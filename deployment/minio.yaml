@@ -1,0 +1,15 @@
+rootUser: "rootuser"
+rootPassword: "rootpass123"
+
+replicas: 3
+
+persistence:
+  size: 10Gi
+
+resources:
+  requests:
+    memory: 512Mi
+
+buckets:
+  - name: bucket1
+    policy: none
