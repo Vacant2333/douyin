@@ -5,9 +5,10 @@ helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 # 安装dashboard到dashboard namespace
 helm install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard -n dashboard --create-namespace
 # 载入dashboard目录下的两个配置文件(创建权限和account)
-kubectl apply -f dashboard
+kubectl apply -f cluster_role_binding.yaml
+kubectl apply -f service_account.yaml
 # 获得token(后续直接从dashboard/token.txt文件中拿token)
-kubectl -n default create token admin-user > dashboard/token.txt
+kubectl -n dashboard create token admin-user > token.txt
 ```
 
 ## 访问Dashboard
