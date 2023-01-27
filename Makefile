@@ -3,10 +3,10 @@ install:
 	@echo 开始清空Kubernetes-douyin
 	kind delete cluster --name douyin
 	@echo 开始部署Kubernetes
-	kind create cluster --config deployment/k8s.yaml
+	kind create cluster --config deployment/cluster/douyin-cluster.yaml
 	@echo 开始部署MinIO
 	helm repo add minio https://charts.min.io/
-	helm install minio minio/minio   -f deployment/minio.yaml -n minio --create-namespace
+	helm install minio minio/minio -f deployment/minio/minio.yaml -n minio --create-namespace
 
 # 格式化所有代码
 fmt:
