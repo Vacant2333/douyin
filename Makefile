@@ -8,7 +8,8 @@ install:
 	kind create cluster --config deployment/cluster/douyin-cluster.yaml
 	@echo 开始部署MinIO
 	helm repo add minio https://charts.min.io/
-	helm install minio minio/minio -f deployment/minio/minio.yaml -n minio --create-namespace
+	kubectl create ns minio
+	helm install minio minio/minio -f deployment/minio/minio.yaml -n minio
 
 # 格式化所有代码
 fmt:

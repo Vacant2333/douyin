@@ -2,8 +2,10 @@
 ```bash
 # 添加Dashboard到库
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+# 创建dashboard namespace(windows的helm好像没有--create-namespace)
+kubectl create ns dashboard
 # 安装dashboard到dashboard namespace
-helm install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard -n dashboard --create-namespace
+helm install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard -n dashboard
 # 载入dashboard目录下的两个配置文件(创建权限和account)
 kubectl apply -f cluster_role_binding.yaml
 kubectl apply -f service_account.yaml
