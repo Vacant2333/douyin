@@ -19,3 +19,14 @@ kubectl get pod -n dashboard | grep "kubernetes-dashboard"
 kubectl port-forward -n dashboard your_pod_name 8443:8443
 # 访问http://127.0.0.1:8443,使用你上一步创建的token来登录
 ```
+
+```bash
+Get the Kubernetes Dashboard URL by running:
+
+  export POD_NAME=$(kubectl get pods  \
+            -n dashboard \
+            -l "app.kubernetes.io/name=kubernetes-dashboard,app.kubernetes.io/instance=kubernetes-dashboard" \
+            -o jsonpath="{.items[0].metadata.name}")
+  echo https://127.0.0.1:8443/
+  kubectl -n dashboard port-forward $POD_NAME 8443:8443
+```

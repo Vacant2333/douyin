@@ -5,7 +5,6 @@ metadata:
     app: demo
   name: demo
   namespace: demo
-spec:
   ports:
     - port: 80
       protocol: TCP
@@ -40,5 +39,3 @@ spec:
           env:
             - name: Serve_Port
               value: "80"
-
-
