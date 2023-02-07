@@ -1,0 +1,28 @@
+syntax = "proto2";
+package douyin.extra.first;
+
+message douyin_comment_list_request {
+  required string token = 1;   // 用户鉴权token
+  required int64 video_id = 2; // 视频id
+}
+
+message douyin_comment_list_response {
+  required int32 status_code = 1;    // 状态码，0-成功，其他值-失败
+  optional string status_msg = 2;    // 返回状态描述
+  repeated Comment comment_list = 3; // 评论列表
+}
+
+message Comment {
+  required int64 id = 1;           // 视频评论id
+  required User user = 2;          // 评论用户信息
+  required string content = 3;     // 评论内容
+  required string create_date = 4; // 评论发布日期，格式 mm-dd
+}
+
+message User {
+  required int64 id = 1;             // 用户id
+  required string name = 2;          // 用户名称
+  optional int64 follow_count = 3;   // 关注总数
+  optional int64 follower_count = 4; // 粉丝总数
+  required bool is_follow = 5;       // true-已关注，false-未关注
+}
