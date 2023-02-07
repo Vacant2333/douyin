@@ -1,4 +1,6 @@
+
 ## 安装Dashboard
+
 ```bash
 # 添加Dashboard到库
 helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
@@ -14,6 +16,7 @@ kubectl -n dashboard create token admin-user > token.txt
 ```
 
 ## 访问Dashboard
+
 ```bash
 # 拿到你创建的Dashboard的pod的名称
 kubectl get pod -n dashboard | grep "kubernetes-dashboard"

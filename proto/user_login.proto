@@ -1,0 +1,14 @@
+syntax = "proto2";
+package douyin.core;
+
+message douyin_user_login_request {
+  required string username = 1; // 登录用户名
+  required string password = 2; // 登录密码
+}
+
+message douyin_user_login_response {
+  required int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  optional string status_msg = 2; // 返回状态描述
+  required int64 user_id = 3;     // 用户id
+  required string token = 4;      // 用户鉴权token
+}

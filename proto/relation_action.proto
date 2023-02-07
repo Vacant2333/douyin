@@ -1,0 +1,13 @@
+syntax = "proto2";
+package douyin.extra.second;
+
+message douyin_relation_action_request {
+  required string token = 1;      // 用户鉴权token
+  required int64 to_user_id = 2;  // 对方用户id
+  required int32 action_type = 3; // 1-关注，2-取消关注
+}
+
+message douyin_relation_action_response {
+  required int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  optional string status_msg = 2; // 返回状态描述
+}
