@@ -26,5 +26,15 @@ func NewGetUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserLo
 func (l *GetUserLogic) GetUser(in *userinfo.UserinfoReq) (*userinfo.UserinfoRes, error) {
 	// todo: add your logic here and delete this line
 
-	return &userinfo.UserinfoRes{}, nil
+	return &userinfo.UserinfoRes{
+		StatusCode: 0,
+		StatusMsg:  "",
+		User: &userinfo.User{
+			Id:            "123",
+			Name:          "TBH",
+			FollowCount:   12,
+			FollowerCount: 23,
+			IsFollow:      false,
+		},
+	}, nil
 }
