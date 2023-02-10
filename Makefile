@@ -48,3 +48,18 @@ install-demo:
 
 forward-demo:
 	kubectl port-forward -n demo service/demo 8000:80
+
+build-userinfo-demo:
+	docker build -f ${PROJECT_ROOT}/cmd/userinfo-demo/rpc/Dockerfile \
+	--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+	-t douyin/userinfo-demo-rpc:nightly
+	docker build -f ${PROJECT_ROOT}/cmd/userinfo-demo/api/Dockerfile \
+    	--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+    	-t douyin/userinfo-demo-api:nightly
+
+install-userinfo-demo:
+	kubectl delete ns userinfo-demo
+	kind load docker-image douyin/userinfo-demo-api:nightly --name douyin
+	kind load docker-image douyin/userinfo-demo-rpc:nightly --name douyin
+	kubectl create ns userinfo-demo
+	kubectl apply -f deployment/userinfo-demo/userinfo-demo.yaml
