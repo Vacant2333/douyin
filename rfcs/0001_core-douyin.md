@@ -1,6 +1,6 @@
 # Features
 
-- Feature Name: core-reservation
+- Feature Name: core-douyin
 
 - Start Date: 2023-2-4 14:34:05  
 
