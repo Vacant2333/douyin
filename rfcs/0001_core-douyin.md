@@ -61,6 +61,7 @@ create table user
     username    varchar(32)                         not null,
     password    varchar(32)                         not null,
     enable      tinyint   default 1                 null,
+    type        tinyint   default 0                 not null,
     login_time  datetime  default CURRENT_TIMESTAMP null,
     create_time timestamp default CURRENT_TIMESTAMP null,
     type        tinyint   default 0                 not null
