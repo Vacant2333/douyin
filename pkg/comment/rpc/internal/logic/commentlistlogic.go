@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"fmt"
 
 	"comment/rpc/internal/svc"
 	"comment/rpc/types/comment"
@@ -24,7 +25,14 @@ func NewCommentListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Comme
 }
 
 func (l *CommentListLogic) CommentList(in *comment.DouyinCommentListRequest) (*comment.DouyinCommentListResponse, error) {
-	// todo: add your logic here and delete this line
+	fmt.Printf("rpc-list参数：%s\\n", in)
+	var id int64 = 1
+	_, _ = l.svcCtx.CommentModel.FindOne(l.ctx, id)
+	var StatusCode int32 = 0
+	var statusMsg = "测试"
 
-	return &comment.DouyinCommentListResponse{}, nil
+	return &comment.DouyinCommentListResponse{
+		StatusCode: &StatusCode,
+		StatusMsg:  &statusMsg,
+	}, nil
 }

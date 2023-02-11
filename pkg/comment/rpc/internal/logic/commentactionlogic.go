@@ -1,11 +1,11 @@
 package logic
 
 import (
-	"context"
-
 	"comment/rpc/internal/svc"
+	"comment/rpc/model"
 	"comment/rpc/types/comment"
-
+	"context"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -24,7 +24,23 @@ func NewCommentActionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Com
 }
 
 func (l *CommentActionLogic) CommentAction(in *comment.DouyinCommentActionRequest) (*comment.DouyinCommentActionResponse, error) {
-	// todo: add your logic here and delete this line
+	commentInsert := new(model.Comment)
+	commentInsert.UserId = 1
+	commentInsert.VideoId = 1
+	var StatusCode int32 = 0
+	var statusMsg = "测试"
+	if _, err := l.svcCtx.CommentModel.Insert(l.ctx, commentInsert); err != nil {
+		fmt.Printf("插入失败")
+		StatusCode = 2
+		statusMsg = "测试失败"
+		return &comment.DouyinCommentActionResponse{
+			StatusCode: &StatusCode,
+			StatusMsg:  &statusMsg,
+		}, nil
+	}
 
-	return &comment.DouyinCommentActionResponse{}, nil
+	return &comment.DouyinCommentActionResponse{
+		StatusCode: &StatusCode,
+		StatusMsg:  &statusMsg,
+	}, nil
 }
