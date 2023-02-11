@@ -1,0 +1,100 @@
+create database tiktok;
+use tiktok;
+
+create table user
+(
+    id          int auto_increment                  primary key,
+    username    varchar(32)                         not null,
+    password    varchar(32)                         not null,
+    enable      tinyint   default 1                 null,
+    type        tinyint   default 0                 not null,
+    login_time  datetime  default CURRENT_TIMESTAMP null,
+    create_time timestamp default CURRENT_TIMESTAMP null
+);
+
+create table chat
+(
+    id         int auto_increment                 primary key,
+    msg        text                               not null,
+    sender     int                                not null,
+    receiver   int                                not null,
+    createtime datetime default CURRENT_TIMESTAMP not null,
+    constraint chat_user_id_fk                    foreign key (sender) references user (id),
+    constraint chat_user_id_fk_2                  foreign key (receiver) references user (id)
+);
+
+create index chat_receiver_sender_index
+    on chat (receiver, sender);
+
+create index chat_sender_receiver_index
+    on chat (sender, receiver);
+
+create table follow
+(
+    id      int auto_increment            primary key,
+    user_id int               null,
+    fun_id  int               not null,
+    removed tinyint default 0 not null,
+    msg     text              null,
+    constraint follow_user_id2fun_fk_2    foreign key (fun_id) references user (id),
+    constraint follow_user_id2user_fk     foreign key (user_id) references user (id)
+);
+
+create index follow_fun_id_removed_index
+    on follow (fun_id, removed);
+
+create index follow_user_id_removed_index
+    on follow (user_id, removed);
+
+create index user_username_enable_index
+    on user (username, enable);
+
+create table video
+(
+    id        int auto_increment primary key,
+    author_id int                not null,
+    play_url  varchar(32)        not null,
+    cover_url varchar(32)        not null,
+    time      int                not null,
+    title     varchar(128)       not null,
+    removed   tinyint default 0  not null,
+    constraint video_user_id_fk  foreign key (author_id) references user (id)
+);
+
+create table comment
+(
+    id          int auto_increment                 primary key,
+    user_id     int                                not null,
+    video_id    int                                not null,
+    create_time datetime default CURRENT_TIMESTAMP not null,
+    removed     tinyint  default 0                 not null,
+    deleted     tinyint  default 0                 not null,
+    content     text                               not null,
+    constraint comment_user_id_fk                  foreign key (user_id) references user (id),
+    constraint comment_video_id_fk                 foreign key (video_id) references video (id)
+);
+
+create index comment_video_id_removed_create_time_index
+    on comment (video_id, removed, create_time);
+
+create table favorite
+(
+    id       int auto_increment      primary key,
+    video_id int                     not null,
+    user_id  int                     not null,
+    removed  tinyint default 0       not null,
+    constraint favorite_user_id_fk   foreign key (user_id) references user (id),
+    constraint favorite_video_id_fk  foreign key (video_id) references video (id)
+);
+
+create index favorite_user_id_removed_index
+    on favorite (user_id, removed);
+
+create index favorite_video_id_removed_index
+    on favorite (video_id, removed);
+
+create index video_author_id_removed_index
+    on video (author_id, removed);
+
+create index video_time_removed_index
+    on video (time, removed);
