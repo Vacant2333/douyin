@@ -79,4 +79,4 @@ install-userinfo-demo:
 	kubectl apply -f deployment/userinfo-demo/userinfo-demo.yaml
 
 forward-userinfo-demo:
-	 kubectl port-forward -n userinfo-demo svc/userinfo-demo 30001:80
+	 kubectl port-forward -n userinfo-demo svc/userinfo-demo 30001:8888
