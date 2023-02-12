@@ -23,14 +23,14 @@ func NewGetUserInfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 	}
 }
 
-func (l *GetUserInfoLogic) GetUserInfo(req *types.UserInfoReq) (resp *types.UserInfoRes, err error) {
+func (l *GetUserInfoLogic) GetUserInfo(req *types.UserInfoRequest) (resp *types.UserInfoResult, err error) {
 	// todo: add your logic here and delete this line
-	userinfoRpc, err := l.svcCtx.UserinfoRpc.GetUser(l.ctx, &userinfo.UserinfoReq{UserId: "1"})
+	userinfoRpc, err := l.svcCtx.UserinfoRpc.GetUser(l.ctx, &userinfo.UserinfoRequest{UserId: "1"})
 	if err != nil {
 		return nil, err
 	}
 
-	resp = &types.UserInfoRes{
+	resp = &types.UserInfoResult{
 		StatusCode: 0,
 		StatusMsg:  "",
 		User: types.User{

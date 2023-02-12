@@ -1,11 +1,11 @@
 syntax = "v1"
 
-type UserInfoReq {
+type UserInfoRequest {
 	UserId string `form:"user_id"`
 	Token  string `form:"token"`
 }
 
-type UserInfoRes {
+type UserInfoResult {
 	StatusCode int    `json:"status_code"`
 	StatusMsg  string `json:"status_msg"`
 	User       User   `json:"user"`
@@ -27,5 +27,5 @@ type User {
 //)
 service template {
 	@handler GetUserInfo
-	get /douyin/user (UserInfoReq) returns (UserInfoRes)
+	get /douyin/user (UserInfoRequest) returns (UserInfoResult)
 }

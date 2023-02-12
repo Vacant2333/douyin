@@ -23,10 +23,9 @@ func NewGetUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUserLo
 	}
 }
 
-func (l *GetUserLogic) GetUser(in *userinfo.UserinfoReq) (*userinfo.UserinfoRes, error) {
+func (l *GetUserLogic) GetUser(in *userinfo.UserinfoRequest) (*userinfo.UserinfoResult, error) {
 	// todo: add your logic here and delete this line
-
-	return &userinfo.UserinfoRes{
+	return &userinfo.UserinfoResult{
 		StatusCode: 0,
 		StatusMsg:  "",
 		User: &userinfo.User{

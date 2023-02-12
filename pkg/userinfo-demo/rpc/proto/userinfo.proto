@@ -3,11 +3,11 @@ syntax = "proto3";
 package userinfo;
 option go_package="./userinfo";
 
-message UserinfoReq {
+message UserinfoRequest {
   string user_id = 1; // 用户id
 }
 
-message UserinfoRes {
+message UserinfoResult {
   int32 status_code = 1; // 状态码，0-成功，其他值-失败
   string status_msg = 2; // 返回状态描述
   User user = 3;         // 用户信息
@@ -22,5 +22,5 @@ message User {
 }
 
 service Userinfo {
-  rpc getUser(UserinfoReq) returns(UserinfoRes);
+  rpc getUser(UserinfoRequest) returns(UserinfoResult);
 }
