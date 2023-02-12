@@ -4,12 +4,24 @@ PROJECT_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 install:
 	@echo 开始清空Kubernetes-douyin
 	kind delete cluster --name douyin
-	@echo 开始部署Kubernetes
+	@echo 开始部署Kubernetes-douyin集群
 	kind create cluster --config deployment/cluster/douyin-cluster.yaml
+
+# 部署MinIO服务,提供非对象存储
+install-minio:
 	@echo 开始部署MinIO
+	-kubectl delete ns minio
 	helm repo add minio https://charts.min.io/
 	kubectl create ns minio
 	helm install minio minio/minio -f deployment/minio/minio.yaml -n minio
+
+# 部署Etcd服务,使用RPC必须有它,默认起3个pod
+install-etcd:
+	@echo 开始部署Etcd
+	-kubectl delete ns etcd
+	helm repo add etcd https://charts.bitnami.com/bitnami
+	kubectl create ns etcd
+	helm install etcd etcd/etcd --set replicaCount=3 -n etcd
 
 # 格式化所有代码
 fmt:
@@ -49,17 +61,22 @@ install-demo:
 forward-demo:
 	kubectl port-forward -n demo service/demo 8000:80
 
+# UserInfo-rpc/api Demo
+
 build-userinfo-demo:
 	docker build -f ${PROJECT_ROOT}/cmd/userinfo-demo/rpc/Dockerfile \
-	--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
-	-t douyin/userinfo-demo-rpc:nightly
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/userinfo-demo-rpc:nightly
 	docker build -f ${PROJECT_ROOT}/cmd/userinfo-demo/api/Dockerfile \
     	--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
     	-t douyin/userinfo-demo-api:nightly
 
 install-userinfo-demo:
-	kubectl delete ns userinfo-demo
+	-kubectl delete ns userinfo-demo
 	kind load docker-image douyin/userinfo-demo-api:nightly --name douyin
 	kind load docker-image douyin/userinfo-demo-rpc:nightly --name douyin
-	kubectl create ns userinfo-demo
+	-kubectl create ns userinfo-demo
 	kubectl apply -f deployment/userinfo-demo/userinfo-demo.yaml
+
+forward-userinfo-demo:
+	 kubectl port-forward -n userinfo-demo svc/userinfo-demo 30001:80

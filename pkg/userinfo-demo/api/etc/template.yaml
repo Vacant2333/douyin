@@ -4,5 +4,5 @@ Port: 8888
 UserinfoRpc:
   Etcd:
     Hosts:
-      - 127.0.0.1:2379
+      - etcd.etcd.svc.cluster.local:2379
     Key: userinfo.rpc
