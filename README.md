@@ -1,10 +1,5 @@
-# 字节跳动青训营-抖音
+# ByteDance douyin project
 
-## 配置和安装
+[Docs](https://github.com/Vacant2333/douyin/blob/main/docs/)
 
-你需要先安装kind,docker,kubectl,helm,如果你是windows建议使用子系统,
-然后执行
-
-```bash
-make install
-```
+[Structure](https://github.com/Vacant2333/douyin/blob/main/docs/design/Structure.drawio)
