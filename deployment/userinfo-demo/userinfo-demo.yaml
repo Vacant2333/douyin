@@ -22,7 +22,7 @@ metadata:
   name: userinfo-demo
   namespace: userinfo-demo
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: userinfo-demo

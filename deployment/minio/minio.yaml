@@ -1,7 +1,7 @@
 rootUser: "rootuser"
 rootPassword: "rootpass123"
 
-replicas: 3
+replicas: 2
 
 persistence:
   size: 10Gi

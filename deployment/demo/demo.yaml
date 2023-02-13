@@ -22,7 +22,7 @@ metadata:
   name: demo
   namespace: demo
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: demo
