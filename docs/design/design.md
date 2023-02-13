@@ -52,7 +52,7 @@
 ### DataBase schema
 
 ```sql
-create database tiktok;
+create database if not exists tiktok;
 use tiktok;
 
 create table user
@@ -62,7 +62,8 @@ create table user
     password    varchar(32)                         not null,
     enable      tinyint   default 1                 null,
     login_time  datetime  default CURRENT_TIMESTAMP null,
-    create_time timestamp default CURRENT_TIMESTAMP null
+    create_time timestamp default CURRENT_TIMESTAMP null,
+    type        tinyint   default 0                 not null
 );
 
 create table chat
@@ -108,9 +109,11 @@ create table video
     author_id int                not null,
     play_url  varchar(32)        not null,
     cover_url varchar(32)        not null,
+    like_count int               null,
     time      int                not null,
     title     varchar(128)       not null,
     removed   tinyint default 0  not null,
+    type      tinyint default 0 not null,
     constraint video_user_id_fk  foreign key (author_id) references user (id)
 );
 
@@ -121,7 +124,6 @@ create table comment
     video_id    int                                not null,
     create_time datetime default CURRENT_TIMESTAMP not null,
     removed     tinyint  default 0                 not null,
-    deleted     tinyint  default 0                 not null,
     content     text                               not null,
     constraint comment_user_id_fk                  foreign key (user_id) references user (id),
     constraint comment_video_id_fk                 foreign key (video_id) references video (id)
