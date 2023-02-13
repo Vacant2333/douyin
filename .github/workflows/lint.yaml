@@ -1,16 +1,16 @@
-name: golang-ci-lint
+name: golangci-lint
 on:
   push:
     tags:
       - v*
     branches:
-      - main
       - master
+      - main
   pull_request:
 permissions:
   contents: read
   # Optional: allow read access to pull request. Use with `only-new-issues` option.
-  # pull-requests: read`
+  # pull-requests: read
 jobs:
   golangci:
     name: lint
@@ -23,9 +23,8 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version:
-            latest
-            # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
+          # Optional: version of golangci-lint to use in form of v1.2 or v1.2.3 or `latest` to use the latest version
+          version: latest
 
           # Optional: working directory, useful for monorepos
           # working-directory: somedir
