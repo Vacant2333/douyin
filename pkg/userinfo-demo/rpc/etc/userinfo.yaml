@@ -1,0 +1,6 @@
+Name: userinfo.rpc
+ListenOn: 0.0.0.0:8080
+Etcd:
+  Hosts:
+  - etcd.etcd.svc.cluster.local:2379
+  Key: userinfo.rpc
