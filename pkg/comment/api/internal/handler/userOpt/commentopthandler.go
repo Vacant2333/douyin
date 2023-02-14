@@ -1,24 +1,24 @@
-package comment
+package userOpt
 
 import (
 	"net/http"
 
-	"comment/api/internal/logic/comment"
-	"comment/api/internal/svc"
-	"comment/api/internal/types"
+	"douyin/pkg/comment/api/internal/logic/userOpt"
+	"douyin/pkg/comment/api/internal/svc"
+	"douyin/pkg/comment/api/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func CommentActionHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func CommentOptHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.CommentActionReq
+		var req types.CommentOptReq
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := comment.NewCommentActionLogic(r.Context(), svcCtx)
-		resp, err := l.CommentAction(&req)
+		l := userOpt.NewCommentOptLogic(r.Context(), svcCtx)
+		resp, err := l.CommentOpt(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
