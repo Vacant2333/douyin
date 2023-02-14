@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"comment/rpc/internal/config"
-	"comment/rpc/internal/server"
-	"comment/rpc/internal/svc"
-	"comment/rpc/types/comment"
+	"douyin/pkg/comment/rpc/internal/config"
+	"douyin/pkg/comment/rpc/internal/server"
+	"douyin/pkg/comment/rpc/internal/svc"
+	"douyin/pkg/comment/rpc/userCommentPb"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -16,7 +16,7 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-var configFile = flag.String("f", "etc/comment.yaml", "the config file")
+var configFile = flag.String("f", "etc/usercomment.yaml", "the config file")
 
 func main() {
 	flag.Parse()
@@ -26,7 +26,7 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		comment.RegisterCommentServiceServer(grpcServer, server.NewCommentServiceServer(ctx))
+		userCommentPb.RegisterUserCommentServer(grpcServer, server.NewUserCommentServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
