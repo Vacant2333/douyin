@@ -73,9 +73,11 @@ forward-userinfo-demo:
 
 
 # Deploy nfs -> Declare nfs pv -> Inject sql scheme -> Deploy mysql
-init-nfs-service:
+nfs-init-service:
 	kubectl apply -f deployment/nfs/nfs-deploy.yaml  
 	kubectl apply -f deployment/nfs/nfs-pvx.yaml  
-init-mysql-service: init-nfs-service
+mysql-init-service: init-nfs-service
 	kubectl apply -f deployment/mysql/mysql-scheme.yaml
 	kubectl apply -f deployment/mysql/mysql-deploy.yaml
+mysql-regenerate-codes:
+	go run cmd/mysql-gen/gen.go

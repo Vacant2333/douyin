@@ -10,15 +10,17 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var DBI *gorm.DB
 var once sync.Once
 
 func init() {
 	once.Do(func() {
-		DB = ConnectDB()
-		_ = DB.AutoMigrate()
+		DBI = ConnectDB()
+		err := DBI.AutoMigrate()
+		if err != nil {
+			panic(err)
+		}
 	})
-
 }
 
 func ConnectDB() (conn *gorm.DB) {
@@ -28,6 +30,9 @@ func ConnectDB() (conn *gorm.DB) {
 	})
 	if err != nil {
 		panic(fmt.Errorf("cannot setup db conn: %v", err))
+	}
+	if conn == nil {
+		panic("conn is null")
 	}
 	return conn
 }
