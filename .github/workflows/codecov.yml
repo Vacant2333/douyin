@@ -1,27 +1,18 @@
-name: CI
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
+name: Test and coverage
+
+on: [push, pull_request]
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.19.2'
-      - name: Install pcap
-        run: sudo apt-get install libpcap-dev
+          go-version: '1.18'
       - name: Run coverage
-        run: make test
-      - name: Codecov
-        uses: codecov/codecov-action@v3.1.0
-        with:
-            files: ./coverage.out
-            name: codecov-shifu
-            fail_ci_if_error: true
-            verbose: true
+        run: go test -race -coverprofile=coverage.txt -covermode=atomic
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
