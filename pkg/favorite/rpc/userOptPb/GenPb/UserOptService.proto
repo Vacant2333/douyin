@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option go_package ="./userOptPb";
+
+package pb;
+
+// ------------------------------------ 
+// Messages
+// ------------------------------------ 
+
+//--------------------------------userFavoriteList--------------------------------
+
+// 用户给视频点赞
+message UpdateFavoriteStatusReq {
+  int64 videoId = 1; //videoId
+  int64 userId = 2; //userId
+  int64 actionType = 3; //点赞
+}
+
+message UpdateFavoriteStatusResp {
+}
+
+// 获得用户和视频的点赞关系
+message GetUserFavoriteReq {
+  int64 userId = 1; //userId
+  repeated int64 videoIds = 2; //videoId
+}
+
+message GetUserFavoriteResp {
+  map<int64, bool> userFavoriteList = 1; //userFavoriteList
+  repeated int64 userFavoriteArr = 2; //userFavoriteArr
+}
+
+
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service UserOptService{
+	 //-----------------------userFavoriteList----------------------- 
+	 rpc GetUserFavorite(GetUserFavoriteReq) returns (GetUserFavoriteResp);
+   rpc UpdateFavoriteStatus(UpdateFavoriteStatusReq) returns (UpdateFavoriteStatusResp);
+
+}
