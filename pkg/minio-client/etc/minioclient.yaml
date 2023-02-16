@@ -1,0 +1,6 @@
+Name: minioclient.rpc
+ListenOn: 0.0.0.0:30001
+Etcd:
+  Hosts:
+    - etcd.etcd.svc.cluster.local:2379
+  Key: minioclient.rpc
