@@ -8,4 +8,5 @@ import (
 type Config struct {
 	rest.RestConf
 	UserCommentRpc zrpc.RpcClientConf
+	UserInfoRpc    zrpc.RpcClientConf
 }

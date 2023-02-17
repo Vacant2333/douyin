@@ -22,9 +22,9 @@ type FollowOptRes struct {
 }
 
 type CommentOptReq struct {
-	Token       string `form:"token"`
-	VideoId     int64  `form:"video_id"`
-	ActionType  int64  `form:"action_type"`
+	Token       string `form:"token" validate:"required"`
+	VideoId     int64  `form:"video_id" validate:"required,numeric"`
+	ActionType  int64  `form:"action_type" validate:"required,numeric"`
 	CommentText string `form:"comment_text,omitempty, optional"`
 	CommentId   int64  `form:"comment_id,omitempty, optional"`
 }
@@ -39,6 +39,11 @@ type Comment struct {
 type CommentOptRes struct {
 	Status
 	Comment *Comment `json:"comment,omitempty"`
+}
+
+func (c CommentOptRes) Error() string {
+	//TODO implement me
+	panic("implement me")
 }
 
 type FavoriteListReq struct {
@@ -69,8 +74,8 @@ type FollowerListRes struct {
 }
 
 type CommentListReq struct {
-	Token   string `form:"token"`
-	VideoId int64  `form:"video_id"`
+	Token   string `form:"token" validate:"required,numeric"`
+	VideoId int64  `form:"video_id" validate:"required"`
 }
 
 type CommentListRes struct {
