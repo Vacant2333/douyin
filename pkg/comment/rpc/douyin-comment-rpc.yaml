@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: comment-rpc-svc
+  name: comment-rpc
   namespace: douyin-comment
   labels:
-    app: comment-rpc-svc
+    app: comment-rpc
 spec:
   replicas: 2
   revisionHistoryLimit: 5
   selector:
     matchLabels:
-      app: comment-rpc-svc
+      app: comment-rpc
   template:
     metadata:
       labels:
-        app: comment-rpc-svc
+        app: comment-rpc
     spec:
       serviceAccountName: find-endpoints
       containers:
-      - name: comment-rpc-svc
+      - name: comment-rpc
         image: douyin-comment-rpc:v1
         ports:
         - containerPort: 8081
@@ -52,7 +52,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: comment-rpc-svc-svc
+  name: comment-rpc-svc
   namespace: douyin-comment
 spec:
   ports:

@@ -4,8 +4,6 @@ import (
 	"context"
 	"douyin/pkg/comment/rpc/internal/svc"
 	"douyin/pkg/comment/rpc/userCommentPb"
-	"fmt"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,15 +21,27 @@ func NewGetVideoCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 	}
 }
 
-// -----------------------userCommentList-----------------------
+// GetVideoComment -----------------------userCommentList-----------------------
 func (l *GetVideoCommentLogic) GetVideoComment(in *userCommentPb.GetVideoCommentReq) (*userCommentPb.GetVideoCommentReqResp, error) {
-	fmt.Printf("GetVideoComment-------------->")
-	commentList, err := l.svcCtx.UserCommentModel.FindAll(l.ctx, in.VideoId)
-	fmt.Printf("commentList: %v", commentList)
+	allCommentInfoData, err := l.svcCtx.UserCommentModel.FindAll(l.ctx, in.VideoId)
+
 	if err != nil {
 		logx.Errorf("GetCommentList------->SELECT err : %s", err.Error())
 		return &userCommentPb.GetVideoCommentReqResp{}, err
 	}
 
-	return &userCommentPb.GetVideoCommentReqResp{}, nil
+	var commentList []*userCommentPb.Comment
+	for _, v := range allCommentInfoData {
+		var comment userCommentPb.Comment
+		comment.CommentId = v.Id
+		comment.Content = v.Content
+		comment.CreateDate = v.CreateTime.String()
+		comment.UserId = v.UserId
+
+		commentList = append(commentList, &comment)
+	}
+
+	return &userCommentPb.GetVideoCommentReqResp{
+		CommentList: commentList,
+	}, nil
 }

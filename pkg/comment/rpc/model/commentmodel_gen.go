@@ -125,8 +125,9 @@ func (m *defaultCommentModel) Trans(ctx context.Context, fn func(ctx context.Con
 func (m *defaultCommentModel) Update(ctx context.Context, data *Comment) error {
 	tiktokCommentIdKey := fmt.Sprintf("%s%v", cacheTiktokCommentIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, commentRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.UserId, data.VideoId, data.Removed, data.Deleted, data.Content, data.Id)
+		query := fmt.Sprintf("update %s set %s where `id` = ? and `user_id`=?", m.table, commentRowsWithPlaceHolder)
+		fmt.Printf("query: %s", query)
+		return conn.ExecCtx(ctx, query, data.UserId, data.VideoId, data.Removed, data.Deleted, data.Content, data.Id, data.UserId)
 	}, tiktokCommentIdKey)
 	return err
 }

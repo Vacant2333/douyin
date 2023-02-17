@@ -13,10 +13,12 @@ message UpdateCommentStatusReq {
   int64 videoId = 1; //videoId
   int64 userId = 2; //userId
   int64 commentId = 3; //commentId
-  int64 actionType = 4; //评论 取消评论
+  string Content = 4;
+  int64 actionType = 5; //评论 取消评论
 }
 
 message UpdateCommentStatusResp {
+  int64 commentId = 3; //commentId
 }
 
 // 获得视频的评论列表
