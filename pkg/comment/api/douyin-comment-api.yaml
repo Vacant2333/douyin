@@ -21,7 +21,7 @@ spec:
       - name: douyin-api-svc
         image: douyin-comment-api:v1
         ports:
-        - containerPort: 8888
+        - containerPor
         readinessProbe:
           tcpSocket:
             port: 8888

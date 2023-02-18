@@ -4,9 +4,12 @@ import (
 	"context"
 	"douyin/pkg/comment/api/internal/types"
 	"douyin/pkg/comment/common/help/sensitiveWords"
+	"douyin/pkg/comment/common/messageTypes"
 	"douyin/pkg/comment/common/xerr"
-	"douyin/pkg/comment/rpc/usercomment"
 	"douyin/pkg/userinfo-demo/rpc/types/userinfo"
+	"encoding/json"
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
 	"time"
 
 	"douyin/pkg/comment/api/internal/svc"
@@ -29,17 +32,14 @@ func NewCommentOptLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Commen
 }
 
 func (l *CommentOptLogic) CommentOpt(req *types.CommentOptReq) (resp *types.CommentOptRes, err error) {
-	//敏感词过滤
-	safeContent := sensitiveWords.SensitiveWordsFliter(sensitiveWords.SensitiveWords, req.CommentText, '?')
+	// 前端传入的是1，2表示评论取消评论，入口这里就将它转换成1，0表示评论取消评论
+	msgTemp, status, err := l.getActionType(req)
 
-	// 调用rpc 更新user_comment表
-	userCommentResult, err := l.svcCtx.UserCommentRpc.UpdateCommentStatus(l.ctx, &usercomment.UpdateCommentStatusReq{
-		VideoId:    req.VideoId,
-		UserId:     1, /*l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)*/
-		Content:    safeContent,
-		CommentId:  req.CommentId,
-		ActionType: req.ActionType,
-	})
+	if msgTemp.ActionType == messageTypes.ActionErr || err != nil {
+		logx.Errorf("CommentOptLogic CommentOpt err: %s", err.Error())
+		return status, nil
+	}
+
 	if err != nil {
 		logx.Errorf("UserCommentOpt->UserCommentRpc  err : %v , val : %s , message:%+v", err)
 		return &types.CommentOptRes{
@@ -77,8 +77,8 @@ func (l *CommentOptLogic) CommentOpt(req *types.CommentOptReq) (resp *types.Comm
 				Msg:  "user comment opt（comment） success",
 			},
 			Comment: &types.Comment{
-				CommentId:  userCommentResult.CommentId,
-				Content:    safeContent,
+				CommentId:  msgTemp.CommentId,
+				Content:    msgTemp.CommentText,
 				User:       user,
 				CreateTime: time.Now().Format("01-01"),
 			},
@@ -95,4 +95,55 @@ func (l *CommentOptLogic) CommentOpt(req *types.CommentOptReq) (resp *types.Comm
 	}
 
 	return nil, nil
+}
+
+func (l *CommentOptLogic) getActionType(req *types.CommentOptReq) (*messageTypes.UserCommentOptMessage, *types.CommentOptRes, error) {
+	var msgTemp messageTypes.UserCommentOptMessage
+	_ = copier.Copy(&msgTemp, req)
+
+	switch req.ActionType { // 方便扩展
+	case messageTypes.ActionADD:
+		//敏感词过滤
+		msgTemp.CommentText = sensitiveWords.SensitiveWordsFliter(sensitiveWords.SensitiveWords, msgTemp.CommentText, '?')
+		msgTemp.UserId = 1
+		//l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)
+		msgTemp.CreateDate = time.Now().Format("01-01")
+		msgTemp.ActionType = messageTypes.ActionADD
+
+	case messageTypes.ActionCancel:
+		msgTemp.UserId = 1
+		//l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)
+		msgTemp.ActionType = messageTypes.ActionCancel
+	default:
+		msgTemp.ActionType = -99
+		return nil, &types.CommentOptRes{
+			Status: types.Status{
+				Code: xerr.ERR,
+				Msg:  "send message to CommentOptMsgConsumer ActionType err",
+			},
+		}, errors.New("operate error")
+	}
+
+	// 序列化
+	msg, err := json.Marshal(msgTemp)
+	if err != nil {
+		return nil, &types.CommentOptRes{
+			Status: types.Status{
+				Code: xerr.ERR,
+				Msg:  "send message to CommentOptMsgConsumer json.Marshal err",
+			},
+		}, errors.Wrapf(err, " json.Marshal err")
+	}
+
+	// 向消息队列发送消息
+	err = l.svcCtx.CommentOptMsgProducer.Push(string(msg))
+	if err != nil {
+		return nil, &types.CommentOptRes{
+			Status: types.Status{
+				Code: xerr.ERR,
+				Msg:  "send message to CommentOptMsgConsumer err",
+			},
+		}, errors.Wrapf(err, " json.Marshal err")
+	}
+	return &msgTemp, nil, nil
 }

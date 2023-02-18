@@ -15,3 +15,14 @@ UserInfoRpc:
     Hosts:
       - 127.0.0.1:2379
     Key: userinfo.rpc
+
+# kq
+UserCommentOptServiceConf:
+  Name: UserCommentOptService
+  Brokers:
+    - 127.0.0.1:9092
+  Group: UserCommentOptService-group
+  Topic: UserCommentOptService-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1
