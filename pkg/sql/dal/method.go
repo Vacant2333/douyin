@@ -40,10 +40,10 @@ type UserMethod interface {
 type ChatMethod interface {
 
 	// Where("sender=@sender")
-	FindSendersByUserId(sender uint) ([]gen.T, error)
+	FindBySender(sender uint) ([]gen.T, error)
 
 	// Where("receiver=@receiver")
-	FindReceiverByUserId(receiver uint) ([]gen.T, error)
+	FindByReceiver(receiver uint) ([]gen.T, error)
 
 	// Where("sender=@userId or receiver=@userId")
 	FindMessageByUserId(userId uint) ([]gen.T, error)

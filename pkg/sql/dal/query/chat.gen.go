@@ -174,8 +174,8 @@ type IChatDo interface {
 	FindAll() (result []model.Chat, err error)
 	FindById(id uint) (result model.Chat, err error)
 	FindByRemoved(removed uint) (result []model.Chat, err error)
-	FindSendersByUserId(sender uint) (result []model.Chat, err error)
-	FindReceiverByUserId(receiver uint) (result []model.Chat, err error)
+	FindBySender(sender uint) (result []model.Chat, err error)
+	FindByReceiver(receiver uint) (result []model.Chat, err error)
 	FindMessageByUserId(userId uint) (result []model.Chat, err error)
 }
 
@@ -222,7 +222,7 @@ func (c chatDo) FindByRemoved(removed uint) (result []model.Chat, err error) {
 }
 
 // Where("sender=@sender")
-func (c chatDo) FindSendersByUserId(sender uint) (result []model.Chat, err error) {
+func (c chatDo) FindBySender(sender uint) (result []model.Chat, err error) {
 	var params []interface{}
 
 	var generateSQL strings.Builder
@@ -237,7 +237,7 @@ func (c chatDo) FindSendersByUserId(sender uint) (result []model.Chat, err error
 }
 
 // Where("receiver=@receiver")
-func (c chatDo) FindReceiverByUserId(receiver uint) (result []model.Chat, err error) {
+func (c chatDo) FindByReceiver(receiver uint) (result []model.Chat, err error) {
 	var params []interface{}
 
 	var generateSQL strings.Builder
