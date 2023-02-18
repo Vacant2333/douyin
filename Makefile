@@ -69,3 +69,8 @@ install-userinfo-demo:
 
 forward-userinfo-demo:
 	kubectl port-forward -n userinfo-demo svc/userinfo-demo 30001:8888
+
+
+init-nfs-service:
+	kubectl apply -f deployment/nfs/nfs.yaml  
+	kubectl apply -f deployment/nfs/nfs-pvx.yaml  
