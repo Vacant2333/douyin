@@ -71,6 +71,11 @@ forward-userinfo-demo:
 	kubectl port-forward -n userinfo-demo svc/userinfo-demo 30001:8888
 
 
+
+# Deploy nfs -> Declare nfs pv -> Inject sql scheme -> Deploy mysql
 init-nfs-service:
-	kubectl apply -f deployment/nfs/nfs.yaml  
+	kubectl apply -f deployment/nfs/nfs-deploy.yaml  
 	kubectl apply -f deployment/nfs/nfs-pvx.yaml  
+init-mysql-service: init-nfs-service
+	kubectl apply -f deployment/mysql/mysql-scheme.yaml
+	kubectl apply -f deployment/mysql/mysql-deploy.yaml

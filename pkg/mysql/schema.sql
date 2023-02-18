@@ -1,7 +1,7 @@
-create database tiktok;
-use tiktok;
+create database IF NOT EXISTS  titok;
+use titok;
 
-create table user
+create table IF NOT EXISTS `user`
 (
     id          int auto_increment                  primary key,
     username    varchar(32)                         not null,
@@ -12,7 +12,7 @@ create table user
     create_time timestamp default CURRENT_TIMESTAMP null
 );
 
-create table chat
+create table IF NOT EXISTS `chat`
 (
     id         int auto_increment                 primary key,
     msg        text                               not null,
@@ -29,7 +29,7 @@ create index chat_receiver_sender_index
 create index chat_sender_receiver_index
     on chat (sender, receiver);
 
-create table follow
+create table IF NOT EXISTS `follow`
 (
     id      int auto_increment            primary key,
     user_id int               null,
@@ -49,7 +49,7 @@ create index follow_user_id_removed_index
 create index user_username_enable_index
     on user (username, enable);
 
-create table video
+create table IF NOT EXISTS `video`
 (
     id        int auto_increment primary key,
     author_id int                not null,
@@ -61,7 +61,7 @@ create table video
     constraint video_user_id_fk  foreign key (author_id) references user (id)
 );
 
-create table comment
+create table IF NOT EXISTS `comment`
 (
     id          int auto_increment                 primary key,
     user_id     int                                not null,
@@ -77,7 +77,7 @@ create table comment
 create index comment_video_id_removed_create_time_index
     on comment (video_id, removed, create_time);
 
-create table favorite
+create table IF NOT EXISTS `favorite`
 (
     id       int auto_increment      primary key,
     video_id int                     not null,
