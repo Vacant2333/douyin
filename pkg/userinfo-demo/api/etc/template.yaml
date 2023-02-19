@@ -1,0 +1,8 @@
+Name: template
+Host: 0.0.0.0
+Port: 8888
+UserinfoRpc:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: userinfo.rpc

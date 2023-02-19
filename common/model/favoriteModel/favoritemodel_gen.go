@@ -29,6 +29,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*Favorite, error)
 		Update(ctx context.Context, data *Favorite) error
 		Delete(ctx context.Context, id int64) error
+		FindAllByUserId(ctx context.Context, userId int64) (int64, error)
 	}
 
 	defaultFavoriteModel struct {
@@ -85,6 +86,20 @@ func (m *defaultFavoriteModel) FindAll(ctx context.Context, id int64) ([]*Favori
 	}
 }
 
+func (m *defaultFavoriteModel) FindAllByUserId(ctx context.Context, userId int64) (int64, error) {
+	query := fmt.Sprintf("select count(*) from %s where `user_id` = ?", m.table)
+	var countNum int64
+	err := m.conn.QueryRowsCtx(ctx, &countNum, query, userId)
+	switch err {
+	case nil:
+		return countNum, nil
+	case sqlc.ErrNotFound:
+		return 0, ErrNotFound
+	default:
+		return 0, err
+	}
+}
+
 // export logic
 func (m *defaultFavoriteModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
 
@@ -101,8 +116,8 @@ func (m *defaultFavoriteModel) Insert(ctx context.Context, data *Favorite) (sql.
 }
 
 func (m *defaultFavoriteModel) Update(ctx context.Context, data *Favorite) error {
-	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, favoriteRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.VideoId, data.UserId, data.Removed, data.Id)
+	query := fmt.Sprintf("update %s set %s where `video_id` = ? and `user_id`=?", m.table, favoriteRowsWithPlaceHolder)
+	_, err := m.conn.ExecCtx(ctx, query, data.VideoId, data.UserId, data.Removed, data.VideoId, data.UserId)
 	return err
 }
 

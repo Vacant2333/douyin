@@ -38,17 +38,21 @@ type (
 
 	defaultUserModel struct {
 		sqlc.CachedConn
+		conn  sqlx.SqlConn
 		table string
 	}
 
 	User struct {
-		Id         int64     `db:"id"`
-		Username   string    `db:"username"`
-		Password   string    `db:"password"`
-		Enable     int64     `db:"enable"`
-		LoginTime  time.Time `db:"login_time"`
-		CreateTime time.Time `db:"create_time"`
-		Type       int64     `db:"type"`
+		Id              int64     `db:"id"`
+		Username        string    `db:"username"`
+		Password        string    `db:"password"`
+		Enable          int64     `db:"enable"`
+		LoginTime       time.Time `db:"login_time"`
+		CreateTime      time.Time `db:"create_time"`
+		Type            int64     `db:"type"`
+		Avatar          string    `db:"avatar"`           // 头像
+		BackgroundImage string    `db:"background_image"` // 背景图片
+		Signature       string    `db:"signature"`        // 签名
 	}
 )
 
@@ -85,6 +89,20 @@ func (m *defaultUserModel) FindOne(ctx context.Context, id int64) (*User, error)
 	}
 }
 
+func (m *defaultUserModel) FindAllByUserId(ctx context.Context, userId int64) (int64, error) {
+	query := fmt.Sprintf("select count(*) from %s where `id` = ?", m.table)
+	var countNum int64
+	err := m.conn.QueryRowsCtx(ctx, &countNum, query, userId)
+	switch err {
+	case nil:
+		return countNum, nil
+	case sqlc.ErrNotFound:
+		return 0, ErrNotFound
+	default:
+		return 0, err
+	}
+}
+
 func (m *defaultUserModel) FindOneByUserName(ctx context.Context, userName string) (*User, error) {
 	douyin2UserUserNameKey := fmt.Sprintf("%s%v", cacheTiktokUserNamePrefix, userName)
 	var resp User
@@ -108,8 +126,8 @@ func (m *defaultUserModel) FindOneByUserName(ctx context.Context, userName strin
 func (m *defaultUserModel) Insert(ctx context.Context, data *User) (sql.Result, error) {
 	tiktokUserIdKey := fmt.Sprintf("%s%v", cacheTiktokUserIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, userRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Username, data.Password, data.Enable, data.LoginTime, data.Type)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?,?,?,?)", m.table, userRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Username, data.Password, data.Enable, data.LoginTime, data.Type, data.Avatar, data.BackgroundImage, data.Signature)
 	}, tiktokUserIdKey)
 	return ret, err
 }

@@ -27,6 +27,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*Video, error)
 		Update(ctx context.Context, data *Video) error
 		Delete(ctx context.Context, id int64) error
+		FindAllByUserId(ctx context.Context, userId int64) (int64, error)
 	}
 
 	defaultVideoModel struct {
@@ -71,6 +72,20 @@ func (m *defaultVideoModel) FindOne(ctx context.Context, id int64) (*Video, erro
 		return nil, ErrNotFound
 	default:
 		return nil, err
+	}
+}
+
+func (m *defaultVideoModel) FindAllByUserId(ctx context.Context, userId int64) (int64, error) {
+	query := fmt.Sprintf("select count(*) from %s where `author_id` = ?", m.table)
+	var countNum int64
+	err := m.conn.QueryRowsCtx(ctx, &countNum, query, userId)
+	switch err {
+	case nil:
+		return countNum, nil
+	case sqlc.ErrNotFound:
+		return 0, ErrNotFound
+	default:
+		return 0, err
 	}
 }
 
