@@ -83,7 +83,6 @@ install-gateway:
 
 
 
-
 # Build proto
 build-proto-minio-client:
 	cd pkg/minio-client && goctl rpc protoc ./proto/minio-client.proto --go_out=./types --go-grpc_out=./types --zrpc_out=.
