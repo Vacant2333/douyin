@@ -3,9 +3,9 @@ package user
 import (
 	"net/http"
 
-	"douyin/pkg/comment/api/internal/logic/user"
-	"douyin/pkg/comment/api/internal/svc"
-	"douyin/pkg/comment/api/internal/types"
+	"douyin/pkg/user/api/internal/logic/user"
+	"douyin/pkg/user/api/internal/svc"
+	"douyin/pkg/user/api/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
