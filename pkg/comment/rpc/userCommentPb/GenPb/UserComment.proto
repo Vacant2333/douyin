@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option go_package ="./userCommentPb";
+
+package pb;
+
+// ------------------------------------ 
+// Messages
+// ------------------------------------ 
+
+// 用户对视频评论
+message UpdateCommentStatusReq {
+  int64 videoId = 1; //videoId
+  int64 userId = 2; //userId
+  int64 commentId = 3; //commentId
+  string Content = 4;
+  int64 actionType = 5; //评论 取消评论
+}
+
+message UpdateCommentStatusResp {
+  int64 commentId = 3; //commentId
+}
+
+// 获得视频的评论列表
+message GetVideoCommentReq {
+  int64 videoId = 1; //video_id
+}
+message Comment {
+  int64 commentId = 1;
+  int64 userId = 2;
+  string content = 3;
+  string createDate = 4;
+}
+
+message GetVideoCommentReqResp {
+  repeated Comment commentList = 1;//comment_list
+}
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service UserComment{
+  //-----------------------userCommentStatus-----------------------
+   rpc UpdateCommentStatus(UpdateCommentStatusReq) returns (UpdateCommentStatusResp);
+  //-----------------------userCommentList-----------------------
+   rpc GetVideoComment(GetVideoCommentReq) returns (GetVideoCommentReqResp);
+}
