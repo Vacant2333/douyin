@@ -6,7 +6,7 @@ import (
 	"douyin/pkg/favorite/common/messageTypes"
 	"douyin/pkg/favorite/common/xerr"
 	"douyin/pkg/favorite/rpc/internal/svc"
-	"douyin/pkg/favorite/rpc/model"
+	model "douyin/pkg/favorite/rpc/model/favorite"
 	"douyin/pkg/favorite/rpc/userOptPb"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -43,7 +43,7 @@ func (l *UpdateFavoriteStatusLogic) UpdateFavoriteStatus(in *userOptPb.UpdateFav
 
 		return &userOptPb.UpdateFavoriteStatusResp{}, nil
 
-	//删除评论
+	//取消点赞
 	case messageTypes.ActionCancel:
 		favoriteModel.Removed = globalkey.DelStateYes
 		favoriteModel.VideoId = in.VideoId

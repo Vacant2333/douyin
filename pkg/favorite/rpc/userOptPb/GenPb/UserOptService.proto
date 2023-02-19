@@ -23,13 +23,22 @@ message UpdateFavoriteStatusResp {
 // 获得用户和视频的点赞关系
 message GetUserFavoriteReq {
   int64 userId = 1; //userId
-  repeated int64 videoIds = 2; //videoId
+}
+
+message Favorite{
+  int64 videoId = 1;//videoId
+  string play_url = 2;
+  string cover_url = 3;
+  string title = 4;
+  int64  author_id = 5;
 }
 
 message GetUserFavoriteResp {
-  map<int64, bool> userFavoriteList = 1; //userFavoriteList
-  repeated int64 userFavoriteArr = 2; //userFavoriteArr
+  repeated Favorite FavoriteList = 1; //userFavoriteList
+
 }
+
+
 
 
 

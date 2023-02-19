@@ -13,6 +13,7 @@ import (
 )
 
 type (
+	Favorite                 = userOptPb.Favorite
 	GetUserFavoriteReq       = userOptPb.GetUserFavoriteReq
 	GetUserFavoriteResp      = userOptPb.GetUserFavoriteResp
 	UpdateFavoriteStatusReq  = userOptPb.UpdateFavoriteStatusReq

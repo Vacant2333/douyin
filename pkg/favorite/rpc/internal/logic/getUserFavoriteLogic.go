@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"fmt"
 
 	"douyin/pkg/favorite/rpc/internal/svc"
 	"douyin/pkg/favorite/rpc/userOptPb"
@@ -25,7 +26,44 @@ func NewGetUserFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 
 // -----------------------userFavoriteList-----------------------
 func (l *GetUserFavoriteLogic) GetUserFavorite(in *userOptPb.GetUserFavoriteReq) (*userOptPb.GetUserFavoriteResp, error) {
-	// todo: add your logic here and delete this line
+	fmt.Printf("GetVideoFavorite-------------->")
+	//var commentList []*userOptPb.Comment
+	//for _, v := range allCommentInfoData {
+	//	var comment userCommentPb.Comment
+	//	comment.CommentId = v.Id
+	//	comment.Content = v.Content
+	//	comment.CreateDate = v.CreateTime.String()
+	//	comment.UserId = v.UserId
+	//
+	//	commentList = append(commentList, &comment)
+	//}
+	//
+	//return &userCommentPb.GetVideoCommentReqResp{
+	//	CommentList: commentList,
+	//}, nil
+	allFavoriteInfoData, err := l.svcCtx.UserFavoriteModel.FindAll(l.ctx, in.UserId)
+	//fmt.Printf("favoriteList: %v", favoriteList)
+	if err != nil {
+		logx.Errorf("GetFavoriteList------->SELECT err : %s", err.Error())
+		return &userOptPb.GetUserFavoriteResp{}, err
+	}
+	var favoriteList []*userOptPb.Favorite
+	for _, v := range allFavoriteInfoData {
+		var favorite userOptPb.Favorite
+		videoInfoData, err := l.svcCtx.UserVideoModel.FindOne(l.ctx, v.VideoId)
+		if err != nil {
+			logx.Errorf("GetFavoriteList------->SELECT err : %s", err.Error())
+			return &userOptPb.GetUserFavoriteResp{}, err
+		}
+		favorite.PlayUrl = videoInfoData.PlayUrl
+		favorite.Title = videoInfoData.Title
+		favorite.VideoId = videoInfoData.Id
+		favorite.CoverUrl = videoInfoData.CoverUrl
+		favorite.AuthorId = videoInfoData.AuthorId
 
-	return &userOptPb.GetUserFavoriteResp{}, nil
+		favoriteList = append(favoriteList, &favorite)
+	}
+	return &userOptPb.GetUserFavoriteResp{
+		FavoriteList: favoriteList,
+	}, nil
 }
