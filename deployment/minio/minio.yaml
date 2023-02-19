@@ -1,5 +1,5 @@
-rootUser: "rootuser"
-rootPassword: "rootpass123"
+rootUser: "douyin"
+rootPassword: "douyin_pass"
 
 replicas: 2
 
@@ -11,5 +11,5 @@ resources:
     memory: 512Mi
 
 buckets:
-  - name: bucket1
+  - name: douyin
     policy: none

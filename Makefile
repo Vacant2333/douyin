@@ -71,6 +71,19 @@ forward-userinfo-demo:
 	kubectl port-forward -n userinfo-demo svc/userinfo-demo 30001:8888
 
 
+# Build proto
+build-proto-minio-client:
+	cd pkg/minio-client && goctl rpc protoc ./proto/minio-client.proto --go_out=./types --go-grpc_out=./types --zrpc_out=.
+
+
+
+# Install dependence
+install-protoc-gen-go:
+	go get -u google.golang.org/protobuf/cmd/protoc-gen-go
+	go install google.golang.org/protobuf/cmd/protoc-gen-go
+	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+
 # Deploy nfs -> Declare nfs pv -> Inject sql scheme -> Deploy mysql
 nfs-init-service:
 	kubectl apply -f deployment/nfs/nfs-deploy.yaml  
