@@ -2,7 +2,7 @@ package kq
 
 import (
 	"context"
-	"douyin/pkg/comment/common/messageTypes"
+	"douyin/common/messageTypes"
 	"douyin/pkg/comment/mq/internal/svc"
 	"douyin/pkg/comment/rpc/usercomment"
 	"encoding/json"
@@ -51,7 +51,7 @@ func (l *UserCommentOpt) execService(message messageTypes.UserCommentOptMessage)
 	// 调用rpc 更新user_comment表
 	_, err := l.svcCtx.UserCommentRpc.UpdateCommentStatus(l.ctx, &usercomment.UpdateCommentStatusReq{
 		VideoId:    message.VideoId,
-		UserId:     1, /*l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)*/
+		UserId:     message.UserId,
 		Content:    message.CommentText,
 		CommentId:  message.CommentId,
 		ActionType: message.ActionType,

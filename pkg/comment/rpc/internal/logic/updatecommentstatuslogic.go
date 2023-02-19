@@ -2,11 +2,11 @@ package logic
 
 import (
 	"context"
-	"douyin/pkg/comment/common/globalkey"
-	"douyin/pkg/comment/common/messageTypes"
-	"douyin/pkg/comment/common/xerr"
+	"douyin/common/globalkey"
+	"douyin/common/messageTypes"
+	"douyin/common/model/commentModel"
+	"douyin/common/xerr"
 	"douyin/pkg/comment/rpc/internal/svc"
-	"douyin/pkg/comment/rpc/model"
 	"douyin/pkg/comment/rpc/userCommentPb"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
@@ -29,7 +29,7 @@ func NewUpdateCommentStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext
 
 // UpdateCommentStatus -----------------------userCommentStatus-----------------------
 func (l *UpdateCommentStatusLogic) UpdateCommentStatus(in *userCommentPb.UpdateCommentStatusReq) (*userCommentPb.UpdateCommentStatusResp, error) {
-	commentModel := new(model.Comment)
+	commentModel := new(commentModel.Comment)
 
 	switch in.ActionType {
 	//新增评论
@@ -57,7 +57,7 @@ func (l *UpdateCommentStatusLogic) UpdateCommentStatus(in *userCommentPb.UpdateC
 
 	//删除评论
 	case messageTypes.ActionCancel:
-		commentModel.Deleted = globalkey.DelStateYes
+		commentModel.Removed = globalkey.DelStateYes
 		commentModel.Id = in.CommentId
 		commentModel.VideoId = in.VideoId
 		commentModel.UserId = in.UserId

@@ -2,9 +2,10 @@ package userOpt
 
 import (
 	"context"
-	"douyin/pkg/comment/common/xerr"
+	"douyin/common/xerr"
 	"douyin/pkg/comment/rpc/usercomment"
-	"douyin/pkg/userinfo-demo/rpc/types/userinfo"
+	"douyin/pkg/user/rpc/userservice"
+	"fmt"
 
 	"douyin/pkg/comment/api/internal/svc"
 	"douyin/pkg/comment/api/internal/types"
@@ -27,7 +28,7 @@ func NewGetCommentListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetCommentListLogic) GetCommentList(req *types.CommentListReq) (resp *types.CommentListRes, err error) {
-	// 调用rpc 更新user_comment表
+	fmt.Printf(":::::::::::::::::::::::::::::::::::::::::::::::")
 	allCommentInfoData, err := l.svcCtx.UserCommentRpc.GetVideoComment(l.ctx, &usercomment.GetVideoCommentReq{
 		VideoId: req.VideoId,
 	})
@@ -46,7 +47,9 @@ func (l *GetCommentListLogic) GetCommentList(req *types.CommentListReq) (resp *t
 		comment.CommentId = v.CommentId
 		comment.Content = v.Content
 		comment.CreateTime = v.CreateDate
-		userInfoResult, err := l.svcCtx.UserInfoRpc.GetUser(l.ctx, &userinfo.UserinfoRequest{UserId: string(v.UserId)})
+		userInfoResult, err := l.svcCtx.UserRpc.Info(l.ctx, &userservice.UserInfoReq{
+			UserId: v.UserId,
+		})
 		if err != nil {
 			logx.Errorf("UserCommentList->userInfoRpc  err : %v , val : %s , message:%+v", err)
 			return &types.CommentListRes{
@@ -58,8 +61,8 @@ func (l *GetCommentListLogic) GetCommentList(req *types.CommentListReq) (resp *t
 		}
 
 		var user = types.User{
-			UserId:        1,
-			UserName:      userInfoResult.User.Name,
+			UserId:        userInfoResult.User.UserId,
+			UserName:      userInfoResult.User.UserName,
 			FollowCount:   userInfoResult.User.FollowCount,
 			FollowerCount: userInfoResult.User.FollowerCount,
 			IsFollow:      false,

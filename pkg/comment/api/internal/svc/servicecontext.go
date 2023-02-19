@@ -4,7 +4,7 @@ import (
 	"douyin/pkg/comment/api/internal/config"
 	"douyin/pkg/comment/api/internal/middleware"
 	"douyin/pkg/comment/rpc/usercomment"
-	"douyin/pkg/userinfo-demo/rpc/userinfoclient"
+	"douyin/pkg/user/rpc/userservice"
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -12,7 +12,7 @@ import (
 
 type ServiceContext struct {
 	Config                config.Config
-	UserInfoRpc           userinfoclient.Userinfo
+	UserRpc               userservice.UserService
 	UserCommentRpc        usercomment.UserComment
 	CommentOptMsgProducer *kq.Pusher
 	AuthJWT               rest.Middleware
@@ -22,7 +22,7 @@ type ServiceContext struct {
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:                c,
-		UserInfoRpc:           userinfoclient.NewUserinfo(zrpc.MustNewClient(c.UserInfoRpc)),
+		UserRpc:               userservice.NewUserService(zrpc.MustNewClient(c.UserRpc)),
 		CommentOptMsgProducer: kq.NewPusher(c.UserCommentOptServiceConf.Brokers, c.UserCommentOptServiceConf.Topic),
 		UserCommentRpc:        usercomment.NewUserComment(zrpc.MustNewClient(c.UserCommentRpc)),
 		AuthJWT:               middleware.NewAuthJWTMiddleware().Handle,

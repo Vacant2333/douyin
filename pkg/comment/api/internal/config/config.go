@@ -9,7 +9,7 @@ import (
 type Config struct {
 	rest.RestConf
 	// rpc
-	UserInfoRpc    zrpc.RpcClientConf
+	UserRpc        zrpc.RpcClientConf
 	UserCommentRpc zrpc.RpcClientConf
 	// kq
 	UserCommentOptServiceConf kq.KqConf

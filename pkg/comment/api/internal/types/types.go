@@ -74,7 +74,7 @@ type FollowerListRes struct {
 }
 
 type CommentListReq struct {
-	Token   string `form:"token" validate:"required,numeric"`
+	Token   string `form:"token" validate:"required"`
 	VideoId int64  `form:"video_id" validate:"required"`
 }
 

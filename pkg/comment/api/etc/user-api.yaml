@@ -10,11 +10,11 @@ UserCommentRpc:
     Hosts:
       - 127.0.0.1:2379
     Key: usercomment.rpc
-UserInfoRpc:
+UserRpc:
   Etcd:
     Hosts:
       - 127.0.0.1:2379
-    Key: userinfo.rpc
+    Key: user.rpc
 
 # kq
 UserCommentOptServiceConf:

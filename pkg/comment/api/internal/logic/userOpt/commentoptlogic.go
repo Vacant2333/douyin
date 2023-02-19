@@ -2,12 +2,14 @@ package userOpt
 
 import (
 	"context"
+	"douyin/common/help/sensitiveWords"
+	myToken "douyin/common/help/token"
+	"douyin/common/messageTypes"
+	"douyin/common/xerr"
 	"douyin/pkg/comment/api/internal/types"
-	"douyin/pkg/comment/common/help/sensitiveWords"
-	"douyin/pkg/comment/common/messageTypes"
-	"douyin/pkg/comment/common/xerr"
-	"douyin/pkg/userinfo-demo/rpc/types/userinfo"
+	"douyin/pkg/user/rpc/userservice"
 	"encoding/json"
+	"fmt"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 	"time"
@@ -52,7 +54,8 @@ func (l *CommentOptLogic) CommentOpt(req *types.CommentOptReq) (resp *types.Comm
 
 	if req.ActionType == 1 {
 		// 调用user-info rpc拉取发布消息的用户信息
-		userInfoResult, err := l.svcCtx.UserInfoRpc.GetUser(l.ctx, &userinfo.UserinfoRequest{UserId: "1"})
+		var userId = l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)
+		userInfoResult, err := l.svcCtx.UserRpc.Info(l.ctx, &userservice.UserInfoReq{UserId: userId})
 		if err != nil {
 			logx.Errorf("UserCommentOpt->userInfoRpc  err : %v , val : %s , message:%+v", err)
 			return &types.CommentOptRes{
@@ -64,8 +67,8 @@ func (l *CommentOptLogic) CommentOpt(req *types.CommentOptReq) (resp *types.Comm
 		}
 
 		var user = types.User{
-			UserId:        1,
-			UserName:      userInfoResult.User.Name,
+			UserId:        l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64),
+			UserName:      userInfoResult.User.UserName,
 			FollowCount:   userInfoResult.User.FollowCount,
 			FollowerCount: userInfoResult.User.FollowerCount,
 			IsFollow:      false,
@@ -100,18 +103,19 @@ func (l *CommentOptLogic) CommentOpt(req *types.CommentOptReq) (resp *types.Comm
 func (l *CommentOptLogic) getActionType(req *types.CommentOptReq) (*messageTypes.UserCommentOptMessage, *types.CommentOptRes, error) {
 	var msgTemp messageTypes.UserCommentOptMessage
 	_ = copier.Copy(&msgTemp, req)
+	fmt.Printf("userid:::::::%v", l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64))
 
 	switch req.ActionType { // 方便扩展
 	case messageTypes.ActionADD:
 		//敏感词过滤
 		msgTemp.CommentText = sensitiveWords.SensitiveWordsFliter(sensitiveWords.SensitiveWords, msgTemp.CommentText, '?')
-		msgTemp.UserId = 1
+		msgTemp.UserId = l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)
 		//l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)
 		msgTemp.CreateDate = time.Now().Format("01-01")
 		msgTemp.ActionType = messageTypes.ActionADD
 
 	case messageTypes.ActionCancel:
-		msgTemp.UserId = 1
+		msgTemp.UserId = l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)
 		//l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)
 		msgTemp.ActionType = messageTypes.ActionCancel
 	default:

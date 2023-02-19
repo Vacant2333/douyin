@@ -26,6 +26,7 @@ uyin-comment -image douyin-comment-api:v1 -o douyin-comment-api.yaml -port 8888 
 kubectl apply -f .\douyin-comment-rpc.yaml
 kubectl apply -f .\douyin-comment-api.yaml
 
-
+kind load docker-image douyin-comment-rpc:v1 --name douyin
+kind load docker-image douyin-comment-api:v1 --name douyin
 
 

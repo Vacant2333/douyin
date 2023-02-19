@@ -4,6 +4,7 @@ import (
 	"context"
 	"douyin/pkg/comment/rpc/internal/svc"
 	"douyin/pkg/comment/rpc/userCommentPb"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,6 +24,7 @@ func NewGetVideoCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 
 // GetVideoComment -----------------------userCommentList-----------------------
 func (l *GetVideoCommentLogic) GetVideoComment(in *userCommentPb.GetVideoCommentReq) (*userCommentPb.GetVideoCommentReqResp, error) {
+	fmt.Printf(":::::::::::::::::::::::::::::::::::::::::::::::")
 	allCommentInfoData, err := l.svcCtx.UserCommentModel.FindAll(l.ctx, in.VideoId)
 
 	if err != nil {

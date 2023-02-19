@@ -1,7 +1,7 @@
 package userOpt
 
 import (
-	"douyin/pkg/comment/common/xerr"
+	"douyin/common/xerr"
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"net/http"
