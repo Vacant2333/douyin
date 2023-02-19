@@ -16,7 +16,7 @@ RUN go mod download
 # 构建镜像报错 package pkg/comment/rpc/usercomment.go is not in GOROOT (/usr/local/go/src/pkg/comment/rpc/usercomment.go)
 # 解决 部分文件路上上添加usr/local/go/src/douyin 如下
 COPY /pkg/comment/api /usr/local/go/src/douyin/pkg/comment/api
-COPY /pkg/comment/common /usr/local/go/src/douyin/pkg/comment/common
+COPY /common /usr/local/go/src/douyin/pkg/comment/common
 COPY /pkg/comment/rpc /usr/local/go/src/douyin/pkg/comment/rpc
 COPY /pkg/comment/rpc/etc /app/etc
 RUN go build -ldflags="-s -w" -o /app/usercomment /usr/local/go/src/douyin/pkg/comment/rpc/usercomment.go

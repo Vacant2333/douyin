@@ -14,7 +14,7 @@ ADD ../../../go.mod .
 ADD ../../../go.sum .
 RUN go mod download
 COPY ../../../pkg/comment/api /usr/local/go/src/douyin/pkg/comment/api
-COPY ../../../pkg/comment/common /usr/local/go/src/douyin/pkg/comment/common
+COPY ../../../common /usr/local/go/src/douyin/pkg/comment/common
 COPY ../../../pkg/comment/rpc /usr/local/go/src/douyin/pkg/comment/rpc
 COPY ../../../pkg/comment/api/etc /app/etc
 RUN go build -ldflags="-s -w" -o /app/user /usr/local/go/src/douyin/pkg/comment/api/user.go
