@@ -2,8 +2,8 @@
 syntax = "v1"
 
 info(
-	author: "babysite"
-	date:   "2023-02-18"
+	author: "healer"
+	date:   "2022-6-7"
 )
 
 //  common 请求
@@ -17,7 +17,11 @@ type IdWithTokenReq {
 	Token  string `form:"token"`
 }
 
-
+// common 返回
+type Status {
+	Code int64  `json:"status_code"`
+	Msg  string `json:"status_msg,omitempty"`
+}
 
 type IdWithTokenRes {
 	UserId int64  `json:"user_id,omitempty"`
@@ -49,11 +53,11 @@ type (
 
 // 用户信息
 type User {
-	UserId        int64  `json:"id"`
-	UserName      string `json:"name"`
-	FollowCount   int64  `json:"follow_count"`
-	FollowerCount int64  `json:"follower_count"`
-	IsFollow      bool   `json:"is_follow"`
+	UserId           int64  `json:"id"`
+	UserName         string `json:"name"`
+	FollowCount   	 int64  `json:"follow_count"`
+	FollowerCount 	 int64  `json:"follower_count"`
+	IsFollow      	 bool   `json:"is_follow"`
 }
 
 type (

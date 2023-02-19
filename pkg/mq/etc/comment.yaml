@@ -1,0 +1,50 @@
+Name: comment-mq
+Host: 0.0.0.0
+Port: 3001
+Mode: dev
+
+#kq
+UserCommentOptServiceConf:
+  Name: UserCommentOptService
+  Brokers:
+    - 127.0.0.1:9092
+  Group: UserCommentOptService-group
+  Topic: UserCommentOptService-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1
+
+UserFavoriteOptServiceConf:
+  Name: UserFavoriteOptService
+  Brokers:
+    - 127.0.0.1:9092
+  Group: UserFavoriteOptService-group
+  Topic: UserFavoriteOptService-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1
+#rpc
+UserCommentRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: usercomment.rpc
+    NonBlock: true
+
+UserInfoRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: userinfo.rpc
+    NonBlock: true
+
+UserFavoriteRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: useropt.rpc
+
+RedisCacheConf:
+  Host: localhost:6379
+  Pass: 
+

@@ -1,0 +1,25 @@
+Name: user-api
+Host: 0.0.0.0
+Port: 8888
+
+UserFavoriteRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: useropt.rpc
+
+UserRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpc
+
+UserFavoriteOptServiceConf:
+  Name: UserFavoriteOptService
+  Brokers:
+    - 127.0.0.1:9092
+  Group: UserFavoriteOptService-group
+  Topic: UserFavoriteOptService-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1
