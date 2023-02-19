@@ -5,12 +5,18 @@ install-cluster:
 	kind delete cluster --name douyin
 	kind create cluster --config deployment/cluster/douyin-cluster.yaml
 
+
 # Deploy MinIO Service
 install-minio:
 	-kubectl delete ns minio
 	helm repo add minio https://charts.min.io/
 	kubectl create ns minio
 	helm install minio minio/minio -f deployment/minio/minio.yaml -n minio
+
+# Forward MinIO's console service(web)
+forward-minio-console:
+	kubectl port-forward -n minio svc/minio-console 9001:9001
+
 
 # Deploy Etcd service, you must install it before use rpc
 install-etcd:
@@ -19,10 +25,15 @@ install-etcd:
 	kubectl create ns etcd
 	helm install etcd etcd/etcd --set replicaCount=2 -n etcd
 
-# Forward MinIO's console service(web)
-forward-minio-console:
-	@echo Forwarding MinIO console service, visit it from http://localhost:9001
-	kubectl port-forward -n minio svc/minio-console 9001:9001
+
+install-kafka:
+	-kubectl delete ns kafka
+	helm repo add bitnami https://charts.bitnami.com/bitnami
+	kubectl create ns kafka
+	helm install kafka bitnami/kafka -n kafka --set replicaCount=2
+
+forward-kafka:
+	kubectl port-forward -n kafka svc/kafka 9092:9092
 
 # Demo pkg
 buildx-demo:
@@ -33,11 +44,12 @@ buildx-demo:
 install-demo:
 	-kubectl delete ns demo
 	kind load docker-image douyin/demo:nightly --name douyin
-	-kubectl create ns demo
+	kubectl create ns demo
 	kubectl apply -f deployment/demo/demo.yaml
 
 forward-demo:
 	kubectl port-forward -n demo service/demo 8000:80
+
 
 # Userinfo-rpc/api Demo
 build-userinfo-demo:
@@ -52,7 +64,7 @@ install-userinfo-demo:
 	-kubectl delete ns userinfo-demo
 	kind load docker-image douyin/userinfo-demo-api:nightly --name douyin
 	kind load docker-image douyin/userinfo-demo-rpc:nightly --name douyin
-	-kubectl create ns userinfo-demo
+	kubectl create ns userinfo-demo
 	kubectl apply -f deployment/userinfo-demo/userinfo-demo.yaml
 
 forward-userinfo-demo:
@@ -65,13 +77,19 @@ build-proto-minio-client:
 
 
 
-
-
-
-
 # Install dependence
 install-protoc-gen-go:
 	go get -u google.golang.org/protobuf/cmd/protoc-gen-go
 	go install google.golang.org/protobuf/cmd/protoc-gen-go
 	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+
+# Deploy nfs -> Declare nfs pv -> Inject sql scheme -> Deploy mysql
+nfs-init-service:
+	kubectl apply -f deployment/nfs/nfs-deploy.yaml  
+	kubectl apply -f deployment/nfs/nfs-pvx.yaml  
+mysql-init-service: init-nfs-service
+	kubectl apply -f deployment/mysql/mysql-scheme.yaml
+	kubectl apply -f deployment/mysql/mysql-deploy.yaml
+mysql-regenerate-codes:
+	go run cmd/mysql-gen/gen.go
