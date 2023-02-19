@@ -15,6 +15,7 @@ func KqMqs(c config.Config, ctx context.Context, svcContext *svc.ServiceContext)
 	return []service.Service{
 		//Listening for changes in consumption flow status
 		kq.MustNewQueue(c.UserCommentOptServiceConf, kqMq.NewUserCommentUpdateMq(ctx, svcContext)),
+		kq.MustNewQueue(c.UserFavoriteOptServiceConf, kqMq.NewUserFavoriteUpdateMq(ctx, svcContext)),
 		//.....
 	}
 

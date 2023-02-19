@@ -34,7 +34,7 @@ func (l *UpdateCommentStatusLogic) UpdateCommentStatus(in *userCommentPb.UpdateC
 	switch in.ActionType {
 	//新增评论
 	case messageTypes.ActionADD:
-
+		// Todo 更新返回字段
 		commentModel.UserId = in.UserId
 		commentModel.VideoId = in.VideoId
 		commentModel.Content = in.Content

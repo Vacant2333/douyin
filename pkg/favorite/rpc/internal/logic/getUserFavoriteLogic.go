@@ -42,6 +42,7 @@ func (l *GetUserFavoriteLogic) GetUserFavorite(in *userOptPb.GetUserFavoriteReq)
 			logx.Errorf("GetFavoriteList------->SELECT err : %s", err.Error())
 			return &userOptPb.GetUserFavoriteResp{}, err
 		}
+		favorite.UserId = v.UserId
 		favorite.PlayUrl = videoInfoData.PlayUrl
 		favorite.Title = videoInfoData.Title
 		favorite.VideoId = videoInfoData.Id

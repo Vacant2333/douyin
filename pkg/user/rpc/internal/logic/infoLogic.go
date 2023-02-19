@@ -35,12 +35,23 @@ func (l *InfoLogic) Info(in *userInfoPb.UserInfoReq) (*userInfoPb.UserInfoResp, 
 	// 统计关注数和粉丝数
 	followNum, err := l.svcCtx.FollowModel.CountByFollowRelation(l.ctx, in.UserId, "fun_id")
 	followerNum, err := l.svcCtx.FollowModel.CountByFollowRelation(l.ctx, in.UserId, "user_id")
+	// 统计视频数
+	workCount, err := l.svcCtx.FavoriteModel.FindAllByUserId(l.ctx, in.UserId)
+
+	// 统计关注情况
+	favoriteCount, err := l.svcCtx.FavoriteModel.FindAllByUserId(l.ctx, in.UserId)
 
 	var user userInfoPb.User
 	user.FollowCount = followNum
 	user.FollowerCount = followerNum
 	user.UserId = userInfo.Id
 	user.UserName = userInfo.Username
+	user.Avatar = userInfo.Avatar
+	user.BackgroundImage = userInfo.BackgroundImage
+	user.Signature = userInfo.Signature
+	user.FavoriteCount = favoriteCount
+	user.WorkCount = workCount
+	user.TotalFavorited = "测试"
 
 	return &userInfoPb.UserInfoResp{
 		User: &user,

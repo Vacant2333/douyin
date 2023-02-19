@@ -1,6 +1,7 @@
 package svc
 
 import (
+	"douyin/pkg/comment/rpc/usercomment"
 	"douyin/pkg/favorite/api/internal/config"
 	"douyin/pkg/favorite/api/internal/middleware"
 	"douyin/pkg/favorite/rpc/useroptservice"
@@ -15,6 +16,7 @@ type ServiceContext struct {
 	AuthJWT                rest.Middleware
 	IsLogin                rest.Middleware
 	UserFavoriteRpc        useroptservice.UserOptService
+	UserCommentRpc         usercomment.UserComment
 	UserRpc                userservice.UserService
 	FavoriteOptMsgProducer *kq.Pusher
 }
@@ -27,5 +29,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		FavoriteOptMsgProducer: kq.NewPusher(c.UserFavoriteOptServiceConf.Brokers, c.UserFavoriteOptServiceConf.Topic),
 		UserFavoriteRpc:        useroptservice.NewUserOptService(zrpc.MustNewClient(c.UserFavoriteRpc)),
 		UserRpc:                userservice.NewUserService(zrpc.MustNewClient(c.UserRpc)),
+		UserCommentRpc:         usercomment.NewUserComment(zrpc.MustNewClient(c.UserCommentRpc)),
 	}
 }

@@ -15,20 +15,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.AuthJWT},
 			[]rest.Route{
-				{
-					Method:  http.MethodPost,
-					Path:    "/favorite/action",
-					Handler: userOpt.FavoriteOptHandler(serverCtx),
-				},
+
 				{
 					Method:  http.MethodPost,
 					Path:    "/comment/action",
 					Handler: userOpt.CommentOptHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodPost,
-					Path:    "/relation/action",
-					Handler: userOpt.FollowOptHandler(serverCtx),
 				},
 			}...,
 		),
@@ -39,25 +30,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		rest.WithMiddlewares(
 			[]rest.Middleware{serverCtx.AuthJWT},
 			[]rest.Route{
-				{
-					Method:  http.MethodGet,
-					Path:    "/favorite/list",
-					Handler: userOpt.GetFavoriteListHandler(serverCtx),
-				},
+
 				{
 					Method:  http.MethodGet,
 					Path:    "/comment/list",
 					Handler: userOpt.GetCommentListHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/relation/follow/list",
-					Handler: userOpt.GetFollowListHandler(serverCtx),
-				},
-				{
-					Method:  http.MethodGet,
-					Path:    "/relation/follower/list",
-					Handler: userOpt.GetFollowerListHandler(serverCtx),
 				},
 			}...,
 		),

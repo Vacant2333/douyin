@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserOptServiceClient interface {
-	// -----------------------userFavoriteList-----------------------
+	//-----------------------userFavoriteList-----------------------
 	GetUserFavorite(ctx context.Context, in *GetUserFavoriteReq, opts ...grpc.CallOption) (*GetUserFavoriteResp, error)
 	UpdateFavoriteStatus(ctx context.Context, in *UpdateFavoriteStatusReq, opts ...grpc.CallOption) (*UpdateFavoriteStatusResp, error)
 }
@@ -57,7 +57,7 @@ func (c *userOptServiceClient) UpdateFavoriteStatus(ctx context.Context, in *Upd
 // All implementations must embed UnimplementedUserOptServiceServer
 // for forward compatibility
 type UserOptServiceServer interface {
-	// -----------------------userFavoriteList-----------------------
+	//-----------------------userFavoriteList-----------------------
 	GetUserFavorite(context.Context, *GetUserFavoriteReq) (*GetUserFavoriteResp, error)
 	UpdateFavoriteStatus(context.Context, *UpdateFavoriteStatusReq) (*UpdateFavoriteStatusResp, error)
 	mustEmbedUnimplementedUserOptServiceServer()

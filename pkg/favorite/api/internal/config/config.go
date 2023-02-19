@@ -10,6 +10,7 @@ type Config struct {
 	rest.RestConf
 	UserFavoriteRpc zrpc.RpcClientConf
 	UserRpc         zrpc.RpcClientConf
+	UserCommentRpc  zrpc.RpcClientConf
 
 	// kq
 	UserFavoriteOptServiceConf kq.KqConf

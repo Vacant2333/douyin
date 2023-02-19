@@ -44,11 +44,17 @@ func (l *UserInfoLogic) UserInfo(req *types.UserInfoReq) (resp *types.UserInfoRe
 			Code: xerr.OK,
 		},
 		User: &types.User{
-			UserId:        info.User.UserId,
-			UserName:      info.User.UserName,
-			FollowCount:   info.User.FollowCount,
-			FollowerCount: info.User.FollowerCount,
-			IsFollow:      false,
+			UserId:          info.User.UserId,
+			UserName:        info.User.UserName,
+			FollowCount:     info.User.FollowCount,
+			FollowerCount:   info.User.FollowerCount,
+			IsFollow:        false,
+			Avatar:          info.User.Avatar,
+			BackgroundImage: info.User.BackgroundImage,
+			Signature:       info.User.Signature,
+			TotalFavorited:  info.User.TotalFavorited,
+			WorkCount:       info.User.WorkCount,
+			FavoriteCount:   info.User.FavoriteCount,
 		},
 	}, nil
 

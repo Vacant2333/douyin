@@ -45,8 +45,11 @@ func (l *RegisterLogic) Register(in *userInfoPb.RegisterReq) (*userInfoPb.Regist
 		return nil, err
 	}
 	res, err := l.svcCtx.UserModel.Insert(l.ctx, &model.User{
-		Username: in.UserName,
-		Password: string(bytes),
+		Username:        in.UserName,
+		Password:        string(bytes),
+		Avatar:          "https://www.shunvzhi.com/uploads/allimg/180731/1TF952E-3.jpg",
+		BackgroundImage: "https://inews.gtimg.com/newsapp_bt/0/13250363674/1000.jpg",
+		Signature:       "打工魂",
 	})
 	if err != nil {
 		logx.Errorf("insert user failed, err: %s", err.Error())

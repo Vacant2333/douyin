@@ -4,6 +4,7 @@ import (
 	"douyin/pkg/mq/internal/config"
 	"douyin/pkg/mq/internal/listen"
 	"flag"
+	"fmt"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -24,7 +25,7 @@ func main() {
 
 	serviceGroup := service.NewServiceGroup()
 	defer serviceGroup.Stop()
-
+	fmt.Printf("mq   start.......................")
 	for _, mq := range listen.Mqs(c) {
 		serviceGroup.Add(mq)
 	}

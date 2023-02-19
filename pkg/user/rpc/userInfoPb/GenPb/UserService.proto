@@ -30,6 +30,14 @@ message User {
   string userName = 2; //name
   int64 followCount = 3; //followCount
   int64 followerCount = 4; //followerCount
+  string avatar=5;
+  string backgroundImage=6;
+  string signature=7;
+  int64 workCount=8;
+  string totalFavorited=9;
+  int64  favorite_count=10;
+
+
 }
 
 message UserInfoReq {

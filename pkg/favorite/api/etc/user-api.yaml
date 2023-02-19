@@ -1,7 +1,13 @@
 Name: user-api
 Host: 0.0.0.0
-Port: 8888
+Port: 8887
 
+
+UserCommentRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: usercomment.rpc
 UserFavoriteRpc:
   Etcd:
     Hosts:

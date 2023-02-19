@@ -31,6 +31,7 @@ message Favorite{
   string cover_url = 3;
   string title = 4;
   int64  author_id = 5;
+  int64  user_id=6;
 }
 
 message GetUserFavoriteResp {
