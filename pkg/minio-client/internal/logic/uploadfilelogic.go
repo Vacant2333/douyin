@@ -4,8 +4,6 @@ import (
 	"bytes"
 	"context"
 	"douyin/pkg/logger"
-	"github.com/minio/minio-go/v7"
-
 	"douyin/pkg/minio-client/internal/svc"
 	"douyin/pkg/minio-client/types/minio-client"
 
@@ -27,27 +25,33 @@ func NewUploadFileLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upload
 }
 
 func (l *UploadFileLogic) UploadFile(in *minio_client.UploadFileRequest) (*minio_client.UploadFileReply, error) {
-	client := MakeMinIOClient()
+	pngFrame, err := getVideoFrame(in.Data, 1)
+	if err != nil {
+		logger.Fatalf("Fail to get video frame, err: %v", err)
+		return nil, err
+	}
+
+	client := makeMinIOClient()
 	bucket := "douyin"
-	if in.Data == nil {
+	if in.Data == nil || in.Title == "" {
 		logger.Fatal("UploadFile's parameter cant be nil")
 		panic("UploadFile's parameter cant be nil")
 	}
-	// Read file's content
-	reader := bytes.NewReader(in.Data)
-	fileName := "test"
-	// Upload file
-	_, err := client.PutObject(context.Background(),
-		bucket, fileName, reader, reader.Size(),
-		minio.PutObjectOptions{ContentType: "application/octet-stream"})
+
+	videoUrl, err := uploadFile(client, bytes.NewReader(in.Data), in.Title+".mp4", bucket, "")
 	if err != nil {
-		logger.Fatalf("Upload object error: %v", err.Error())
-		return &minio_client.UploadFileReply{
-			Success: false,
-		}, err
+		logger.Fatalf("Fail to upload video file, err: %v", err)
+		return nil, err
 	}
-	logger.InfoF("Upload file success, fileName: %v len: %v bytes", fileName, reader.Size())
+	frameUrl, err := uploadFile(client, pngFrame, in.Title+".png", bucket, "")
+	if err != nil {
+		logger.Fatalf("Fail to upload frame file, err: %v, err")
+		return nil, err
+	}
+
 	return &minio_client.UploadFileReply{
-		Success: true,
+		Success:     true,
+		VideoUrl:    videoUrl,
+		FrontImgUrl: frameUrl,
 	}, nil
 }
