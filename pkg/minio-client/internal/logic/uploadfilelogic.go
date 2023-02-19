@@ -41,12 +41,12 @@ func (l *UploadFileLogic) UploadFile(in *minio_client.UploadFileRequest) (*minio
 		bucket, fileName, reader, reader.Size(),
 		minio.PutObjectOptions{ContentType: "application/octet-stream"})
 	if err != nil {
-		logger.Fatalf("Upload object error:%v", err.Error())
+		logger.Fatalf("Upload object error: %v", err.Error())
 		return &minio_client.UploadFileReply{
 			Success: false,
 		}, err
 	}
-	logger.InfoF("Upload file success, fileName:%v len:%v", fileName, reader.Size())
+	logger.InfoF("Upload file success, fileName: %v len: %v bytes", fileName, reader.Size())
 	return &minio_client.UploadFileReply{
 		Success: true,
 	}, nil

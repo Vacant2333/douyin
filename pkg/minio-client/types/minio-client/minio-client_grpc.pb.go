@@ -18,86 +18,86 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// UploadFileClient is the client API for UploadFile service.
+// MinIOClientClient is the client API for MinIOClient service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type UploadFileClient interface {
+type MinIOClientClient interface {
 	UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileReply, error)
 }
 
-type uploadFileClient struct {
+type minIOClientClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewUploadFileClient(cc grpc.ClientConnInterface) UploadFileClient {
-	return &uploadFileClient{cc}
+func NewMinIOClientClient(cc grpc.ClientConnInterface) MinIOClientClient {
+	return &minIOClientClient{cc}
 }
 
-func (c *uploadFileClient) UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileReply, error) {
+func (c *minIOClientClient) UploadFile(ctx context.Context, in *UploadFileRequest, opts ...grpc.CallOption) (*UploadFileReply, error) {
 	out := new(UploadFileReply)
-	err := c.cc.Invoke(ctx, "/minio_client.UploadFile/UploadFile", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/minio_client.MinIOClient/UploadFile", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// UploadFileServer is the server API for UploadFile service.
-// All implementations must embed UnimplementedUploadFileServer
+// MinIOClientServer is the server API for MinIOClient service.
+// All implementations must embed UnimplementedMinIOClientServer
 // for forward compatibility
-type UploadFileServer interface {
+type MinIOClientServer interface {
 	UploadFile(context.Context, *UploadFileRequest) (*UploadFileReply, error)
-	mustEmbedUnimplementedUploadFileServer()
+	mustEmbedUnimplementedMinIOClientServer()
 }
 
-// UnimplementedUploadFileServer must be embedded to have forward compatible implementations.
-type UnimplementedUploadFileServer struct {
+// UnimplementedMinIOClientServer must be embedded to have forward compatible implementations.
+type UnimplementedMinIOClientServer struct {
 }
 
-func (UnimplementedUploadFileServer) UploadFile(context.Context, *UploadFileRequest) (*UploadFileReply, error) {
+func (UnimplementedMinIOClientServer) UploadFile(context.Context, *UploadFileRequest) (*UploadFileReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UploadFile not implemented")
 }
-func (UnimplementedUploadFileServer) mustEmbedUnimplementedUploadFileServer() {}
+func (UnimplementedMinIOClientServer) mustEmbedUnimplementedMinIOClientServer() {}
 
-// UnsafeUploadFileServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to UploadFileServer will
+// UnsafeMinIOClientServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to MinIOClientServer will
 // result in compilation errors.
-type UnsafeUploadFileServer interface {
-	mustEmbedUnimplementedUploadFileServer()
+type UnsafeMinIOClientServer interface {
+	mustEmbedUnimplementedMinIOClientServer()
 }
 
-func RegisterUploadFileServer(s grpc.ServiceRegistrar, srv UploadFileServer) {
-	s.RegisterService(&UploadFile_ServiceDesc, srv)
+func RegisterMinIOClientServer(s grpc.ServiceRegistrar, srv MinIOClientServer) {
+	s.RegisterService(&MinIOClient_ServiceDesc, srv)
 }
 
-func _UploadFile_UploadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MinIOClient_UploadFile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UploadFileRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UploadFileServer).UploadFile(ctx, in)
+		return srv.(MinIOClientServer).UploadFile(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/minio_client.UploadFile/UploadFile",
+		FullMethod: "/minio_client.MinIOClient/UploadFile",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UploadFileServer).UploadFile(ctx, req.(*UploadFileRequest))
+		return srv.(MinIOClientServer).UploadFile(ctx, req.(*UploadFileRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// UploadFile_ServiceDesc is the grpc.ServiceDesc for UploadFile service.
+// MinIOClient_ServiceDesc is the grpc.ServiceDesc for MinIOClient service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var UploadFile_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "minio_client.UploadFile",
-	HandlerType: (*UploadFileServer)(nil),
+var MinIOClient_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "minio_client.MinIOClient",
+	HandlerType: (*MinIOClientServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "UploadFile",
-			Handler:    _UploadFile_UploadFile_Handler,
+			Handler:    _MinIOClient_UploadFile_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -7,7 +7,7 @@ import (
 	"douyin/pkg/minio-client/internal/config"
 	"douyin/pkg/minio-client/internal/server"
 	"douyin/pkg/minio-client/internal/svc"
-	"douyin/pkg/minio-client/types/userinfo"
+	"douyin/pkg/minio-client/types/minio-client"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
@@ -26,7 +26,7 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		userinfo.RegisterUserinfoServer(grpcServer, server.NewUserinfoServer(ctx))
+		minio_client.RegisterMinIOClientServer(grpcServer, server.NewMinIOClientServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)
