@@ -69,3 +69,15 @@ install-userinfo-demo:
 
 forward-userinfo-demo:
 	kubectl port-forward -n userinfo-demo svc/userinfo-demo 30001:8888
+
+
+
+# Deploy nfs -> Declare nfs pv -> Inject sql scheme -> Deploy mysql
+nfs-init-service:
+	kubectl apply -f deployment/nfs/nfs-deploy.yaml  
+	kubectl apply -f deployment/nfs/nfs-pvx.yaml  
+mysql-init-service: init-nfs-service
+	kubectl apply -f deployment/mysql/mysql-scheme.yaml
+	kubectl apply -f deployment/mysql/mysql-deploy.yaml
+mysql-regenerate-codes:
+	go run cmd/mysql-gen/gen.go

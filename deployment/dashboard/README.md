@@ -1,3 +1,5 @@
+# kubernets dashboard
+
 ## Install Kubernetes-Dashboard
 
 ```bash
@@ -25,4 +27,3 @@ echo Visit the dashboard https://127.0.0.1:8443/ by your token:
 cat token.txt
 kubectl -n dashboard port-forward $POD_NAME 8443:8443
 ```
-
