@@ -4,12 +4,12 @@ package handler
 import (
 	"net/http"
 
-	feed "douyin/pkg/gateway/api/internal/handler/feed"
-	message "douyin/pkg/gateway/api/internal/handler/message"
-	publish "douyin/pkg/gateway/api/internal/handler/publish"
-	user "douyin/pkg/gateway/api/internal/handler/user"
-	userOpt "douyin/pkg/gateway/api/internal/handler/userOpt"
-	"douyin/pkg/gateway/api/internal/svc"
+	feed "douyin/pkg/gateway/internal/handler/feed"
+	message "douyin/pkg/gateway/internal/handler/message"
+	publish "douyin/pkg/gateway/internal/handler/publish"
+	user "douyin/pkg/gateway/internal/handler/user"
+	userOpt "douyin/pkg/gateway/internal/handler/userOpt"
+	"douyin/pkg/gateway/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
