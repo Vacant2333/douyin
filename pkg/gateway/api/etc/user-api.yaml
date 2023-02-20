@@ -1,0 +1,45 @@
+Name: user-api
+Host: 0.0.0.0
+Port: 8888
+Mode: dev
+
+UserCommentRpc:
+  # 踩坑 goctl生成的服务名会自动加上-svc后缀 因此创建yaml文件时 --name 参数不要加-svc
+  #Target: k8s://douyin-comment/comment-rpc-svc:8081
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: usercomment.rpc
+UserRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: user.rpcc
+UserFavoriteRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: useropt.rpc
+
+# kq
+UserCommentOptServiceConf:
+  Name: UserCommentOptService
+  Brokers:
+    - 127.0.0.1:9092
+  Group: UserCommentOptService-group
+  Topic: UserCommentOptService-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1
+
+UserFavoriteOptServiceConf:
+  Name: UserFavoriteOptService
+  Brokers:
+    - 127.0.0.1:9092
+  Group: UserFavoriteOptService-group
+  Topic: UserFavoriteOptService-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1
+
+
