@@ -2,12 +2,14 @@
 package handler
 
 import (
-	"douyin/pkg/gateway/api/internal/handler/feed"
-	publish2 "douyin/pkg/gateway/api/internal/handler/publish"
-	user2 "douyin/pkg/gateway/api/internal/handler/user"
-	userOpt2 "douyin/pkg/gateway/api/internal/handler/userOpt"
-	"douyin/pkg/gateway/api/internal/svc"
 	"net/http"
+
+	feed "douyin/pkg/gateway/api/internal/handler/feed"
+	message "douyin/pkg/gateway/api/internal/handler/message"
+	publish "douyin/pkg/gateway/api/internal/handler/publish"
+	user "douyin/pkg/gateway/api/internal/handler/user"
+	userOpt "douyin/pkg/gateway/api/internal/handler/userOpt"
+	"douyin/pkg/gateway/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -20,17 +22,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodPost,
 					Path:    "/favorite/action",
-					Handler: userOpt2.FavoriteOptHandler(serverCtx),
+					Handler: userOpt.FavoriteOptHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/comment/action",
-					Handler: userOpt2.CommentOptHandler(serverCtx),
+					Handler: userOpt.CommentOptHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
 					Path:    "/relation/action",
-					Handler: userOpt2.FollowOptHandler(serverCtx),
+					Handler: userOpt.FollowOptHandler(serverCtx),
 				},
 			}...,
 		),
@@ -44,22 +46,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/favorite/list",
-					Handler: userOpt2.GetFavoriteListHandler(serverCtx),
+					Handler: userOpt.GetFavoriteListHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/comment/list",
-					Handler: userOpt2.GetCommentListHandler(serverCtx),
+					Handler: userOpt.GetCommentListHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/relation/follow/list",
-					Handler: userOpt2.GetFollowListHandler(serverCtx),
+					Handler: userOpt.GetFollowListHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/relation/follower/list",
-					Handler: userOpt2.GetFollowerListHandler(serverCtx),
+					Handler: userOpt.GetFollowerListHandler(serverCtx),
 				},
 			}...,
 		),
@@ -71,12 +73,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/register",
-				Handler: user2.UserRegisterHandler(serverCtx),
+				Handler: user.UserRegisterHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/login",
-				Handler: user2.UserLoginHandler(serverCtx),
+				Handler: user.UserLoginHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/douyin/user"),
@@ -89,7 +91,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/",
-					Handler: user2.UserInfoHandler(serverCtx),
+					Handler: user.UserInfoHandler(serverCtx),
 				},
 			}...,
 		),
@@ -103,12 +105,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodPost,
 					Path:    "/action",
-					Handler: publish2.PublishVideoHandler(serverCtx),
+					Handler: publish.PublishVideoHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodGet,
 					Path:    "/list",
-					Handler: publish2.GetPublishVideoListHandler(serverCtx),
+					Handler: publish.GetPublishVideoListHandler(serverCtx),
 				},
 			}...,
 		),
@@ -127,5 +129,24 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/douyin/feed"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthJWT},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/message/action",
+					Handler: message.MessageHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/message/chat",
+					Handler: message.MessagelistHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/douyin"),
 	)
 }

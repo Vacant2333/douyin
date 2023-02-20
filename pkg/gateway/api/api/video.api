@@ -42,7 +42,7 @@ type GetPubVideoListRes {
 	prefix: /douyin/publish
 	middleware: AuthJWT
 )
-service user-api {
+service gateway-api {
 	@doc "发布视频"
 	@handler PublishVideo
 	post /action (PubVideoReq) returns (PubVideoRes)
@@ -68,7 +68,7 @@ type FeedVideoListRes {
 	prefix: /douyin/feed
 	middleware: IsLogin
 )
-service user-api {
+service gateway-api {
 	@doc "获取视频流"
 	@handler FeedVideoList
 	get / (FeedVideoListReq) returns (FeedVideoListRes)

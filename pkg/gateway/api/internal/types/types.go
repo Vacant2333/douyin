@@ -179,3 +179,33 @@ type FeedVideoListRes struct {
 	NextTime  int64       `json:"next_time,omitempty"`
 	VideoList []*PubVideo `json:"video_list,omitempty"`
 }
+
+type MessageReq struct {
+	Token      string `form:"token"`
+	ToUserId   int64  `form:"to_user_id"`
+	ActionType int64  `form:"action_type"`
+	Content    string `form:"content"`
+}
+
+type MessageRes struct {
+	Code int64  `json:"status_code"`
+	Msg  string `json:"status_msg,omitempty"`
+}
+
+type MessageListReq struct {
+	UserId int64  `form:"user_id"`
+	Token  string `form:"token"`
+}
+
+type MessageListRes struct {
+	Status
+	VideoPubList []*Message `json:"message_list,omitempty"`
+}
+
+type Message struct {
+	Id         int64  `json:"id"`
+	ToUserId   int64  `json:"to_user_id"`
+	FromUserId int64  `json:"from_user_id"`
+	Content    string `json:"content"`
+	CreateTime string `json:"create_time"`
+}
