@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option go_package ="./userMessagePb";
+
+package pb;
+
+// ------------------------------------ 
+// Messages
+// ------------------------------------ 
+
+message MessageReq {
+  string Token = 1;
+  int64 ToUserId = 2;
+  int64 ActionType = 3;
+  string Content = 4;
+}
+
+message MessageRes {
+ int64  Code = 1;
+ string Msg = 2;
+}
+
+message MessageListReq {
+ int64  UserId = 1;
+  string Token = 2;
+}
+
+message MessageListRes {
+  int64 Code = 1;
+  string Msg = 2;
+  repeated Message MessageList = 3;
+}
+
+message Message {
+  int64  Id = 1;
+  int64  ToUserId = 2;
+  int64  FromUserId = 3;
+  string Content = 4;
+  string CreateTime = 5;
+}
+
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service UserMessage{
+  //-----------------------SendMessage-----------------------
+   rpc SendMessage(MessageReq) returns (MessageRes);
+  //-----------------------GetMessageList-----------------------
+   rpc GetMessageList(MessageListReq) returns (MessageListRes);
+}
