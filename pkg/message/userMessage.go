@@ -1,13 +1,12 @@
 package main
 
 import (
+	"douyin/pkg/message/internal/config"
+	"douyin/pkg/message/internal/server"
+	"douyin/pkg/message/internal/svc"
+	"douyin/pkg/message/userMessagePb"
 	"flag"
 	"fmt"
-
-	"douyin/pkg/message/rpc/internal/config"
-	"douyin/pkg/message/rpc/internal/server"
-	"douyin/pkg/message/rpc/internal/svc"
-	"douyin/pkg/message/rpc/userMessagePb"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"

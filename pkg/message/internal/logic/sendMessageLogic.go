@@ -3,11 +3,10 @@ package logic
 import (
 	"context"
 	"douyin/common/model/messageModel"
+	"douyin/pkg/message/internal/svc"
+	"douyin/pkg/message/userMessagePb"
 	"fmt"
 	"time"
-
-	"douyin/pkg/message/rpc/internal/svc"
-	"douyin/pkg/message/rpc/userMessagePb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

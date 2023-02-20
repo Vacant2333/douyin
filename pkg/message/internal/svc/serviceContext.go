@@ -2,7 +2,7 @@ package svc
 
 import (
 	"douyin/common/model/messageModel"
-	"douyin/pkg/message/rpc/internal/config"
+	"douyin/pkg/message/internal/config"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 

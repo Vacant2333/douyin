@@ -5,19 +5,18 @@ package usermessage
 
 import (
 	"context"
-
-	"douyin/pkg/message/rpc/userMessagePb"
+	userMessagePb2 "douyin/pkg/message/userMessagePb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 )
 
 type (
-	Message        = userMessagePb.Message
-	MessageListReq = userMessagePb.MessageListReq
-	MessageListRes = userMessagePb.MessageListRes
-	MessageReq     = userMessagePb.MessageReq
-	MessageRes     = userMessagePb.MessageRes
+	Message        = userMessagePb2.Message
+	MessageListReq = userMessagePb2.MessageListReq
+	MessageListRes = userMessagePb2.MessageListRes
+	MessageReq     = userMessagePb2.MessageReq
+	MessageRes     = userMessagePb2.MessageRes
 
 	UserMessage interface {
 		// -----------------------SendMessage-----------------------
@@ -39,12 +38,12 @@ func NewUserMessage(cli zrpc.Client) UserMessage {
 
 // -----------------------SendMessage-----------------------
 func (m *defaultUserMessage) SendMessage(ctx context.Context, in *MessageReq, opts ...grpc.CallOption) (*MessageRes, error) {
-	client := userMessagePb.NewUserMessageClient(m.cli.Conn())
+	client := userMessagePb2.NewUserMessageClient(m.cli.Conn())
 	return client.SendMessage(ctx, in, opts...)
 }
 
 // -----------------------GetMessageList-----------------------
 func (m *defaultUserMessage) GetMessageList(ctx context.Context, in *MessageListReq, opts ...grpc.CallOption) (*MessageListRes, error) {
-	client := userMessagePb.NewUserMessageClient(m.cli.Conn())
+	client := userMessagePb2.NewUserMessageClient(m.cli.Conn())
 	return client.GetMessageList(ctx, in, opts...)
 }

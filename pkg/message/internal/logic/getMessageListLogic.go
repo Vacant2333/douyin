@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 	"douyin/common/help/token"
-	"douyin/pkg/message/rpc/internal/svc"
-	"douyin/pkg/message/rpc/userMessagePb"
+	"douyin/pkg/message/internal/svc"
+	"douyin/pkg/message/userMessagePb"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
