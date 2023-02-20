@@ -5,12 +5,11 @@ import (
 	myToken "douyin/common/help/token"
 	"douyin/common/messageTypes"
 	"douyin/common/xerr"
+	"douyin/pkg/gateway/api/internal/svc"
+	"douyin/pkg/gateway/api/internal/types"
 	"encoding/json"
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
-
-	"douyin/pkg/favorite/api/internal/svc"
-	"douyin/pkg/favorite/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
