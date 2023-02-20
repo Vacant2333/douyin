@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-mysql
+  labels:
+    app: mysql
+spec:
+  ports:
+    - name: mysql
+      port: 3306
+      targetPort: 3306
+  selector:
+    app: mysql
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_USER
+              value: titok
+            - name: MYSQL_PASSWORD
+              value: titok
+          ports:
+            - name: mysql
+              containerPort: 3306
+          volumeMounts:
+            - name: mysql-pv
+              mountPath: /var/lib/mysql
+            - name: mysql-initdb
+              mountPath: /var/lib/mysql
+          command:
+            - bash
+            - "-c"
+            - |
+              /entrypoint.sh mysqld &
+              sleep 30
+              mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "CREATE USER 'titok'@'%' IDENTIFIED BY 'titok';"
+              mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO 'titok'@'%';"
+              mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "FLUSH PRIVILEGES;"
+              mysql -u root -p${MYSQL_ROOT_PASSWORD} < /var/lib/mysql/schema.sql
+      volumes:
+        - name: mysql-pv
+          persistentVolumeClaim:
+            claimName: nfs-pvc
+        - name: mysql-initdb
+          configMap:
+            name: mysql-scheme

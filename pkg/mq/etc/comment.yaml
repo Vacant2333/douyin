@@ -1,0 +1,48 @@
+Name: comment-mq
+Host: 0.0.0.0
+Port: 3001
+Mode: dev
+
+UserCommentOptServiceConf:
+  Name: UserCommentOptService
+  Brokers:
+    - kafka.kafka.svc.cluster.local:9092
+  Group: UserCommentOptService-group
+  Topic: UserCommentOptService-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1
+
+UserFavoriteOptServiceConf:
+  Name: UserFavoriteOptService
+  Brokers:
+    - kafka.kafka.svc.cluster.local:9092
+  Group: UserFavoriteOptService-group
+  Topic: UserFavoriteOptService-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1
+#rpc
+UserCommentRpc:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: usercomment.rpc
+    NonBlock: true
+
+UserInfoRpc:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: userinfo.rpc
+    NonBlock: true
+
+UserFavoriteRpc:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: useropt.rpc
+
+RedisCacheConf:
+  Host: redis-master.redis.svc.cluster.local:6379
+  Pass: 

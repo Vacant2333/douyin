@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nfs-server
+spec:
+  ports:
+    - name: nfs
+      port: 2049
+      protocol: TCP
+    - name: mountd
+      port: 20048
+      protocol: TCP
+    - name: rpcbind
+      port: 111
+      protocol: TCP
+  selector:
+    app: nfs-server
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nfs-server
+spec:
+  serviceName: "nfs-server"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nfs-server
+  template:
+    metadata:
+      labels:
+        app: nfs-server
+    spec:
+      containers:
+        - name: nfs-server
+          image: quay.io/kubernetes_incubator/nfs-server:1.0
+          ports:
+            - name: nfs
+              containerPort: 2049
+              protocol: TCP
+            - name: mountd
+              containerPort: 20048
+              protocol: TCP
+            - name: rpcbind
+              containerPort: 111
+              protocol: TCP
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: nfs-pv
+              mountPath: /nfsdata
+      volumes:
+        - name: nfs-pv
+          persistentVolumeClaim:
+            claimName: nfs-pvc

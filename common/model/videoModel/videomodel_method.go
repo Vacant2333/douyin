@@ -20,3 +20,8 @@ func (m *defaultVideoModel) FindManyByTime(ctx context.Context, time int64, num 
 		return nil, err
 	}
 }
+
+func (m *defaultVideoModel) FindAllByUserId(ctx context.Context, userId int64) (int64, error) {
+	// todo: 与向交流后完善该函数
+	return 0, nil
+}

@@ -30,6 +30,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*Follow, error)
 		FindAllByUserId(ctx context.Context, userId string) ([]*Follow, error)
 		FindAllByFunId(ctx context.Context, funId string) ([]*Follow, error)
+		CountByFollowRelation(ctx context.Context, id int64, field string) (int64, error)
 		Update(ctx context.Context, data *Follow) error
 		Delete(ctx context.Context, id int64) error
 	}
