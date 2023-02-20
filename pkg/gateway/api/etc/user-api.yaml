@@ -41,5 +41,3 @@ UserFavoriteOptServiceConf:
   Offset: first
   Consumers: 1
   Processors: 1
-
-

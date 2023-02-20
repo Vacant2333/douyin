@@ -78,7 +78,7 @@ type (
 	group : user
 	prefix : /douyin/user
 )
-service gateway-api {
+service user-api {
 	@doc "用户注册"
 	@handler UserRegister
 	post /register (UserRegisterReq) returns (UserRegisterRes)
@@ -92,7 +92,7 @@ service gateway-api {
 	prefix : /douyin/user
 	middleware: AuthJWT
 )
-service gateway-api {
+service user-api {
 	@doc "用户信息"
 	@handler UserInfo
 	get / (UserInfoReq) returns (UserInfoRes)

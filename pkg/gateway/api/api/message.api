@@ -37,7 +37,7 @@ type Message {
 	middleware: AuthJWT
 )
 
-service gateway-api {
+service user-api {
 	@doc "发送消息"
 	@handler message
 	post /message/action (MessageReq) returns (MessageRes)
