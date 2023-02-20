@@ -2,7 +2,7 @@ PROJECT_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 # Todo:build all image
 install-cluster:
-	kind delete cluster --name douyin
+	-kind delete cluster --name douyin
 	kind create cluster --config deployment/cluster/douyin-cluster.yaml
 
 # Deploy MinIO Service
