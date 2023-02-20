@@ -3,7 +3,7 @@ package kq
 import (
 	"context"
 	"douyin/common/messageTypes"
-	"douyin/pkg/favorite/rpc/useroptservice"
+	"douyin/pkg/favorite/useroptservice"
 	"douyin/pkg/mq/internal/svc"
 	"encoding/json"
 	"errors"
@@ -12,7 +12,7 @@ import (
 )
 
 /*
-	Listening to the payment flow status change notification message queue
+Listening to the payment flow status change notification message queue
 */
 type UserFavoriteOpt struct {
 	ctx    context.Context

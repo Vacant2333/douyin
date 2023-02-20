@@ -3,7 +3,7 @@ package kq
 import (
 	"context"
 	"douyin/common/messageTypes"
-	"douyin/pkg/comment/rpc/usercomment"
+	"douyin/pkg/comment/usercomment"
 	"douyin/pkg/mq/internal/svc"
 	"encoding/json"
 	"fmt"
@@ -12,7 +12,7 @@ import (
 )
 
 /*
-	Listening to the payment flow status change notification message queue
+Listening to the payment flow status change notification message queue
 */
 type UserCommentOpt struct {
 	ctx    context.Context

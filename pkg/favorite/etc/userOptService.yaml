@@ -1,0 +1,10 @@
+Name: useropt.rpc
+ListenOn: 0.0.0.0:8081
+Mode: dev
+Etcd:
+  Hosts:
+  - etcd.etcd.svc.cluster.local:2379
+  Key: useropt.rpc
+
+DB:
+  DataSource: douyin:Z4eEXbWWCApby8dE@tcp(bt.vacant.zone:3306)/douyin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai

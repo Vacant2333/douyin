@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comment
+  namespace: comment
+  labels:
+    app: comment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: comment
+  template:
+    metadata:
+      labels:
+        app: comment
+    spec:
+      serviceAccountName: find-endpoints
+      containers:
+      - name: comment
+        image: comment:v1
+        ports:
+        - containerPort: 8081
+        readinessProbe:
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: 200m
+            memory: 50Mi
+          limits:
+            cpu: 300m
+            memory: 100Mi
+        volumeMounts:
+        - name: timezone
+          mountPath: /etc/localtime
+      volumes:
+        - name: timezone
+          hostPath:
+            path: /usr/share/zoneinfo/Asia/Shanghai
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: comment-rpc-svc
+#  namespace: douyin-comment
+#spec:
+#  ports:
+#  - port: 8081
+#    targetPort: 8081
+#  selector:
+#    app: comment-rpc-svc
+#---
+#
+#apiVersion: autoscaling/v2beta1
+#kind: HorizontalPodAutoscaler
+#metadata:
+#  name: comment-rpc-svc-hpa-c
+#  namespace: douyin-comment
+#  labels:
+#    app: comment-rpc-svc-hpa-c
+#spec:
+#  scaleTargetRef:
+#    apiVersion: apps/v1
+#    kind: Deployment
+#    name: comment-rpc-svc
+#  minReplicas: 3
+#  maxReplicas: 10
+#  metrics:
+#  - type: Resource
+#    resource:
+#      name: cpu
+#      targetAverageUtilization: 80
+#
+#---
+#
+#apiVersion: autoscaling/v2beta1
+#kind: HorizontalPodAutoscaler
+#metadata:
+#  name: comment-rpc-svc-hpa-m
+#  namespace: douyin-comment
+#  labels:
+#    app: comment-rpc-svc-hpa-m
+#spec:
+#  scaleTargetRef:
+#    apiVersion: apps/v1
+#    kind: Deployment
+#    name: comment-rpc-svc
+#  minReplicas: 3
+#  maxReplicas: 10
+#  metrics:
+#  - type: Resource
+#    resource:
+#      name: memory
+#      targetAverageUtilization: 80
