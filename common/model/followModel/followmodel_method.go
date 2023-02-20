@@ -38,5 +38,6 @@ func (m *defaultFollowModel) FindAllByFunId(ctx context.Context, funId string) (
 
 func (m *defaultFollowModel) CountByFollowRelation(ctx context.Context, id int64, field string) (int64, error) {
 	// todo: 与向交流后完善该函数
+
 	return 0, nil
 }

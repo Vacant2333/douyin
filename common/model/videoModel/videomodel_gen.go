@@ -29,7 +29,7 @@ type (
 		Insert(ctx context.Context, data *Video) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*Video, error)
 		FindManyByTime(ctx context.Context, time int64, num int64) ([]*Video, error)
-		FindAllByUserId(ctx context.Context, userId int64) (int64, error)
+		FindAllByUserId(ctx context.Context, userId int64) ([]*Video, error)
 		Update(ctx context.Context, data *Video) error
 		Delete(ctx context.Context, id int64) error
 	}
