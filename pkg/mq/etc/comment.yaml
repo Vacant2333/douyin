@@ -45,4 +45,4 @@ UserFavoriteRpc:
 
 RedisCacheConf:
   Host: redis-master.redis.svc.cluster.local:6379
-  Pass: 
+  Pass: redispwd123

@@ -9,6 +9,8 @@ DB:
 
 CacheConf:
   - Host: redis-master.redis.svc.cluster.local:6379
+    Pass: redispwd123
 
 RedisCacheConf:
   Host: redis-master.redis.svc.cluster.local:6379
+  Pass: redispwd123

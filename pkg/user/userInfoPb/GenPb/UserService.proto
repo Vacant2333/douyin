@@ -31,13 +31,11 @@ message User {
   int64 followCount = 3; //followCount
   int64 followerCount = 4; //followerCount
   string avatar=5;
-  string backgroundImage=6;
+  string background_image=6;
   string signature=7;
-  int64 workCount=8;
-  string totalFavorited=9;
+  int64 work_count=8;
+  int64 total_favorited=9;
   int64  favorite_count=10;
-
-
 }
 
 message UserInfoReq {

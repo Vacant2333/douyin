@@ -50,7 +50,7 @@ func (l *InfoLogic) Info(in *userInfoPb.UserInfoReq) (*userInfoPb.UserInfoResp, 
 	user.Signature = userInfo.Signature
 	user.FavoriteCount = favoriteCount
 	user.WorkCount = workCount
-	user.TotalFavorited = "测试"
+	user.TotalFavorited = 0
 
 	return &userInfoPb.UserInfoResp{
 		User: &user,
