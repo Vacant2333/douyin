@@ -72,7 +72,7 @@ create table chat
     msg        text                               not null,
     sender     int                                not null,
     receiver   int                                not null,
-    createtime datetime default CURRENT_TIMESTAMP not null,
+    create_time datetime default CURRENT_TIMESTAMP not null,
     constraint chat_user_id_fk                    foreign key (sender) references user (id),
     constraint chat_user_id_fk_2                  foreign key (receiver) references user (id)
 );
@@ -109,7 +109,8 @@ create table video
     author_id int                not null,
     play_url  varchar(32)        not null,
     cover_url varchar(32)        not null,
-    like_count int               null,
+    like_count int    default 0  not null,
+    comment_count int default 0  not null,
     time      int                not null,
     title     varchar(128)       not null,
     removed   tinyint default 0  not null,
