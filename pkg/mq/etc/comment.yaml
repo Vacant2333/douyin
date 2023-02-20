@@ -3,11 +3,10 @@ Host: 0.0.0.0
 Port: 3001
 Mode: dev
 
-#kq
 UserCommentOptServiceConf:
   Name: UserCommentOptService
   Brokers:
-    - 127.0.0.1:9092
+    - kafka.kafka.svc.cluster.local:9092
   Group: UserCommentOptService-group
   Topic: UserCommentOptService-topic
   Offset: first
@@ -17,7 +16,7 @@ UserCommentOptServiceConf:
 UserFavoriteOptServiceConf:
   Name: UserFavoriteOptService
   Brokers:
-    - 127.0.0.1:9092
+    - kafka.kafka.svc.cluster.local:9092
   Group: UserFavoriteOptService-group
   Topic: UserFavoriteOptService-topic
   Offset: first
@@ -27,24 +26,23 @@ UserFavoriteOptServiceConf:
 UserCommentRpc:
   Etcd:
     Hosts:
-      - 127.0.0.1:2379
+      - etcd.etcd.svc.cluster.local:2379
     Key: usercomment.rpc
     NonBlock: true
 
 UserInfoRpc:
   Etcd:
     Hosts:
-      - 127.0.0.1:2379
+      - etcd.etcd.svc.cluster.local:2379
     Key: userinfo.rpc
     NonBlock: true
 
 UserFavoriteRpc:
   Etcd:
     Hosts:
-      - 127.0.0.1:2379
+      - etcd.etcd.svc.cluster.local:2379
     Key: useropt.rpc
 
 RedisCacheConf:
-  Host: localhost:6379
+  Host: redis-master.redis.svc.cluster.local:6379
   Pass: 
-
