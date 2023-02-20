@@ -5,7 +5,7 @@ Etcd:
   - etcd.etcd.svc.cluster.local:2379
   Key: user.rpc
 DB:
-  DataSource: root:2019xzcdg@tcp(120.25.202.230:3306)/tiktok?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: douyin:Z4eEXbWWCApby8dE@tcp(bt.vacant.zone:3306)/douyin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 CacheConf:
   - Host: localhost:6379
