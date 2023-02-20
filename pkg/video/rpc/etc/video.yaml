@@ -1,15 +1,15 @@
 Name: video.rpc
-ListenOn: 0.0.0.0:8080
+ListenOn: 0.0.0.0:8081
 Etcd:
   Hosts:
   - 127.0.0.1:2379
   Key: video.rpc
-  Mysql:
-    DataSource: root:123456@tcp(127.0.0.1:3306)/tiktok?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
-  CacheRedis:
-    - Host: 127.0.0.1:6379
-      Type: node
-      Pass:
+Mysql:
+  DataSource: root:123456@tcp(127.0.0.1:3306)/tiktok?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+CacheRedis:
+  - Host: 127.0.0.1:6379
+    Type: node
+    Pass:
 MinIOClientRpc:
   Etcd:
     Hosts:
