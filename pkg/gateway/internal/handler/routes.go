@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	feed "douyin/pkg/gateway/internal/handler/feed"
+	message "douyin/pkg/gateway/internal/handler/message"
 	publish "douyin/pkg/gateway/internal/handler/publish"
 	user "douyin/pkg/gateway/internal/handler/user"
 	userOpt "douyin/pkg/gateway/internal/handler/userOpt"
@@ -128,5 +129,24 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			}...,
 		),
 		rest.WithPrefix("/douyin/feed"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.AuthJWT},
+			[]rest.Route{
+				{
+					Method:  http.MethodPost,
+					Path:    "/message/action",
+					Handler: message.MessageHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/message/chat",
+					Handler: message.MessagelistHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/douyin"),
 	)
 }

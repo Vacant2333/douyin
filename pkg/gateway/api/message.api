@@ -1,0 +1,48 @@
+syntax = "v1"
+
+import "user.api"
+
+type MessageReq {
+	Token      string `form:"token"`
+	ToUserId   int64  `form:"to_user_id"`
+	ActionType int64  `form:"action_type"`
+	Content    string `form:"content"`
+}
+
+type MessageRes {
+	Code int64  `json:"status_code"`
+	Msg  string `json:"status_msg,omitempty"`
+}
+type MessageListReq {
+	UserId int64  `form:"user_id"`
+	Token  string `form:"token"`
+}
+
+type MessageListRes {
+	Status
+	VideoPubList []*Message `json:"message_list,omitempty"`
+}
+
+type Message {
+	Id         int64  `json:"id"`
+	ToUserId   int64  `json:"to_user_id"`
+	FromUserId int64  `json:"from_user_id"`
+	Content    string `json:"content"`
+	CreateTime string `json:"create_time"`
+}
+
+@server(
+	group : message
+	prefix : /douyin
+	middleware: AuthJWT
+)
+
+service user-api {
+	@doc "发送消息"
+	@handler message
+	post /message/action (MessageReq) returns (MessageRes)
+	
+	@doc "聊天记录"
+	@handler messagelist
+	post /message/chat (MessageListReq) returns (MessageListRes)
+}
