@@ -2,9 +2,8 @@ package message
 
 import (
 	"context"
-
-	"douyin/pkg/gateway/api/internal/svc"
-	"douyin/pkg/gateway/api/internal/types"
+	"douyin/pkg/gateway/internal/svc"
+	"douyin/pkg/gateway/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
