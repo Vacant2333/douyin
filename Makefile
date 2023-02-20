@@ -19,28 +19,70 @@ install-minio:
 	kubectl create ns minio
 	helm install minio minio/minio -f deployment/minio/minio.yaml -n minio
 
-# Forward MinIO's console service(web)
-forward-minio-console:
-	kubectl port-forward -n minio svc/minio-console 9001:9001
-
-
 # Deploy Etcd service, you must install it before use rpc
 install-etcd:
 	-kubectl delete ns etcd
-	helm repo add etcd https://charts.bitnami.com/bitnami
 	kubectl create ns etcd
-	helm install etcd etcd/etcd --set replicaCount=2 -n etcd --set auth.rbac.create=false
-
-
+	helm install etcd bitnami/etcd --set replicaCount=2 -n etcd --set auth.rbac.create=false
 
 install-kafka:
 	-kubectl delete ns kafka
-	helm repo add bitnami https://charts.bitnami.com/bitnami
 	kubectl create ns kafka
 	helm install kafka bitnami/kafka -n kafka --set replicaCount=2
 
-forward-kafka:
-	kubectl port-forward -n kafka svc/kafka 9092:9092
+install-redis:
+	-kubectl delete ns redis
+	kubectl create ns redis
+	helm install redis bitnami/redis -n redis --set replicaCount=2 --set auth.enable=false
+
+
+
+
+install-user:
+	docker build -f ${PROJECT_ROOT}/cmd/user/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/user:nightly
+	-kubectl delete ns user
+	kind load docker-image douyin/user:nightly --name douyin
+	kubectl create ns user
+	kubectl apply -f deployment/user/user.yaml
+
+install-comment:
+	docker build -f ${PROJECT_ROOT}/cmd/comment/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/comment:nightly
+	-kubectl delete ns comment
+	kind load docker-image douyin/comment:nightly --name douyin
+	kubectl create ns comment
+	kubectl apply -f deployment/comment/comment.yaml
+
+install-favorite:
+	docker build -f ${PROJECT_ROOT}/cmd/favorite/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/favorite:nightly
+	-kubectl delete ns favorite
+	kind load docker-image douyin/favorite:nightly --name douyin
+	kubectl create ns favorite
+	kubectl apply -f deployment/favorite/favorite.yaml
+
+install-gateway:
+	docker build -f ${PROJECT_ROOT}/cmd/gateway/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/gateway:nightly
+	-kubectl delete ns gateway
+	kind load docker-image douyin/gateway:nightly --name douyin
+	kubectl create ns gateway
+	kubectl apply -f deployment/gateway/gateway.yaml
+
+
+
+
+# todo: delete deployment/comment/* != comment.yaml
+
+
+
+
+
 
 # Build proto
 build-proto-minio-client:
@@ -48,27 +90,13 @@ build-proto-minio-client:
 
 # Deploy nfs -> Declare nfs pv -> Inject sql scheme -> Deploy mysql
 nfs-init-service:
-	kubectl apply -f deployment/nfs/nfs-deploy.yaml  
-	kubectl apply -f deployment/nfs/nfs-pvx.yaml  
+	kubectl apply -f deployment/nfs/nfs-deploy.yaml
+	kubectl apply -f deployment/nfs/nfs-pvx.yaml
 mysql-init-service: nfs-init-service
 	kubectl apply -f deployment/mysql/mysql-scheme.yaml
 	kubectl apply -f deployment/mysql/mysql-deploy.yaml
 mysql-regenerate-codes:
 	go run cmd/mysql-gen/gen.go
 
-
-build-user:
-	docker build -f ${PROJECT_ROOT}/cmd/user/rpc/Dockerfile \
-		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
-		-t douyin/user-rpc:nightly
-	docker build -f ${PROJECT_ROOT}/cmd/user/api/Dockerfile \
-    	--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
-    	-t douyin/user-api:nightly
-
-install-user: build-user
-	-kubectl delete ns user
-	kind load docker-image douyin/user-rpc:nightly --name douyin
-	kind load docker-image douyin/user-api:nightly --name douyin
-	kubectl create ns user
-	kubectl apply -f deployment/user/user.yaml
-
+forward-gateway:
+	kubectl port-forward -n gateway svc/gateway 8888: --address='0.0.0.0'

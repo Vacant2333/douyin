@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: user
-  name: user
-  namespace: user
+    app: favorite
+  name: favorite
+  namespace: favorite
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: user
+      app: favorite
   template:
     metadata:
       labels:
-        app: user
+        app: favorite
     spec:
       containers:
-        - name: user
-          image: douyin/user:nightly
+        - name: favorite
+          image: douyin/favorite:nightly
           imagePullPolicy: Never
           ports:
-            - containerPort: 30001
+            - containerPort: 8081
