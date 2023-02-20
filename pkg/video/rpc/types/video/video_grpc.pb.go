@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type VideoServiceClient interface {
 	PublishVideo(ctx context.Context, in *PublishVideoReq, opts ...grpc.CallOption) (*PublishVideoResp, error)
 	GetVideo(ctx context.Context, in *GetVideoReq, opts ...grpc.CallOption) (*GetVideoResp, error)
+	GetAllVideoByUserId(ctx context.Context, in *GetAllVideoByUserIdReq, opts ...grpc.CallOption) (*GetAllVideoByUserIdResp, error)
 }
 
 type videoServiceClient struct {
@@ -52,12 +53,22 @@ func (c *videoServiceClient) GetVideo(ctx context.Context, in *GetVideoReq, opts
 	return out, nil
 }
 
+func (c *videoServiceClient) GetAllVideoByUserId(ctx context.Context, in *GetAllVideoByUserIdReq, opts ...grpc.CallOption) (*GetAllVideoByUserIdResp, error) {
+	out := new(GetAllVideoByUserIdResp)
+	err := c.cc.Invoke(ctx, "/video.VideoService/GetAllVideoByUserId", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VideoServiceServer is the server API for VideoService service.
 // All implementations must embed UnimplementedVideoServiceServer
 // for forward compatibility
 type VideoServiceServer interface {
 	PublishVideo(context.Context, *PublishVideoReq) (*PublishVideoResp, error)
 	GetVideo(context.Context, *GetVideoReq) (*GetVideoResp, error)
+	GetAllVideoByUserId(context.Context, *GetAllVideoByUserIdReq) (*GetAllVideoByUserIdResp, error)
 	mustEmbedUnimplementedVideoServiceServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedVideoServiceServer) PublishVideo(context.Context, *PublishVid
 }
 func (UnimplementedVideoServiceServer) GetVideo(context.Context, *GetVideoReq) (*GetVideoResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVideo not implemented")
+}
+func (UnimplementedVideoServiceServer) GetAllVideoByUserId(context.Context, *GetAllVideoByUserIdReq) (*GetAllVideoByUserIdResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllVideoByUserId not implemented")
 }
 func (UnimplementedVideoServiceServer) mustEmbedUnimplementedVideoServiceServer() {}
 
@@ -120,6 +134,24 @@ func _VideoService_GetVideo_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VideoService_GetAllVideoByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllVideoByUserIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServiceServer).GetAllVideoByUserId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/video.VideoService/GetAllVideoByUserId",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServiceServer).GetAllVideoByUserId(ctx, req.(*GetAllVideoByUserIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VideoService_ServiceDesc is the grpc.ServiceDesc for VideoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var VideoService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetVideo",
 			Handler:    _VideoService_GetVideo_Handler,
+		},
+		{
+			MethodName: "GetAllVideoByUserId",
+			Handler:    _VideoService_GetAllVideoByUserId_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

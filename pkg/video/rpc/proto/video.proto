@@ -51,7 +51,19 @@ message User {
   int64 favorite_count = 11; //点赞数量
 }
 
+message GetAllVideoByUserIdReq {
+  string token = 1;
+  string user_id = 2;
+}
+
+message GetAllVideoByUserIdResp {
+  int32 status_code = 1;
+  string status_msg = 2;
+  repeated Video video_list = 3;
+}
+
 service VideoService {
   rpc PublishVideo(PublishVideoReq) returns (PublishVideoResp);
   rpc GetVideo(GetVideoReq) returns (GetVideoResp);
+  rpc GetAllVideoByUserId(GetAllVideoByUserIdReq) returns (GetAllVideoByUserIdResp);
 }

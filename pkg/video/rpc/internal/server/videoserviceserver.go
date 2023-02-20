@@ -31,3 +31,8 @@ func (s *VideoServiceServer) GetVideo(ctx context.Context, in *video.GetVideoReq
 	l := logic.NewGetVideoLogic(ctx, s.svcCtx)
 	return l.GetVideo(in)
 }
+
+func (s *VideoServiceServer) GetAllVideoByUserId(ctx context.Context, in *video.GetAllVideoByUserIdReq) (*video.GetAllVideoByUserIdResp, error) {
+	l := logic.NewGetAllVideoByUserIdLogic(ctx, s.svcCtx)
+	return l.GetAllVideoByUserId(in)
+}
