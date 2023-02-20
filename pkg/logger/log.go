@@ -1,8 +1,9 @@
 package logger
 
 import (
-	"go.uber.org/zap"
 	"sync"
+
+	"go.uber.org/zap"
 )
 
 var zlog *zap.SugaredLogger
