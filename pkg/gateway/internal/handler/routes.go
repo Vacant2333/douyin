@@ -2,12 +2,13 @@
 package handler
 
 import (
-	"douyin/pkg/gateway/internal/handler/feed"
-	"douyin/pkg/gateway/internal/handler/publish"
-	"douyin/pkg/gateway/internal/handler/user"
-	"douyin/pkg/gateway/internal/handler/userOpt"
-	"douyin/pkg/gateway/internal/svc"
 	"net/http"
+
+	feed "douyin/pkg/gateway/internal/handler/feed"
+	publish "douyin/pkg/gateway/internal/handler/publish"
+	user "douyin/pkg/gateway/internal/handler/user"
+	userOpt "douyin/pkg/gateway/internal/handler/userOpt"
+	"douyin/pkg/gateway/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

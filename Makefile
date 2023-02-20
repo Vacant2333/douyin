@@ -33,7 +33,7 @@ install-kafka:
 install-redis:
 	-kubectl delete ns redis
 	kubectl create ns redis
-	helm install redis bitnami/redis -n redis --set replicaCount=2 --set auth.enable=false
+	helm install redis bitnami/redis -n redis --set auth.password='redispwd123'
 
 
 

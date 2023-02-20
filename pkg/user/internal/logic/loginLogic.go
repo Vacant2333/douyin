@@ -67,7 +67,6 @@ func (l *LoginLogic) Login(in *userInfoPb.LoginReq) (*userInfoPb.LoginResp, erro
 		logx.Errorf("set token to redis failed, err: %s", err.Error())
 		return nil, errors.Wrapf(xerr.NewErrCode(xerr.TOKEN_GENERATE_ERROR), "set token to redis error")
 	}
-
 	return &userInfoPb.LoginResp{
 		UserId: user.Id,
 		Token:  token,
