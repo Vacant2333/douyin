@@ -1,10 +1,16 @@
 PROJECT_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 # Todo:build all image
+init:
+	go get -u google.golang.org/protobuf/cmd/protoc-gen-go
+	go install google.golang.org/protobuf/cmd/protoc-gen-go
+	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
+	helm repo add bitnami https://charts.bitnami.com/bitnami
+
 install-cluster:
 	kind delete cluster --name douyin
 	kind create cluster --config deployment/cluster/douyin-cluster.yaml
-
 
 # Deploy MinIO Service
 install-minio:
@@ -23,7 +29,8 @@ install-etcd:
 	-kubectl delete ns etcd
 	helm repo add etcd https://charts.bitnami.com/bitnami
 	kubectl create ns etcd
-	helm install etcd etcd/etcd --set replicaCount=2 -n etcd
+	helm install etcd etcd/etcd --set replicaCount=2 -n etcd --set auth.rbac.create=false
+
 
 
 install-kafka:
@@ -35,61 +42,33 @@ install-kafka:
 forward-kafka:
 	kubectl port-forward -n kafka svc/kafka 9092:9092
 
-# Demo pkg
-buildx-demo:
-	docker buildx build --platform=linux/arm64 -f ${PROJECT_ROOT}/cmd/demo/Dockerfile \
-		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
-		-t douyin/demo:nightly
-
-install-demo:
-	-kubectl delete ns demo
-	kind load docker-image douyin/demo:nightly --name douyin
-	kubectl create ns demo
-	kubectl apply -f deployment/demo/demo.yaml
-
-forward-demo:
-	kubectl port-forward -n demo service/demo 8000:80
-
-
-# Userinfo-rpc/api Demo
-build-userinfo-demo:
-	docker build -f ${PROJECT_ROOT}/cmd/userinfo-demo/rpc/Dockerfile \
-		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
-		-t douyin/userinfo-demo-rpc:nightly
-	docker build -f ${PROJECT_ROOT}/cmd/userinfo-demo/api/Dockerfile \
-    	--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
-    	-t douyin/userinfo-demo-api:nightly
-
-install-userinfo-demo:
-	-kubectl delete ns userinfo-demo
-	kind load docker-image douyin/userinfo-demo-api:nightly --name douyin
-	kind load docker-image douyin/userinfo-demo-rpc:nightly --name douyin
-	kubectl create ns userinfo-demo
-	kubectl apply -f deployment/userinfo-demo/userinfo-demo.yaml
-
-forward-userinfo-demo:
-	kubectl port-forward -n userinfo-demo svc/userinfo-demo 30001:8888
-
-
 # Build proto
 build-proto-minio-client:
 	cd pkg/minio-client && goctl rpc protoc ./proto/minio-client.proto --go_out=./types --go-grpc_out=./types --zrpc_out=.
-
-
-
-# Install dependence
-install-protoc-gen-go:
-	go get -u google.golang.org/protobuf/cmd/protoc-gen-go
-	go install google.golang.org/protobuf/cmd/protoc-gen-go
-	go get -u google.golang.org/grpc/cmd/protoc-gen-go-grpc
-	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
 # Deploy nfs -> Declare nfs pv -> Inject sql scheme -> Deploy mysql
 nfs-init-service:
 	kubectl apply -f deployment/nfs/nfs-deploy.yaml  
 	kubectl apply -f deployment/nfs/nfs-pvx.yaml  
-mysql-init-service: init-nfs-service
+mysql-init-service: nfs-init-service
 	kubectl apply -f deployment/mysql/mysql-scheme.yaml
 	kubectl apply -f deployment/mysql/mysql-deploy.yaml
 mysql-regenerate-codes:
 	go run cmd/mysql-gen/gen.go
+
+
+build-user:
+	docker build -f ${PROJECT_ROOT}/cmd/user/rpc/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/user-rpc:nightly
+	docker build -f ${PROJECT_ROOT}/cmd/user/api/Dockerfile \
+    	--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+    	-t douyin/user-api:nightly
+
+install-user: build-user
+	-kubectl delete ns user
+	kind load docker-image douyin/user-rpc:nightly --name douyin
+	kind load docker-image douyin/user-api:nightly --name douyin
+	kubectl create ns user
+	kubectl apply -f deployment/user/user.yaml
+

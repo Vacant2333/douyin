@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: user
+  name: user
+  namespace: user
+spec:
+  ports:
+    - port: 30002
+      protocol: TCP
+      targetPort: 30002
+  selector:
+    app: user
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: user
+  name: user
+  namespace: user
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+        - name: user-api
+          image: douyin/user-api:nightly
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 30002
+        - name: user-rpc
+          image: douyin/user-rpc:nightly
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 30001

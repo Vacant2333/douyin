@@ -1,10 +1,9 @@
 Name: user.rpc
-ListenOn: 0.0.0.0:8082
+ListenOn: 0.0.0.0:30001
 Etcd:
   Hosts:
   - etcd.etcd.svc.cluster.local:2379
   Key: user.rpc
-
 DB:
   DataSource: root:2019xzcdg@tcp(120.25.202.230:3306)/tiktok?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
