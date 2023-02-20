@@ -2,7 +2,7 @@ Name: user.rpc
 ListenOn: 0.0.0.0:8082
 Etcd:
   Hosts:
-  - 127.0.0.1:2379
+  - etcd.etcd.svc.cluster.local:2379
   Key: user.rpc
 
 DB:

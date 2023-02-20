@@ -1,11 +1,10 @@
 Name: user-api
 Host: 0.0.0.0
 Port: 8889
-
 UserRpc:
   Etcd:
     Hosts:
-      - 127.0.0.1:2379
+      - etcd.etcd.svc.cluster.local:2379
     Key: user.rpc
 
 
