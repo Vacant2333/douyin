@@ -12,6 +12,7 @@ import (
 	"douyin/pkg/logger"
 	"douyin/pkg/video/rpc/internal/svc"
 	"douyin/pkg/video/rpc/types/video"
+	"sync"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
