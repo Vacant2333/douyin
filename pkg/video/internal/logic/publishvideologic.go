@@ -3,10 +3,9 @@ package logic
 import (
 	"context"
 	"douyin/common/model/videoModel"
+	"douyin/pkg/video/internal/svc"
+	"douyin/pkg/video/types/video"
 	"time"
-
-	"douyin/pkg/video/rpc/internal/svc"
-	"douyin/pkg/video/rpc/types/video"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

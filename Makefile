@@ -65,6 +65,15 @@ install-favorite:
 	kubectl create ns favorite
 	kubectl apply -f deployment/favorite/favorite.yaml
 
+install-video:
+	docker build -f ${PROJECT_ROOT}/cmd/video/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/video:nightly
+	-kubectl delete ns video
+	kind load docker-image douyin/video:nightly --name douyin
+	kubectl create ns video
+	kubectl apply -f deployment/video/video.yaml
+
 install-gateway:
 	docker build -f ${PROJECT_ROOT}/cmd/gateway/Dockerfile \
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
@@ -73,6 +82,7 @@ install-gateway:
 	kind load docker-image douyin/gateway:nightly --name douyin
 	kubectl create ns gateway
 	kubectl apply -f deployment/gateway/gateway.yaml
+
 
 
 

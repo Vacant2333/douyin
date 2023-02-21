@@ -5,22 +5,21 @@ package videoservice
 
 import (
 	"context"
-
-	"douyin/pkg/video/rpc/types/video"
+	video2 "douyin/pkg/video/types/video"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 )
 
 type (
-	GetAllVideoByUserIdReq  = video.GetAllVideoByUserIdReq
-	GetAllVideoByUserIdResp = video.GetAllVideoByUserIdResp
-	GetVideoReq             = video.GetVideoReq
-	GetVideoResp            = video.GetVideoResp
-	PublishVideoReq         = video.PublishVideoReq
-	PublishVideoResp        = video.PublishVideoResp
-	User                    = video.User
-	Video                   = video.Video
+	GetAllVideoByUserIdReq  = video2.GetAllVideoByUserIdReq
+	GetAllVideoByUserIdResp = video2.GetAllVideoByUserIdResp
+	GetVideoReq             = video2.GetVideoReq
+	GetVideoResp            = video2.GetVideoResp
+	PublishVideoReq         = video2.PublishVideoReq
+	PublishVideoResp        = video2.PublishVideoResp
+	User                    = video2.User
+	Video                   = video2.Video
 
 	VideoService interface {
 		PublishVideo(ctx context.Context, in *PublishVideoReq, opts ...grpc.CallOption) (*PublishVideoResp, error)
@@ -40,16 +39,16 @@ func NewVideoService(cli zrpc.Client) VideoService {
 }
 
 func (m *defaultVideoService) PublishVideo(ctx context.Context, in *PublishVideoReq, opts ...grpc.CallOption) (*PublishVideoResp, error) {
-	client := video.NewVideoServiceClient(m.cli.Conn())
+	client := video2.NewVideoServiceClient(m.cli.Conn())
 	return client.PublishVideo(ctx, in, opts...)
 }
 
 func (m *defaultVideoService) GetVideo(ctx context.Context, in *GetVideoReq, opts ...grpc.CallOption) (*GetVideoResp, error) {
-	client := video.NewVideoServiceClient(m.cli.Conn())
+	client := video2.NewVideoServiceClient(m.cli.Conn())
 	return client.GetVideo(ctx, in, opts...)
 }
 
 func (m *defaultVideoService) GetAllVideoByUserId(ctx context.Context, in *GetAllVideoByUserIdReq, opts ...grpc.CallOption) (*GetAllVideoByUserIdResp, error) {
-	client := video.NewVideoServiceClient(m.cli.Conn())
+	client := video2.NewVideoServiceClient(m.cli.Conn())
 	return client.GetAllVideoByUserId(ctx, in, opts...)
 }

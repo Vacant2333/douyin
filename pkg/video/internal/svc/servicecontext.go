@@ -2,7 +2,7 @@ package svc
 
 import (
 	"douyin/common/model/videoModel"
-	"douyin/pkg/video/rpc/internal/config"
+	"douyin/pkg/video/internal/config"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
