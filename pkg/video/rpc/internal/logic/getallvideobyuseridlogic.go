@@ -6,7 +6,6 @@ import (
 	"douyin/common/model/videoModel"
 	"douyin/pkg/favorite/userOptPb"
 	"douyin/pkg/user/userservice"
-	"strconv"
 	"sync"
 
 	"douyin/pkg/logger"
@@ -39,12 +38,7 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 		hasUserId = false // Token解析错误
 	}
 
-	id, err := strconv.Atoi(in.UserId)
-	authorId := int64(id)
-	if err != nil {
-		logger.Fatal("useId转换int类型失败", err)
-		return nil, err
-	}
+	authorId := in.UserId
 	queryVideos, err := l.svcCtx.VideoModel.FindAllByUserId(l.ctx, authorId)
 	if err != nil {
 		logger.Fatal("FindAllByUserId failed", err)
