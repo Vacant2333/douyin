@@ -2,7 +2,10 @@ package logic
 
 import (
 	"context"
+	"douyin/common/help/token"
 	"douyin/common/model/videoModel"
+	"douyin/pkg/logger"
+	"douyin/pkg/user/userservice"
 	"douyin/pkg/video/rpc/internal/svc"
 	"douyin/pkg/video/rpc/types/video"
 	"sync"
@@ -29,7 +32,14 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 	var selectNum int64 = 10
 	queryVideos, err := l.svcCtx.VideoModel.FindManyByTime(l.ctx, in.LatestTime, selectNum)
 	if err != nil {
+		logger.Fatal("FindManyByTime failed", err)
 		return nil, err
+	}
+	parseToken := token.ParseToken{}
+	tokenResult, err := parseToken.ParseToken(in.Token)
+	hasUserId := true
+	if err != nil || tokenResult.UserId == 0 {
+		hasUserId = false // Token解析错误
 	}
 	videos := make([]*video.Video, len(queryVideos))
 	var wg sync.WaitGroup
@@ -45,22 +55,33 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 				CommentCount:  query.CommentCount,
 				Title:         query.Title,
 			}
-			// todo: 调用RPC获取作者信息，以及user是否关注了该人
-			videos[i].Author = &video.User{
-				Id:              "123",
-				Name:            "Author",
-				FollowCount:     12,
-				FollowerCount:   34,
-				IsFollow:        false,
-				Avatar:          "",
-				BackgroundImage: "",
-				Signature:       "this is a sign",
-				TotalFavorited:  16,
-				WorkCount:       0,
-				FavoriteCount:   15,
+
+			info, err := l.svcCtx.UserPRC.Info(l.ctx, &userservice.UserInfoReq{
+				UserId: query.AuthorId,
+			})
+			if err != nil {
+				logger.Fatal("Video获取Userinfo出错", err)
+				return
 			}
-			// todo: 调用RPC获取是否点赞
-			videos[i].IsFavorite = false
+
+			videos[i].Author = &video.User{
+				Id:              query.AuthorId,
+				Name:            info.User.UserName,
+				FollowCount:     info.User.FollowCount,
+				FollowerCount:   info.User.FollowerCount,
+				Avatar:          info.User.Avatar,
+				BackgroundImage: info.User.BackgroundImage,
+				Signature:       info.User.Signature,
+				TotalFavorited:  info.User.TotalFavorited,
+				WorkCount:       info.User.WorkCount,
+				FavoriteCount:   info.User.FavoriteCount,
+			}
+			if hasUserId {
+				// todo: 调用Follow RPC,查看是否关注了这个人,填入IsFollow
+				videos[i].Author.IsFollow = true // 对应函数
+				// todo: 调用RPC获取是否点赞
+				videos[i].IsFavorite = true // 对应函数
+			}
 			defer wg.Done()
 		}(i, queryVideos)
 	}

@@ -4,7 +4,7 @@ import (
 	"context"
 	"douyin/common/help/token"
 	"douyin/common/model/videoModel"
-	minio_client "douyin/pkg/minio-client/types/minio-client"
+	"douyin/pkg/minio-client/types/minio-client"
 	"time"
 
 	"douyin/pkg/video/rpc/internal/svc"
