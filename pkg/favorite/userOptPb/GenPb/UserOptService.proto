@@ -39,17 +39,22 @@ message GetUserFavoriteResp {
 
 }
 
+message CheckIsFavoriteReq {
+  int64  userId=1;
+  int64  videoId=2;
+}
 
-
-
+message CheckIsFavoriteResp {
+  bool isFavorite=1;
+}
 
 // ------------------------------------ 
 // Rpc Func
 // ------------------------------------ 
 
 service UserOptService{
-	 //-----------------------userFavoriteList----------------------- 
+	 //-----------------------userFavoriteList-----------------------
 	 rpc GetUserFavorite(GetUserFavoriteReq) returns (GetUserFavoriteResp);
    rpc UpdateFavoriteStatus(UpdateFavoriteStatusReq) returns (UpdateFavoriteStatusResp);
-
+   rpc CheckIsFavorite(CheckIsFavoriteReq) returns (CheckIsFavoriteResp);
 }

@@ -5,23 +5,27 @@ package useroptservice
 
 import (
 	"context"
-	userOptPb2 "douyin/pkg/favorite/userOptPb"
+
+	"douyin/pkg/favorite/userOptPb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 )
 
 type (
-	Favorite                 = userOptPb2.Favorite
-	GetUserFavoriteReq       = userOptPb2.GetUserFavoriteReq
-	GetUserFavoriteResp      = userOptPb2.GetUserFavoriteResp
-	UpdateFavoriteStatusReq  = userOptPb2.UpdateFavoriteStatusReq
-	UpdateFavoriteStatusResp = userOptPb2.UpdateFavoriteStatusResp
+	CheckIsFavoriteReq       = userOptPb.CheckIsFavoriteReq
+	CheckIsFavoriteResp      = userOptPb.CheckIsFavoriteResp
+	Favorite                 = userOptPb.Favorite
+	GetUserFavoriteReq       = userOptPb.GetUserFavoriteReq
+	GetUserFavoriteResp      = userOptPb.GetUserFavoriteResp
+	UpdateFavoriteStatusReq  = userOptPb.UpdateFavoriteStatusReq
+	UpdateFavoriteStatusResp = userOptPb.UpdateFavoriteStatusResp
 
 	UserOptService interface {
 		// -----------------------userFavoriteList-----------------------
 		GetUserFavorite(ctx context.Context, in *GetUserFavoriteReq, opts ...grpc.CallOption) (*GetUserFavoriteResp, error)
 		UpdateFavoriteStatus(ctx context.Context, in *UpdateFavoriteStatusReq, opts ...grpc.CallOption) (*UpdateFavoriteStatusResp, error)
+		CheckIsFavorite(ctx context.Context, in *CheckIsFavoriteReq, opts ...grpc.CallOption) (*CheckIsFavoriteResp, error)
 	}
 
 	defaultUserOptService struct {
@@ -37,11 +41,16 @@ func NewUserOptService(cli zrpc.Client) UserOptService {
 
 // -----------------------userFavoriteList-----------------------
 func (m *defaultUserOptService) GetUserFavorite(ctx context.Context, in *GetUserFavoriteReq, opts ...grpc.CallOption) (*GetUserFavoriteResp, error) {
-	client := userOptPb2.NewUserOptServiceClient(m.cli.Conn())
+	client := userOptPb.NewUserOptServiceClient(m.cli.Conn())
 	return client.GetUserFavorite(ctx, in, opts...)
 }
 
 func (m *defaultUserOptService) UpdateFavoriteStatus(ctx context.Context, in *UpdateFavoriteStatusReq, opts ...grpc.CallOption) (*UpdateFavoriteStatusResp, error) {
-	client := userOptPb2.NewUserOptServiceClient(m.cli.Conn())
+	client := userOptPb.NewUserOptServiceClient(m.cli.Conn())
 	return client.UpdateFavoriteStatus(ctx, in, opts...)
+}
+
+func (m *defaultUserOptService) CheckIsFavorite(ctx context.Context, in *CheckIsFavoriteReq, opts ...grpc.CallOption) (*CheckIsFavoriteResp, error) {
+	client := userOptPb.NewUserOptServiceClient(m.cli.Conn())
+	return client.CheckIsFavorite(ctx, in, opts...)
 }

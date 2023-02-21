@@ -31,3 +31,8 @@ func (s *UserOptServiceServer) UpdateFavoriteStatus(ctx context.Context, in *use
 	l := logic2.NewUpdateFavoriteStatusLogic(ctx, s.svcCtx)
 	return l.UpdateFavoriteStatus(in)
 }
+
+func (s *UserOptServiceServer) CheckIsFavorite(ctx context.Context, in *userOptPb2.CheckIsFavoriteReq) (*userOptPb2.CheckIsFavoriteResp, error) {
+	l := logic2.NewCheckIsFavoriteLogic(ctx, s.svcCtx)
+	return l.CheckIsFavorite(in)
+}
