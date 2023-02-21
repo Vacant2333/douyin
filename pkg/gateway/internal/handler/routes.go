@@ -118,16 +118,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	)
 
 	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.IsLogin},
-			[]rest.Route{
-				{
-					Method:  http.MethodGet,
-					Path:    "/",
-					Handler: feed.FeedVideoListHandler(serverCtx),
-				},
-			}...,
-		),
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: feed.FeedVideoListHandler(serverCtx),
+			},
+		},
 		rest.WithPrefix("/douyin/feed"),
 	)
 

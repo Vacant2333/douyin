@@ -20,7 +20,11 @@ UserFavoriteRpc:
     Hosts:
       - etcd.etcd.svc.cluster.local:2379
     Key: useropt.rpc
-
+VideoRPC:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: video.rpc
 UserCommentOptServiceConf:
   Name: UserCommentOptService
   Brokers:
