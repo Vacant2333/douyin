@@ -1,0 +1,124 @@
+syntax = "v1"
+
+import "user.api"
+import "video.api"
+
+type FavoriteOptReq {
+	Token      string `form:"token"`
+	VideoId    int64  `form:"video_id"`
+	ActionType int64  `form:"action_type"`
+}
+
+type FavoriteOptRes {
+	Status
+}
+
+type FollowOptReq {
+	Token      string `form:"token"`
+	FollowId   int64  `form:"to_user_id"`
+	ActionType int64  `form:"action_type"`
+}
+
+type FollowOptRes {
+	Status
+}
+
+type CommentOptReq {
+	Token       string `form:"token"`
+	VideoId     int64  `form:"video_id"`
+	ActionType  int64  `form:"action_type"`
+	CommentText string `form:"comment_text,omitempty, optional"`
+	CommentId   int64  `form:"comment_id,omitempty, optional"`
+}
+
+type Comment {
+	CommentId  int64  `json:"id" copyier:"id"`
+	User       User   `json:"user"`
+	Content    string `json:"content"`
+	CreateTime string `json:"create_date"`
+}
+
+type CommentOptRes {
+	Status
+	Comment *Comment `json:"comment,omitempty"`
+}
+
+@server(
+	group : userOpt
+	prefix : /douyin
+	middleware: AuthJWT
+)
+
+service user-api {
+	@doc "用户点赞"
+	@handler FavoriteOpt
+	post /favorite/action (FavoriteOptReq) returns (FavoriteOptRes)
+	
+	@doc "用户评论"
+	@handler CommentOpt
+	post /comment/action (CommentOptReq) returns (CommentOptRes)
+	
+	@doc "用户关注"
+	@handler FollowOpt
+	post /relation/action (FollowOptReq) returns (FollowOptRes)
+}
+
+type FavoriteListReq {
+	IdWithTokenReq
+}
+
+type FavoriteListRes {
+	Status
+	FavoriteList []*PubVideo `json:"video_list,omitempty"`
+}
+
+type FollowListReq {
+	IdWithTokenReq
+}
+
+type FollowListRes {
+	Status
+	UserFollowlist []*User `json:"user_list,omitempty"`
+}
+
+type FollowerListReq {
+	IdWithTokenReq
+}
+
+type FollowerListRes {
+	Status
+	UserFollowerlist []*User `json:"user_list,omitempty"`
+}
+
+type CommentListReq {
+	Token   string `form:"token"`
+	VideoId int64  `form:"video_id"`
+}
+
+type CommentListRes {
+	Status
+	CommentList []*Comment `json:"comment_list,omitempty"`
+}
+
+@server(
+	group : userOpt
+	prefix : /douyin
+	middleware: AuthJWT
+)
+service user-api {
+	@doc "用户点赞列表"
+	@handler GetFavoriteList
+	get /favorite/list (FavoriteListReq) returns (FavoriteListRes)
+	
+	@doc "视频评论列表"
+	@handler GetCommentList
+	get /comment/list (CommentListReq) returns (CommentListRes)
+	
+	@doc "用户关注列表"
+	@handler GetFollowList
+	get /relation/follow/list (FollowListReq) returns (FollowListRes)
+	
+	@doc "用户粉丝列表"
+	@handler GetFollowerList
+	get /relation/follower/list (FollowerListReq) returns (FollowerListRes)
+}
