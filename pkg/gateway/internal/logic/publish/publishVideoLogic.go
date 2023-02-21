@@ -5,7 +5,7 @@ import (
 	"douyin/common/xerr"
 	"douyin/pkg/gateway/internal/svc"
 	"douyin/pkg/gateway/internal/types"
-	"douyin/pkg/video/rpc/types/video"
+	"douyin/pkg/video/types/video"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 

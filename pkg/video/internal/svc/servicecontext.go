@@ -5,7 +5,7 @@ import (
 	"douyin/pkg/favorite/useroptservice"
 	"douyin/pkg/minio-client/minioclient"
 	"douyin/pkg/user/userservice"
-	"douyin/pkg/video/rpc/internal/config"
+	"douyin/pkg/video/internal/config"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 

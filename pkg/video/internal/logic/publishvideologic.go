@@ -5,10 +5,10 @@ import (
 	"douyin/common/help/token"
 	"douyin/common/model/videoModel"
 	"douyin/pkg/minio-client/types/minio-client"
-	"douyin/pkg/video/rpc/internal/svc"
-	"douyin/pkg/video/rpc/types/video"
-	"time"
+	"douyin/pkg/video/internal/svc"
+	"douyin/pkg/video/types/video"
 	"github.com/zeromicro/go-zero/core/logx"
+	"time"
 )
 
 type PublishVideoLogic struct {

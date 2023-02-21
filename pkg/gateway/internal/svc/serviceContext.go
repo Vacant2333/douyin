@@ -6,7 +6,7 @@ import (
 	"douyin/pkg/gateway/internal/config"
 	"douyin/pkg/gateway/internal/middleware"
 	"douyin/pkg/user/userservice"
-	"douyin/pkg/video/rpc/videoservice"
+	"douyin/pkg/video/videoservice"
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"

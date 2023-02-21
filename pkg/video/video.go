@@ -1,10 +1,10 @@
 package main
 
 import (
-	"douyin/pkg/video/rpc/internal/config"
-	"douyin/pkg/video/rpc/internal/server"
-	"douyin/pkg/video/rpc/internal/svc"
-	"douyin/pkg/video/rpc/types/video"
+	"douyin/pkg/video/internal/config"
+	"douyin/pkg/video/internal/server"
+	"douyin/pkg/video/internal/svc"
+	"douyin/pkg/video/types/video"
 	"flag"
 	"fmt"
 

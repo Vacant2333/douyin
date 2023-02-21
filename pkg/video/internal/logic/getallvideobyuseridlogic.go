@@ -7,36 +7,28 @@ import (
 	"douyin/pkg/favorite/userOptPb"
 	"douyin/pkg/logger"
 	"douyin/pkg/user/userservice"
-	"douyin/pkg/video/rpc/internal/svc"
-	"douyin/pkg/video/rpc/types/video"
-	"sync"
-
+	"douyin/pkg/video/internal/svc"
+	"douyin/pkg/video/types/video"
 	"github.com/zeromicro/go-zero/core/logx"
+	"sync"
 )
 
-type GetVideoLogic struct {
+type GetAllVideoByUserIdLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetVideoLogic {
-	return &GetVideoLogic{
+func NewGetAllVideoByUserIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAllVideoByUserIdLogic {
+	return &GetAllVideoByUserIdLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, error) {
-	// todo: 这个10应该改为配置文件中读取，待改进
-	var selectNum int64 = 10
-	queryVideos, err := l.svcCtx.VideoModel.FindManyByTime(l.ctx, in.LatestTime, selectNum)
-	if err != nil {
-		logger.Fatal("FindManyByTime failed", err)
-		return nil, err
-	}
-
+func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUserIdReq) (*video.GetAllVideoByUserIdResp, error) {
+	// 根据token查看是否已登陆
 	parseToken := token.ParseToken{}
 	tokenResult, err := parseToken.ParseToken(in.Token)
 	hasUserId := true
@@ -44,6 +36,12 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 		hasUserId = false // Token解析错误
 	}
 
+	authorId := in.UserId
+	queryVideos, err := l.svcCtx.VideoModel.FindAllByUserId(l.ctx, authorId)
+	if err != nil {
+		logger.Fatal("FindAllByUserId failed", err)
+		return nil, err
+	}
 	videos := make([]*video.Video, len(queryVideos))
 	var wg sync.WaitGroup
 	for i, queryVideo := range queryVideos {
@@ -58,17 +56,16 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 				CommentCount:  query.CommentCount,
 				Title:         query.Title,
 			}
-
+			// 查询作者信息
 			info, err := l.svcCtx.UserPRC.Info(l.ctx, &userservice.UserInfoReq{
-				UserId: query.AuthorId,
+				UserId: authorId,
 			})
 			if err != nil {
 				logger.Fatal("Video获取Userinfo出错", err)
 				return
 			}
-
 			videos[i].Author = &video.User{
-				Id:              query.AuthorId,
+				Id:              authorId,
 				Name:            info.User.UserName,
 				FollowCount:     info.User.FollowCount,
 				FollowerCount:   info.User.FollowerCount,
@@ -80,7 +77,7 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 				FavoriteCount:   info.User.FavoriteCount,
 			}
 			if hasUserId {
-				// todo: 调用Follow RPC,查看是否关注了这个人,填入IsFollow
+				// todo: 调用PRC查看是否已关注
 				videos[i].Author.IsFollow = true // 对应函数
 
 				// 调用RPC查看视频是否点赞
@@ -98,11 +95,9 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 		}(i, queryVideos)
 	}
 	wg.Wait()
-	nextTime := queryVideos[len(videos)-1].Time
-	return &video.GetVideoResp{
+	return &video.GetAllVideoByUserIdResp{
 		StatusCode: 0,
 		StatusMsg:  "success",
 		VideoList:  videos,
-		NextTime:   nextTime,
 	}, nil
 }
