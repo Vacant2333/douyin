@@ -41,7 +41,7 @@ message User {
 
 message GetFollowerListReq {
   string token = 1;
-  string user_id = 2;
+  int64 user_id = 2;
 }
 
 message GetFollowerListResp {
