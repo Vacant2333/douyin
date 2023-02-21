@@ -6,6 +6,7 @@ import (
 	"douyin/pkg/gateway/internal/svc"
 	"douyin/pkg/gateway/internal/types"
 	"douyin/pkg/user/userservice"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -55,6 +56,4 @@ func (l *UserInfoLogic) UserInfo(req *types.UserInfoReq) (resp *types.UserInfoRe
 			FavoriteCount:   info.User.FavoriteCount,
 		},
 	}, nil
-
-	return
 }

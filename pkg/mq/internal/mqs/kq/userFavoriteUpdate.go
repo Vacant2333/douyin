@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -58,7 +59,8 @@ func (l *UserFavoriteOpt) execService(message messageTypes.UserFavoriteOptMessag
 	logx.Error("UserCommentOptMessage->execService xxxxxxxxxxx")
 
 	if err != nil {
-		logx.Errorf("UserCommentOptMessage->execService  err : %v , val : %s , message:%+v", err, message)
+		// FIXME: args error
+		logx.Errorf("UserCommentOptMessage->execService  err : %v , message:%+v " /*val : %s ,"*/, err, message)
 		return err
 	}
 	fmt.Printf("消费者消费成功------------------------------\n")

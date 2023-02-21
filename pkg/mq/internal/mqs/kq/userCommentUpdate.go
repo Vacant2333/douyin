@@ -7,6 +7,7 @@ import (
 	"douyin/pkg/mq/internal/svc"
 	"encoding/json"
 	"fmt"
+
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -60,7 +61,8 @@ func (l *UserCommentOpt) execService(message messageTypes.UserCommentOptMessage)
 	logx.Error("UserCommentOptMessage->execService xxxxxxxxxxx")
 
 	if err != nil {
-		logx.Errorf("UserCommentOptMessage->execService  err : %v , val : %s , message:%+v", err, message)
+		// FIXME: args error
+		logx.Errorf("UserCommentOptMessage->execService  err : %v message:%+v" /*, val : %s*/, err, message)
 		return err
 	}
 	fmt.Printf("消费者消费成功------------------------------\n")

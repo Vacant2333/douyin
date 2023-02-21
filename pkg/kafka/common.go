@@ -86,7 +86,10 @@ func CreateTopics(brokers, topics []string) error {
 			return err
 		}
 
-		PrintTopics(broker)
+		err = PrintTopics(broker)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

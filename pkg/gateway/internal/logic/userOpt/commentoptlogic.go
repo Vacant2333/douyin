@@ -11,9 +11,10 @@ import (
 	"douyin/pkg/user/userservice"
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
-	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -42,7 +43,8 @@ func (l *CommentOptLogic) CommentOpt(req *types.CommentOptReq) (resp *types.Comm
 	}
 
 	if err != nil {
-		logx.Errorf("UserCommentOpt->UserCommentRpc  err : %v , val : %s , message:%+v", err)
+		// FIXME: args error
+		logx.Errorf("UserCommentOpt->UserCommentRpc  err : %v " /* val : %s , message:%+v"*/, err)
 		return &types.CommentOptRes{
 			Status: types.Status{
 				Code: xerr.ERR,
@@ -56,7 +58,8 @@ func (l *CommentOptLogic) CommentOpt(req *types.CommentOptReq) (resp *types.Comm
 		var userId = l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)
 		userInfoResult, err := l.svcCtx.UserRpc.Info(l.ctx, &userservice.UserInfoReq{UserId: userId})
 		if err != nil {
-			logx.Errorf("UserCommentOpt->userInfoRpc  err : %v , val : %s , message:%+v", err)
+			// FIXME: args error
+			logx.Errorf("UserCommentOpt->userInfoRpc  err : %v " /*val : %s , message:%+v"*/, err)
 			return &types.CommentOptRes{
 				Status: types.Status{
 					Code: xerr.ERR,

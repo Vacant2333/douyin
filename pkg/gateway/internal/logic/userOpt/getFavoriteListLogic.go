@@ -34,7 +34,8 @@ func (l *GetFavoriteListLogic) GetFavoriteList(req *types.FavoriteListReq) (resp
 		UserId: req.UserId,
 	})
 	if err != nil {
-		logx.Errorf("UserFavoriteList->favoriteRpc  err : %v , val : %s , message:%+v", err)
+		// FIXME: args error
+		logx.Errorf("UserFavoriteList->favoriteRpc  err : %v " /* val : %s , message:%+v",*/, err)
 		return &types.FavoriteListRes{
 			Status: types.Status{
 				Code: xerr.ERR,
