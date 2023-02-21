@@ -26,3 +26,9 @@ UserRPC:
     Hosts:
       - etcd.etcd.svc.cluster.local:2379
     Key: user.rpc
+
+FavoriteRPC:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: useropt.rpc

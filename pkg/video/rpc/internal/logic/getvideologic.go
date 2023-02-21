@@ -4,6 +4,7 @@ import (
 	"context"
 	"douyin/common/help/token"
 	"douyin/common/model/videoModel"
+	"douyin/pkg/favorite/userOptPb"
 	"douyin/pkg/logger"
 	"douyin/pkg/user/userservice"
 	"douyin/pkg/video/rpc/internal/svc"
@@ -35,12 +36,14 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 		logger.Fatal("FindManyByTime failed", err)
 		return nil, err
 	}
+
 	parseToken := token.ParseToken{}
 	tokenResult, err := parseToken.ParseToken(in.Token)
 	hasUserId := true
 	if err != nil || tokenResult.UserId == 0 {
 		hasUserId = false // Token解析错误
 	}
+
 	videos := make([]*video.Video, len(queryVideos))
 	var wg sync.WaitGroup
 	for i, queryVideo := range queryVideos {
@@ -79,8 +82,17 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 			if hasUserId {
 				// todo: 调用Follow RPC,查看是否关注了这个人,填入IsFollow
 				videos[i].Author.IsFollow = true // 对应函数
-				// todo: 调用RPC获取是否点赞
-				videos[i].IsFavorite = true // 对应函数
+
+				// 调用RPC查看视频是否点赞
+				favoriteResp, err := l.svcCtx.FavoritePRC.CheckIsFavorite(l.ctx, &userOptPb.CheckIsFavoriteReq{
+					UserId:  tokenResult.UserId,
+					VideoId: query.Id,
+				})
+				if err != nil {
+					logger.Fatal("查询视频是否点赞失败", err)
+					return
+				}
+				videos[i].IsFavorite = favoriteResp.IsFavorite
 			}
 			defer wg.Done()
 		}(i, queryVideos)

@@ -2,6 +2,7 @@ package svc
 
 import (
 	"douyin/common/model/videoModel"
+	"douyin/pkg/favorite/useroptservice"
 	"douyin/pkg/minio-client/minioclient"
 	"douyin/pkg/user/userservice"
 	"douyin/pkg/video/rpc/internal/config"
@@ -9,10 +10,11 @@ import (
 )
 
 type ServiceContext struct {
-	Config     config.Config
-	VideoModel videoModel.VideoModel
-	MinioRPC   minioclient.MinIOClient
-	UserPRC    userservice.UserService
+	Config      config.Config
+	VideoModel  videoModel.VideoModel
+	MinioRPC    minioclient.MinIOClient
+	UserPRC     userservice.UserService
+	FavoritePRC useroptservice.UserOptService
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
