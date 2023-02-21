@@ -5,9 +5,8 @@ package minio_client;
 option go_package="./minio-client";
 
 message UploadFileRequest {
-  string token = 1; // 用户鉴权token
-  bytes data = 2; // 视频数据
-  string title = 3; // 视频名称(也是路径direction/filename)
+  bytes data = 1; // 视频数据
+  string title = 2; // 视频名称(也是路径direction/filename)
 }
 
 message UploadFileReply {
