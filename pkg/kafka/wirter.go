@@ -12,13 +12,12 @@ import (
 type Writer struct {
 	Writer *kafka.Writer
 	// Callback funtion when get a msg
-	Postcb  func(*Writer, proto.Message) error
+	PostCb  func(*Writer, *proto.Message) error
 	MsgChan chan proto.Message
 }
 
 func (w *Writer) Run() {
 
-	// FIXME: maybe need trim port suffix
 	brokers := strings.Split(w.Writer.Addr.String(), ",")
 	CreateTopics(brokers, append([]string{}, w.Writer.Topic))
 
@@ -31,11 +30,11 @@ func (w *Writer) Run() {
 		for {
 			var e error
 			m := <-w.MsgChan
-			if w.Postcb == nil {
-				e = templateCb(w, m)
+			if w.PostCb == nil {
+				e = templateWriteCb(w, &m)
 
 			} else {
-				e = w.Postcb(w, m)
+				e = w.PostCb(w, &m)
 			}
 			if e != nil {
 				l.Errorf("error when write %v", e)
@@ -46,8 +45,8 @@ func (w *Writer) Run() {
 
 }
 
-func templateCb(w *Writer, m proto.Message) error {
-	pbbytes, err := proto.Marshal(m)
+func templateWriteCb(w *Writer, m *proto.Message) error {
+	pbbytes, err := proto.Marshal(*m)
 	if err != nil {
 		return errors.New("cannot marshal meesage to protobuf binary bytes")
 	}

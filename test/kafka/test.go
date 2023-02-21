@@ -34,13 +34,13 @@ func main() {
 			Partition: constantx.KAFKA_PartitionNum,
 			MinBytes:  10e3,
 			MaxBytes:  10e6,
-			//ReadBatchTimeout: 500 * time.Millisecond,
-			//ReadBackoffMin: ,
-			//ReadBackoffMax: ,
+			//ReadBatchTimeout: 500 * time.Millisecond, // try to read's timeout def: 10s
+			//ReadBackoffMin: ,  // Min interval def: 100ms
+			//ReadBackoffMax: 500 * time.Millisecond, // Max interval def: 1s
 
 		}),
-		IsFetchMode: true,
-		PullCb:      readcb,
+		IsFetchMode: false, // do need commit?
+		PullCb:      pullCb,
 	}
 
 	r.Run()
@@ -55,7 +55,7 @@ func main() {
 
 }
 
-func readcb(m kafka.Message) error {
+func pullCb(m *kafka.Message) error {
 	msg := &msg.Msg{}
 	err := proto.Unmarshal(m.Value, msg)
 	if err != nil {

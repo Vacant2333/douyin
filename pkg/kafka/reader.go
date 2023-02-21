@@ -9,7 +9,7 @@ import (
 type Reader struct {
 	Reader *kafka.Reader
 	// Callback funtion when get a msg
-	PullCb func(m kafka.Message) error
+	PullCb func(m *kafka.Message) error
 	//err        chan error
 	IsFetchMode bool
 }
@@ -43,7 +43,7 @@ func (r *Reader) fetchRun() {
 				l.Errorln("error occur when reader <fetch> a message")
 			}
 			// Handle it
-			if e = r.PullCb(m); e != nil {
+			if e = r.PullCb(&m); e != nil {
 				// r.err <- e
 				l.Errorln("error occur when handle message")
 			}
@@ -67,7 +67,7 @@ func (r *Reader) run() {
 				l.Errorln("error occur when reader <fetch> a message")
 			}
 			// Handle it
-			if e = r.PullCb(m); e != nil {
+			if e = r.PullCb(&m); e != nil {
 				//r.err <- e
 				l.Errorln("error occur when handle message")
 			}
