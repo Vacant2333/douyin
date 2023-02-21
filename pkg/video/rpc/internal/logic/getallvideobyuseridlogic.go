@@ -72,7 +72,6 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 				logger.Fatal("Video获取Userinfo出错", err)
 				return
 			}
-			// todo: 调用Follow RPC,查看是否关注了这个人,填入IsFollow
 			videos[i].Author = &video.User{
 				Id:              authorId,
 				Name:            info.User.UserName,
