@@ -38,7 +38,7 @@ message Video {
 }
 
 message User {
-  string id = 1; // 用户id
+  int64 id = 1; // 用户id
   string name = 2; // 用户名称
   int64 follow_count = 3; // 关注总数
   int64 follower_count = 4; // 粉丝总数
