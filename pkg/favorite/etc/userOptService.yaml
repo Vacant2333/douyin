@@ -8,3 +8,8 @@ Etcd:
 
 DB:
   DataSource: douyin:Z4eEXbWWCApby8dE@tcp(bt.vacant.zone:3306)/douyin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+
+CacheRedis:
+  - Host: 127.0.0.1:6379
+    Type: node
+    Pass:

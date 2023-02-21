@@ -17,6 +17,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:            c,
 		UserFavoriteModel: favoriteModel.NewFavoriteModel(sqlx.NewMysql(c.DB.DataSource)),
-		UserVideoModel:    videoModel.NewVideoModel(sqlx.NewMysql(c.DB.DataSource)),
+		UserVideoModel:    videoModel.NewVideoModel(sqlx.NewMysql(c.DB.DataSource), c.CacheRedis),
 	}
 }

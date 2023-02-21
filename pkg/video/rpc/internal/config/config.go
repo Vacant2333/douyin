@@ -7,8 +7,7 @@ import (
 
 type Config struct {
 	zrpc.RpcServerConf
-
-	DB struct {
+	Mysql struct {
 		DataSource string
 	}
 	CacheRedis cache.CacheConf

@@ -9,7 +9,7 @@ init:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
 
 install-cluster:
-	kind delete cluster --name douyin
+	-kind delete cluster --name douyin
 	kind create cluster --config deployment/cluster/douyin-cluster.yaml
 
 # Deploy MinIO Service

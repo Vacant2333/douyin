@@ -23,6 +23,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		RedisCache:    c.RedisCacheConf.NewRedis(),
 		UserModel:     userModel.NewUserModel(sqlx.NewMysql(c.DB.DataSource), c.CacheConf),
 		FavoriteModel: favoriteModel.NewFavoriteModel(sqlx.NewMysql(c.DB.DataSource)),
-		FollowModel:   followModel.NewFollowModel(sqlx.NewMysql(c.DB.DataSource)),
+		FollowModel:   followModel.NewFollowModel(sqlx.NewMysql(c.DB.DataSource), c.CacheConf),
 	}
 }

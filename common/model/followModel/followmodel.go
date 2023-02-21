@@ -1,6 +1,9 @@
 package followModel
 
-import "github.com/zeromicro/go-zero/core/stores/sqlx"
+import (
+	"github.com/zeromicro/go-zero/core/stores/cache"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+)
 
 var _ FollowModel = (*customFollowModel)(nil)
 
@@ -17,8 +20,8 @@ type (
 )
 
 // NewFollowModel returns a model for the database table.
-func NewFollowModel(conn sqlx.SqlConn) FollowModel {
+func NewFollowModel(conn sqlx.SqlConn, c cache.CacheConf) FollowModel {
 	return &customFollowModel{
-		defaultFollowModel: newFollowModel(conn),
+		defaultFollowModel: newFollowModel(conn, c),
 	}
 }

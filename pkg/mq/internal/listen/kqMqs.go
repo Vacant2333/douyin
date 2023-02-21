@@ -9,7 +9,7 @@ import (
 	"github.com/zeromicro/go-zero/core/service"
 )
 
-//pub sub use kq (kafka)
+// pub sub use kq (kafka)
 func KqMqs(c config.Config, ctx context.Context, svcContext *svc.ServiceContext) []service.Service {
 
 	return []service.Service{

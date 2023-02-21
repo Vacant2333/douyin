@@ -5,7 +5,7 @@ import (
 	"regexp"
 )
 
-//密码强度必须为字⺟⼤⼩写+数字+符号，9位以上
+// 密码强度必须为字⺟⼤⼩写+数字+符号，9位以上
 func CheckPassword(ps string) error {
 	if len(ps) < 9 {
 		return fmt.Errorf("password len is < 9")
