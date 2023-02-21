@@ -141,6 +141,7 @@ type UserInfoRes struct {
 
 type PubVideoReq struct {
 	Token string `form:"token"`
+	Data  []byte `form:"data"`
 	Title string `form:"title"`
 }
 

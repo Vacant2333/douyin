@@ -6,6 +6,7 @@ import (
 	"douyin/pkg/gateway/internal/config"
 	"douyin/pkg/gateway/internal/middleware"
 	"douyin/pkg/user/userservice"
+	"douyin/pkg/video/rpc/videoservice"
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/rest"
 	"github.com/zeromicro/go-zero/zrpc"
@@ -17,6 +18,7 @@ type ServiceContext struct {
 	UserRpc         userservice.UserService
 	UserCommentRpc  usercomment.UserComment
 	UserFavoriteRpc useroptservice.UserOptService
+	VideoRPC        videoservice.VideoService
 
 	CommentOptMsgProducer  *kq.Pusher
 	FavoriteOptMsgProducer *kq.Pusher

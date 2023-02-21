@@ -56,5 +56,4 @@ func (l *UserInfoLogic) UserInfo(req *types.UserInfoReq) (resp *types.UserInfoRe
 		},
 	}, nil
 
-	return
 }

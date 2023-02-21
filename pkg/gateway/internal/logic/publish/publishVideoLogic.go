@@ -2,9 +2,10 @@ package publish
 
 import (
 	"context"
+	"douyin/common/xerr"
 	"douyin/pkg/gateway/internal/svc"
 	"douyin/pkg/gateway/internal/types"
-
+	"douyin/pkg/video/rpc/types/video"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,7 +24,24 @@ func NewPublishVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Publ
 }
 
 func (l *PublishVideoLogic) PublishVideo(req *types.PubVideoReq) (resp *types.PubVideoRes, err error) {
-	// todo: add your logic here and delete this line
-
-	return
+	pubResp, err := l.svcCtx.VideoRPC.PublishVideo(l.ctx, &video.PublishVideoReq{
+		Token: req.Token,
+		Data:  req.Data,
+		Title: req.Title,
+	})
+	if err != nil {
+		logx.Errorf("publish video failed: %v", err.Error())
+		return &types.PubVideoRes{
+			Status: types.Status{
+				Code: xerr.ERR,
+				Msg:  "get videos failed",
+			},
+		}, err
+	}
+	return &types.PubVideoRes{
+		Status: types.Status{
+			Code: int64(pubResp.StatusCode),
+			Msg:  pubResp.StatusMsg,
+		},
+	}, nil
 }
