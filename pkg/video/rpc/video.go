@@ -1,13 +1,12 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-
 	"douyin/pkg/video/rpc/internal/config"
 	"douyin/pkg/video/rpc/internal/server"
 	"douyin/pkg/video/rpc/internal/svc"
 	"douyin/pkg/video/rpc/types/video"
+	"flag"
+	"fmt"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"

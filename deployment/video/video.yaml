@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: video
+  name: video
+  namespace: video
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: video
+  template:
+    metadata:
+      labels:
+        app: video
+    spec:
+      containers:
+        - name: video
+          image: douyin/video:nightly
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081

@@ -5,11 +5,9 @@ import (
 	"douyin/common/help/token"
 	"douyin/common/model/videoModel"
 	"douyin/pkg/minio-client/types/minio-client"
-	"time"
-
 	"douyin/pkg/video/rpc/internal/svc"
 	"douyin/pkg/video/rpc/types/video"
-
+	"time"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
