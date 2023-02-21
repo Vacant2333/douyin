@@ -51,7 +51,8 @@ func (l *GetFavoriteListLogic) GetFavoriteList(req *types.FavoriteListReq) (resp
 			UserId: v.AuthorId,
 		})
 		if err != nil {
-			logx.Errorf("userinfo->userinfoRpc  err : %v , val : %s , message:%+v", err)
+			// FIXME: args error
+			logx.Errorf("userinfo->userinfoRpc  err : %v ,  message:%+v" /*val : %s ,*/, err)
 			return &types.FavoriteListRes{
 				Status: types.Status{
 					Code: xerr.ERR,
@@ -64,7 +65,8 @@ func (l *GetFavoriteListLogic) GetFavoriteList(req *types.FavoriteListReq) (resp
 			VideoId: v.VideoId,
 		})
 		if err != nil {
-			logx.Errorf("UserCommentList->commentRpc  err : %v , val : %s , message:%+v", err)
+			// FIXME: args error
+			logx.Errorf("UserCommentList->commentRpc  err : %v" /*val : %s , message:%+v*/, err)
 			return &types.FavoriteListRes{
 				Status: types.Status{
 					Code: xerr.ERR,

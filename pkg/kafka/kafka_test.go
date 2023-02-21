@@ -37,7 +37,3 @@ func TestInitSequence(t *testing.T) {
 		t.Error("error when get message from reder/writer ")
 	}
 }
-
-func TestLog(t *testing.T) {
-	t.Logf("str1: %v" "str2: %v", 1, 2)
-}

@@ -32,7 +32,8 @@ func (l *GetCommentListLogic) GetCommentList(req *types.CommentListReq) (resp *t
 		VideoId: req.VideoId,
 	})
 	if err != nil {
-		logx.Errorf("UserCommentList->commentRpc  err : %v , val : %s , message:%+v", err)
+		// FIXME: args error
+		logx.Errorf("UserCommentList->commentRpc  err : %v ," /* val : %s , message:%+v"*/, err)
 		return &types.CommentListRes{
 			Status: types.Status{
 				Code: xerr.ERR,

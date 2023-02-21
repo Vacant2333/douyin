@@ -42,11 +42,12 @@ func TestWithHandle(t *testing.T) {
 	db := pack.GetConn()
 	{
 		icd := pack.GetIChatDO(db)
-		icd.Create(&model.Chat{
+		e := icd.Create(&model.Chat{
 			Msg:      "[01_test::TestWithHandle]",
 			Sender:   1,
 			Receiver: 2,
 		})
+		check(e, t)
 
 		Chats, err := icd.FindByReceiver(2)
 		check(err, t)

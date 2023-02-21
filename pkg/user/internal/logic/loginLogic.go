@@ -7,10 +7,11 @@ import (
 	"douyin/pkg/user/internal/svc"
 	"douyin/pkg/user/userInfoPb"
 	"fmt"
-	"github.com/pkg/errors"
-	"golang.org/x/crypto/bcrypt"
 	"strconv"
 	"time"
+
+	"github.com/pkg/errors"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -62,6 +63,10 @@ func (l *LoginLogic) Login(in *userInfoPb.LoginReq) (*userInfoPb.LoginResp, erro
 	var genToken myToken.GenToken
 	now := time.Now()
 	token, err = genToken.GenToken(now, user.Id, nil)
+	if err != nil {
+		logx.Errorf("set token to redis failed, err: %s", err.Error())
+		return nil, errors.Wrapf(xerr.NewErrCode(xerr.TOKEN_GENERATE_ERROR), "generate token error")
+	}
 	_, err = l.svcCtx.RedisCache.SetnxExCtx(l.ctx, "token:"+strconv.FormatInt(user.Id, 10), token, myToken.AccessExpire)
 	if err != nil {
 		logx.Errorf("set token to redis failed, err: %s", err.Error())
