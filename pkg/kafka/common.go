@@ -17,7 +17,7 @@ func init() {
 	l = logger.NewLogger()
 }
 
-func printTopics(broker string) error {
+func PrintTopics(broker string) error {
 
 	conn, err := kafka.Dial("tcp", broker)
 	if err != nil {
@@ -43,7 +43,7 @@ func printTopics(broker string) error {
 	return nil
 }
 
-func createTopics(brokers, topics []string) error {
+func CreateTopics(brokers, topics []string) error {
 
 	for _, broker := range brokers {
 
@@ -86,7 +86,7 @@ func createTopics(brokers, topics []string) error {
 			return err
 		}
 
-		printTopics(broker)
+		PrintTopics(broker)
 	}
 
 	return nil

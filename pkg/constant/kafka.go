@@ -1,10 +1,11 @@
 package constantx
 
 const (
-	KAFKA_testBroker string = "zookeeper:2181"
+	KAFKA_TestBroker string = "localhost:9092"
+	KAFKA_TestTopic  string = "msg"
 )
 
 const (
-	KAFKA_PartitionNum   int = 1
-	KAFKA_ReplicationNum     = 1
+	KAFKA_PartitionNum   int = 0 // 0 as index start
+	KAFKA_ReplicationNum int = 1
 )

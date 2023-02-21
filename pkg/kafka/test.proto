@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package msg;
+option go_package = "/msg";
+
+message msg {
+  int64 id = 1;
+  string content = 2;
+}

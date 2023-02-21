@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper_
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - 2181:2181
+    volumes:
+      - "zookeeper_data:/bitnami/zookeeper_data"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka_
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - "kafka_data:/bitnami"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1 ## modified
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_LOG_RETENTION_HOURS: 120
+      KAFKA_NUM_PARTITIONS: 1
+      KAFKA_DELETE_RETENTION_MS: 1000
+
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
