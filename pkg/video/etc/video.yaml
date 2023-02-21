@@ -16,6 +16,10 @@ RedisCacheConf:
   Host: redis-master.redis.svc.cluster.local:6379
   Pass: redispwd123
 
+CacheRedis:
+  - Host: redis-master.redis.svc.cluster.local:6379
+    Pass: redispwd123
+
 MinIOClientRpc:
   Etcd:
     Hosts:
