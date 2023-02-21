@@ -3,29 +3,31 @@ package logic
 import (
 	"context"
 	"douyin/common/model/videoModel"
-	"douyin/pkg/video/internal/svc"
-	"douyin/pkg/video/types/video"
+	"douyin/pkg/video/rpc/internal/svc"
+	"douyin/pkg/video/rpc/types/video"
 	"sync"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetAllVideoByUserIdLogic struct {
+type GetVideoLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetAllVideoByUserIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetAllVideoByUserIdLogic {
-	return &GetAllVideoByUserIdLogic{
+func NewGetVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetVideoLogic {
+	return &GetVideoLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUserIdReq) (*video.GetAllVideoByUserIdResp, error) {
-	queryVideos, err := l.svcCtx.VideoModel.FindAllByUserId(l.ctx, in.UserId)
+func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, error) {
+	// todo: 这个10应该改为配置文件中读取，待改进
+	var selectNum int64 = 10
+	queryVideos, err := l.svcCtx.VideoModel.FindManyByTime(l.ctx, in.LatestTime, selectNum)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +47,7 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 			}
 			// todo: 调用RPC获取作者信息，以及user是否关注了该人
 			videos[i].Author = &video.User{
-				Id:              in.UserId,
+				Id:              "123",
 				Name:            "Author",
 				FollowCount:     12,
 				FollowerCount:   34,
@@ -63,9 +65,11 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 		}(i, queryVideos)
 	}
 	wg.Wait()
-	return &video.GetAllVideoByUserIdResp{
+	nextTime := queryVideos[len(videos)-1].Time
+	return &video.GetVideoResp{
 		StatusCode: 0,
 		StatusMsg:  "success",
 		VideoList:  videos,
+		NextTime:   nextTime,
 	}, nil
 }
