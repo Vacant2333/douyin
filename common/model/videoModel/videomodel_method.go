@@ -21,7 +21,7 @@ func (m *defaultVideoModel) FindManyByTime(ctx context.Context, time int64, num 
 	}
 }
 
-func (m *defaultVideoModel) FindAllByUserId(ctx context.Context, userId string) ([]*Video, error) {
+func (m *defaultVideoModel) FindAllByUserId(ctx context.Context, userId int64) ([]*Video, error) {
 	var resp []*Video
 	query := fmt.Sprintf("select %s from %s where `removed` = 0 and `author_id` = ?", videoRows, m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userId)

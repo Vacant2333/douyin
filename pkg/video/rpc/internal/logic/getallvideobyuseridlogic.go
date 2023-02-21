@@ -2,7 +2,14 @@ package logic
 
 import (
 	"context"
+	"douyin/common/help/token"
 	"douyin/common/model/videoModel"
+	"douyin/pkg/favorite/userOptPb"
+	"douyin/pkg/user/userservice"
+	"strconv"
+	"sync"
+
+	"douyin/pkg/logger"
 	"douyin/pkg/video/rpc/internal/svc"
 	"douyin/pkg/video/rpc/types/video"
 	"sync"
@@ -25,8 +32,23 @@ func NewGetAllVideoByUserIdLogic(ctx context.Context, svcCtx *svc.ServiceContext
 }
 
 func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUserIdReq) (*video.GetAllVideoByUserIdResp, error) {
-	queryVideos, err := l.svcCtx.VideoModel.FindAllByUserId(l.ctx, in.UserId)
+	// 根据token查看是否已登陆
+	parseToken := token.ParseToken{}
+	tokenResult, err := parseToken.ParseToken(in.Token)
+	hasUserId := true
+	if err != nil || tokenResult.UserId == 0 {
+		hasUserId = false // Token解析错误
+	}
+
+	id, err := strconv.Atoi(in.UserId)
+	authorId := int64(id)
 	if err != nil {
+		logger.Fatal("useId转换int类型失败", err)
+		return nil, err
+	}
+	queryVideos, err := l.svcCtx.VideoModel.FindAllByUserId(l.ctx, authorId)
+	if err != nil {
+		logger.Fatal("FindAllByUserId failed", err)
 		return nil, err
 	}
 	videos := make([]*video.Video, len(queryVideos))
@@ -43,22 +65,41 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 				CommentCount:  query.CommentCount,
 				Title:         query.Title,
 			}
-			// todo: 调用RPC获取作者信息，以及user是否关注了该人
-			videos[i].Author = &video.User{
-				Id:              in.UserId,
-				Name:            "Author",
-				FollowCount:     12,
-				FollowerCount:   34,
-				IsFollow:        false,
-				Avatar:          "",
-				BackgroundImage: "",
-				Signature:       "this is a sign",
-				TotalFavorited:  16,
-				WorkCount:       0,
-				FavoriteCount:   15,
+			// 查询作者信息
+			info, err := l.svcCtx.UserPRC.Info(l.ctx, &userservice.UserInfoReq{
+				UserId: authorId,
+			})
+			if err != nil {
+				logger.Fatal("Video获取Userinfo出错", err)
+				return
 			}
-			// todo: 调用RPC获取是否点赞
-			videos[i].IsFavorite = false
+			videos[i].Author = &video.User{
+				Id:              authorId,
+				Name:            info.User.UserName,
+				FollowCount:     info.User.FollowCount,
+				FollowerCount:   info.User.FollowerCount,
+				Avatar:          info.User.Avatar,
+				BackgroundImage: info.User.BackgroundImage,
+				Signature:       info.User.Signature,
+				TotalFavorited:  info.User.TotalFavorited,
+				WorkCount:       info.User.WorkCount,
+				FavoriteCount:   info.User.FavoriteCount,
+			}
+			if hasUserId {
+				// todo: 调用PRC查看是否已关注
+				videos[i].Author.IsFollow = true // 对应函数
+
+				// 调用RPC查看视频是否点赞
+				favoriteResp, err := l.svcCtx.FavoritePRC.CheckIsFavorite(l.ctx, &userOptPb.CheckIsFavoriteReq{
+					UserId:  tokenResult.UserId,
+					VideoId: query.Id,
+				})
+				if err != nil {
+					logger.Fatal("查询视频是否点赞失败", err)
+					return
+				}
+				videos[i].IsFavorite = favoriteResp.IsFavorite
+			}
 			defer wg.Done()
 		}(i, queryVideos)
 	}

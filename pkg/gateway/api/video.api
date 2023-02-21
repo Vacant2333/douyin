@@ -9,6 +9,7 @@ import "user.api"
 
 type PubVideoReq {
 	Token string `form:"token"`
+	Data []byte  `form:data`
 	Title string `form:"title"`
 }
 
@@ -66,7 +67,6 @@ type FeedVideoListRes {
 @server(
 	group: feed
 	prefix: /douyin/feed
-	middleware: IsLogin
 )
 service user-api {
 	@doc "获取视频流"

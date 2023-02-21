@@ -1,16 +1,35 @@
 Name: video.rpc
-ListenOn: 0.0.0.0:8081
+ListenOn: 0.0.0.0:30001
 Etcd:
   Hosts:
   - etcd.etcd.svc.cluster.local:2379
   Key: video.rpc
-Mysql:
+
+DB:
   DataSource: douyin:Z4eEXbWWCApby8dE@tcp(bt.vacant.zone:3306)/douyin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
-CacheRedis:
+
+CacheConf:
   - Host: redis-master.redis.svc.cluster.local:6379
     Pass: redispwd123
+
+RedisCacheConf:
+  Host: redis-master.redis.svc.cluster.local:6379
+  Pass: redispwd123
+
 MinIOClientRpc:
   Etcd:
     Hosts:
       - etcd.etcd.svc.cluster.local:2379
     Key: minioclient.rpc
+
+UserRPC:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: user.rpc
+
+FavoriteRPC:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: useropt.rpc
