@@ -36,6 +36,14 @@ install-redis:
 	helm install redis bitnami/redis -n redis --set auth.password='redispwd123'
 
 
+install-minio-client:
+	docker build -f ${PROJECT_ROOT}/cmd/minio-client/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/minio-client:nightly
+	-kubectl delete ns minio-client
+	kind load docker-image douyin/minio-client:nightly --name douyin
+	kubectl create ns minio-client
+	kubectl apply -f deployment/minio-client/minio-client.yaml
 
 
 install-user:
