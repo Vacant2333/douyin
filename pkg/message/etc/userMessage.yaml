@@ -4,3 +4,8 @@ Etcd:
   Hosts:
   - etcd.etcd.svc.cluster.local:2379
   Key: usermessage.rpc
+DB:
+  DataSource: douyin:Z4eEXbWWCApby8dE@tcp(bt.vacant.zone:3306)/douyin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+CacheConf:
+  - Host: redis-master.redis.svc.cluster.local:6379
+    Pass: redispwd123

@@ -91,6 +91,15 @@ install-video:
 	kubectl create ns video
 	kubectl apply -f deployment/video/video.yaml
 
+install-message:
+	docker build -f ${PROJECT_ROOT}/cmd/message/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/message:nightly
+	-kubectl delete ns message
+	kind load docker-image douyin/message:nightly --name douyin
+	kubectl create ns message
+	kubectl apply -f deployment/message/message.yaml
+
 install-gateway:
 	docker build -f ${PROJECT_ROOT}/cmd/gateway/Dockerfile \
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \

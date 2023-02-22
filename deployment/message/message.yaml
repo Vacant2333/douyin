@@ -2,22 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: comment
-  name: comment
-  namespace: comment
+    app: message
+  name: message
+  namespace: message
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: comment
+      app: message
   template:
     metadata:
       labels:
-        app: comment
+        app: message
     spec:
       containers:
-        - name: comment
-          image: douyin/comment:nightly
+        - name: message
+          image: douyin/message:nightly
           imagePullPolicy: Never
           ports:
-            - containerPort: 8083
+            - containerPort: 8080
