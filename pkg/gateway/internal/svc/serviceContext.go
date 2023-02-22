@@ -3,6 +3,7 @@ package svc
 import (
 	"douyin/pkg/comment/usercomment"
 	"douyin/pkg/favorite/useroptservice"
+	"douyin/pkg/follow/followservice"
 	"douyin/pkg/gateway/internal/config"
 	"douyin/pkg/gateway/internal/middleware"
 	"douyin/pkg/user/userservice"
@@ -19,9 +20,11 @@ type ServiceContext struct {
 	UserCommentRpc  usercomment.UserComment
 	UserFavoriteRpc useroptservice.UserOptService
 	VideoRPC        videoservice.VideoService
+	FollowRPC       followservice.FollowService
 
 	CommentOptMsgProducer  *kq.Pusher
 	FavoriteOptMsgProducer *kq.Pusher
+	FollowOptMsgProducer   *kq.Pusher
 
 	AuthJWT rest.Middleware
 	IsLogin rest.Middleware
@@ -36,5 +39,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserRpc:               userservice.NewUserService(zrpc.MustNewClient(c.UserRpc)),
 		CommentOptMsgProducer: kq.NewPusher(c.UserCommentOptServiceConf.Brokers, c.UserCommentOptServiceConf.Topic),
 		UserCommentRpc:        usercomment.NewUserComment(zrpc.MustNewClient(c.UserCommentRpc)),
+		FollowRPC:             followservice.NewFollowService(zrpc.MustNewClient(c.FollowRPC)),
 	}
 }
