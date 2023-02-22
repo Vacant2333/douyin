@@ -63,14 +63,14 @@ install-comment:
 	kubectl create ns comment
 	kubectl apply -f deployment/comment/comment.yaml
 
-install-comment-mq:
-	docker build -f ${PROJECT_ROOT}/cmd/comment-mq/Dockerfile \
+install-mq:
+	docker build -f ${PROJECT_ROOT}/cmd/mq/Dockerfile \
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
-		-t douyin/comment-mq:nightly
-	-kubectl delete ns comment-mq
-	kind load docker-image douyin/comment-mq:nightly --name douyin
-	kubectl create ns comment-mq
-	kubectl apply -f deployment/comment-mq/comment-mq.yaml
+		-t douyin/mq:nightly
+	-kubectl delete ns mq
+	kind load docker-image douyin/mq:nightly --name douyin
+	kubectl create ns mq
+	kubectl apply -f deployment/mq/mq.yaml
 
 install-favorite:
 	docker build -f ${PROJECT_ROOT}/cmd/favorite/Dockerfile \
@@ -98,6 +98,16 @@ install-message:
 	kind load docker-image douyin/message:nightly --name douyin
 	kubectl create ns message
 	kubectl apply -f deployment/message/message.yaml
+
+install-follow:
+	docker build -f ${PROJECT_ROOT}/cmd/follow/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/follow:nightly
+	-kubectl delete ns follow
+	kind load docker-image douyin/follow:nightly --name douyin
+	kubectl create ns follow
+	kubectl apply -f deployment/follow/follow.yaml
+
 
 install-gateway:
 	docker build -f ${PROJECT_ROOT}/cmd/gateway/Dockerfile \

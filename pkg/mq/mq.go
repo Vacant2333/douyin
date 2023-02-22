@@ -8,7 +8,7 @@ import (
 	"github.com/zeromicro/go-zero/core/service"
 )
 
-var configFile = flag.String("f", "etc/comment.yaml", "Specify the config file")
+var configFile = flag.String("f", "etc/mq.yaml", "Specify the config file")
 
 func main() {
 	flag.Parse()

@@ -6,6 +6,8 @@ import (
 	"douyin/pkg/logger"
 	"douyin/pkg/minio-client/internal/svc"
 	"douyin/pkg/minio-client/types/minio-client"
+	"fmt"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -38,13 +40,13 @@ func (l *UploadFileLogic) UploadFile(in *minio_client.UploadFileRequest) (*minio
 		panic("UploadFile's parameter cant be nil")
 	}
 
-	videoUrl, err := uploadFile(client, bytes.NewReader(in.Data), in.Title+".mp4", bucket, "")
+	videoUrl, err := uploadFile(client, bytes.NewReader(in.Data), fmt.Sprintf("%v.mp4", time.Now().Unix()), bucket, "")
 	if err != nil {
 		logger.Fatalf("Fail to upload video file, err: %v", err)
 		return nil, err
 	}
 
-	frameUrl, err := uploadFile(client, pngFrame, in.Title+".png", bucket, "")
+	frameUrl, err := uploadFile(client, pngFrame, fmt.Sprintf("%v.png", time.Now().Unix()), bucket, "")
 	if err != nil {
 		logger.Fatalf("Fail to upload frame file, err: %v, err")
 		return nil, err

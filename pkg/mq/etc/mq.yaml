@@ -13,6 +13,16 @@ UserCommentOptServiceConf:
   Consumers: 1
   Processors: 1
 
+UserFollowOptServiceConf:
+  Name: UserFollowOptService
+  Brokers:
+    - kafka.kafka.svc.cluster.local:9092
+  Group: UserFollowOptService-group
+  Topic: UserFollowOptService-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1
+
 UserFavoriteOptServiceConf:
   Name: UserFavoriteOptService
   Brokers:
@@ -22,19 +32,12 @@ UserFavoriteOptServiceConf:
   Offset: first
   Consumers: 1
   Processors: 1
-#rpc
+
 UserCommentRpc:
   Etcd:
     Hosts:
       - etcd.etcd.svc.cluster.local:2379
     Key: usercomment.rpc
-    NonBlock: true
-
-UserInfoRpc:
-  Etcd:
-    Hosts:
-      - etcd.etcd.svc.cluster.local:2379
-    Key: userinfo.rpc
     NonBlock: true
 
 UserFavoriteRpc:
@@ -43,7 +46,7 @@ UserFavoriteRpc:
       - etcd.etcd.svc.cluster.local:2379
     Key: useropt.rpc
 
-FollowRpc:
+UserFollowRpc:
   Etcd:
     Hosts:
       - etcd.etcd.svc.cluster.local:2379

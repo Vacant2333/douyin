@@ -2,11 +2,11 @@ Name: user-api
 Host: 0.0.0.0
 Port: 8888
 Mode: dev
+MaxBytes: 8388608
+Timeout: 30000
 
 
 UserCommentRpc:
-  # 踩坑 goctl生成的服务名会自动加上-svc后缀 因此创建yaml文件时 --name 参数不要加-svc
-  #Target: k8s://douyin-comment/comment-rpc-svc:8081
   Etcd:
     Hosts:
       - etcd.etcd.svc.cluster.local:2379
@@ -51,3 +51,9 @@ UserFavoriteOptServiceConf:
   Offset: first
   Consumers: 1
   Processors: 1
+
+FollowRpc:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: follow.rpc

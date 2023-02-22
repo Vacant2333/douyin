@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: follow
+  name: follow
+  namespace: follow
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: follow
+  template:
+    metadata:
+      labels:
+        app: follow
+    spec:
+      containers:
+        - name: follow
+          image: douyin/follow:nightly
+          imagePullPolicy: Never
