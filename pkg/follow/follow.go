@@ -1,13 +1,12 @@
 package main
 
 import (
+	"douyin/pkg/follow/internal/config"
+	"douyin/pkg/follow/internal/server"
+	"douyin/pkg/follow/internal/svc"
+	"douyin/pkg/follow/types/follow"
 	"flag"
 	"fmt"
-
-	"douyin/pkg/follow/rpc/internal/config"
-	"douyin/pkg/follow/rpc/internal/server"
-	"douyin/pkg/follow/rpc/internal/svc"
-	"douyin/pkg/follow/rpc/types/follow"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"

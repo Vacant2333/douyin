@@ -2,9 +2,8 @@ package logic
 
 import (
 	"context"
-
-	"douyin/pkg/follow/rpc/internal/svc"
-	"douyin/pkg/follow/rpc/types/follow"
+	"douyin/pkg/follow/internal/svc"
+	"douyin/pkg/follow/types/follow"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

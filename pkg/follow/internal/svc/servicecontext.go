@@ -2,8 +2,7 @@ package svc
 
 import (
 	"douyin/common/model/followModel"
-	"douyin/pkg/follow/rpc/internal/config"
-
+	"douyin/pkg/follow/internal/config"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
