@@ -6,7 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 )
 
-func (m *defaultFollowModel) FindAllByUserId(ctx context.Context, userId string) ([]*Follow, error) {
+func (m *defaultFollowModel) FindAllByUserId(ctx context.Context, userId int64) ([]*Follow, error) {
 	var resp []*Follow
 	query := fmt.Sprintf("select `fun_id` from %s where `user_id` = ? and `removed` = 0", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userId)
@@ -21,7 +21,7 @@ func (m *defaultFollowModel) FindAllByUserId(ctx context.Context, userId string)
 	}
 }
 
-func (m *defaultFollowModel) FindAllByFunId(ctx context.Context, funId string) ([]*Follow, error) {
+func (m *defaultFollowModel) FindAllByFunId(ctx context.Context, funId int64) ([]*Follow, error) {
 	var resp []*Follow
 	query := fmt.Sprintf("select `user_id` from %s where `fun_id` = ? and `removed` = 0", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, funId)

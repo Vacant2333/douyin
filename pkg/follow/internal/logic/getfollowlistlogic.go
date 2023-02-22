@@ -4,7 +4,7 @@ import (
 	"context"
 	"douyin/pkg/follow/internal/svc"
 	"douyin/pkg/follow/types/follow"
-	"fmt"
+	"douyin/pkg/user/userservice"
 	"sync"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -25,30 +25,45 @@ func NewGetFollowListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 }
 
 func (l *GetFollowListLogic) GetFollowList(in *follow.GetFollowListReq) (*follow.GetFollowListResp, error) {
-	// todo: 判断token是否合法
-	queryFollows, err := l.svcCtx.FollowModel.FindAllByFunId(l.ctx, in.UserId)
+	queryFollow, err := l.svcCtx.FollowModel.FindAllByFunId(l.ctx, in.UserId)
 	if err != nil {
+		logx.Errorf("get follow list failed: %v", err.Error())
 		return &follow.GetFollowListResp{
 			StatusCode: -1,
-			StatusMsg:  "Failed, something seems to be wrong on the server side",
+			StatusMsg:  "get follow list failed",
 		}, err
 	}
-	userList := make([]*follow.User, len(queryFollows))
+	follows := make([]*follow.User, len(queryFollow))
 	var wg sync.WaitGroup
-	for i, queryFollow := range queryFollows {
-		query := queryFollow
+	for index, v := range queryFollow {
 		wg.Add(1)
-		go func(i int) {
-			// todo: 生成user model，根据query中的userId查询User数据，并组装UserList
-			fmt.Println(query.UserId)
-			userList[i].Name = "TBH"
+		query := v
+		i := index
+		go func() {
+			queryFollows, err := l.svcCtx.UserPRC.Info(l.ctx, &userservice.UserInfoReq{
+				UserId: query.UserId.Int64,
+			})
+			if err != nil {
+				logx.Errorf("in follow model get user info failed: %v", err.Error())
+				return
+			}
+			follows[i].Id = queryFollows.User.UserId
+			follows[i].Name = queryFollows.User.UserName
+			follows[i].FollowCount = queryFollows.User.FollowCount
+			follows[i].FollowerCount = queryFollows.User.FollowerCount
+			follows[i].IsFollow = true
+			follows[i].Avatar = queryFollows.User.Avatar
+			follows[i].BackgroundImage = queryFollows.User.BackgroundImage
+			follows[i].Signature = queryFollows.User.Signature
+			follows[i].TotalFavorited = queryFollows.User.TotalFavorited
+			follows[i].WorkCount = queryFollows.User.WorkCount
+			follows[i].FavoriteCount = queryFollows.User.FavoriteCount
 			defer wg.Done()
-		}(i)
+		}()
 	}
 	wg.Wait()
 	return &follow.GetFollowListResp{
 		StatusCode: 0,
-		StatusMsg:  "success",
-		UserList:   userList,
+		UserList:   follows,
 	}, nil
 }

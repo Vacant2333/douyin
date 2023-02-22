@@ -16,7 +16,7 @@ message FollowResp {
 
 message GetFollowListReq {
   string token = 1;
-  string user_id = 2;
+  int64 user_id = 2;
 }
 
 message GetFollowListResp {
@@ -26,7 +26,7 @@ message GetFollowListResp {
 }
 
 message User {
-  string id = 1; // 用户id
+  int64 id = 1; // 用户id
   string name = 2; // 用户名称
   int64 follow_count = 3; // 关注总数
   int64 follower_count = 4; // 粉丝总数
