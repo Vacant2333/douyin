@@ -5,6 +5,7 @@ import (
 	"douyin/pkg/favorite/useroptservice"
 	"douyin/pkg/gateway/internal/config"
 	"douyin/pkg/gateway/internal/middleware"
+	"douyin/pkg/message/usermessage"
 	"douyin/pkg/user/userservice"
 	"douyin/pkg/video/videoservice"
 	"github.com/zeromicro/go-queue/kq"
@@ -19,6 +20,7 @@ type ServiceContext struct {
 	UserCommentRpc  usercomment.UserComment
 	UserFavoriteRpc useroptservice.UserOptService
 	VideoRPC        videoservice.VideoService
+	MessageRpc      usermessage.UserMessage
 
 	CommentOptMsgProducer  *kq.Pusher
 	FavoriteOptMsgProducer *kq.Pusher
@@ -35,6 +37,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 		UserRpc:               userservice.NewUserService(zrpc.MustNewClient(c.UserRpc)),
 		UserCommentRpc:        usercomment.NewUserComment(zrpc.MustNewClient(c.UserCommentRpc)),
+		MessageRpc:            usermessage.NewUserMessage(zrpc.MustNewClient(c.MessageRpc)),
 		UserFavoriteRpc:       nil,
 		VideoRPC:              videoservice.NewVideoService(zrpc.MustNewClient(c.VideoRPC)),
 		CommentOptMsgProducer: kq.NewPusher(c.UserCommentOptServiceConf.Brokers, c.UserCommentOptServiceConf.Topic),
