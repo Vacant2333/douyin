@@ -51,13 +51,19 @@ func (l *GetFollowerListLogic) GetFollowerList(in *follow.GetFollowerListReq) (*
 			followers[i].Name = queryFollowers.User.UserName
 			followers[i].FollowCount = queryFollowers.User.FollowCount
 			followers[i].FollowerCount = queryFollowers.User.FollowerCount
-			// todo followers[i].IsFollow
 			followers[i].Avatar = queryFollowers.User.Avatar
 			followers[i].BackgroundImage = queryFollowers.User.BackgroundImage
 			followers[i].Signature = queryFollowers.User.Signature
 			followers[i].TotalFavorited = queryFollowers.User.TotalFavorited
 			followers[i].WorkCount = queryFollowers.User.WorkCount
 			followers[i].FavoriteCount = queryFollowers.User.FavoriteCount
+
+			isFollow, err := l.svcCtx.FollowModel.CheckIsFollow(l.ctx, queryFollowers.User.UserId, in.UserId)
+			if err != nil {
+				logx.Errorf("in follow model query is follow failed: %v", err.Error())
+				return
+			}
+			followers[i].IsFollow = isFollow
 			defer wg.Done()
 		}()
 	}

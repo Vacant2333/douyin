@@ -36,3 +36,8 @@ func (s *FollowServiceServer) GetFollowerList(ctx context.Context, in *follow.Ge
 	l := logic.NewGetFollowerListLogic(ctx, s.svcCtx)
 	return l.GetFollowerList(in)
 }
+
+func (s *FollowServiceServer) CheckIsFollow(ctx context.Context, in *follow.CheckIsFollowReq) (*follow.CheckIsFollowResp, error) {
+	l := logic.NewCheckIsFollowLogic(ctx, s.svcCtx)
+	return l.CheckIsFollow(in)
+}

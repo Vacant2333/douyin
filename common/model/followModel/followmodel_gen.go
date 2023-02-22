@@ -31,6 +31,7 @@ type (
 		FindAllByUserId(ctx context.Context, userId int64) ([]*Follow, error)
 		FindAllByFunId(ctx context.Context, funId int64) ([]*Follow, error)
 		CountByFollowRelation(ctx context.Context, id int64, field string) (int64, error)
+		CheckIsFollow(ctx context.Context, userId int64, funId int64) (bool, error)
 		Update(ctx context.Context, data *Follow) error
 		Delete(ctx context.Context, id int64) error
 	}

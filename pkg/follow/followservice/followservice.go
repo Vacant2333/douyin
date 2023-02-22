@@ -13,6 +13,8 @@ import (
 )
 
 type (
+	CheckIsFollowReq    = follow.CheckIsFollowReq
+	CheckIsFollowResp   = follow.CheckIsFollowResp
 	FollowReq           = follow.FollowReq
 	FollowResp          = follow.FollowResp
 	GetFollowListReq    = follow.GetFollowListReq
@@ -25,6 +27,7 @@ type (
 		Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
 		GetFollowList(ctx context.Context, in *GetFollowListReq, opts ...grpc.CallOption) (*GetFollowListResp, error)
 		GetFollowerList(ctx context.Context, in *GetFollowerListReq, opts ...grpc.CallOption) (*GetFollowerListResp, error)
+		CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error)
 	}
 
 	defaultFollowService struct {
@@ -51,4 +54,9 @@ func (m *defaultFollowService) GetFollowList(ctx context.Context, in *GetFollowL
 func (m *defaultFollowService) GetFollowerList(ctx context.Context, in *GetFollowerListReq, opts ...grpc.CallOption) (*GetFollowerListResp, error) {
 	client := follow.NewFollowServiceClient(m.cli.Conn())
 	return client.GetFollowerList(ctx, in, opts...)
+}
+
+func (m *defaultFollowService) CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error) {
+	client := follow.NewFollowServiceClient(m.cli.Conn())
+	return client.CheckIsFollow(ctx, in, opts...)
 }
