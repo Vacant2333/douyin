@@ -88,7 +88,7 @@ func (m *defaultFavoriteModel) FindAll(ctx context.Context, id int64) ([]*Favori
 }
 
 func (m *defaultFavoriteModel) CheckIsFavorite(ctx context.Context, id int64, videoId int64) (bool, error) {
-	query := fmt.Sprintf("select `count(*)` from %s where `user_id` = ? and `removed` = 0 and `video_id` = ? ", m.table)
+	query := fmt.Sprintf("select count(*) from %s where `user_id` = ? and `removed` = 0 and `video_id` = ? ", m.table)
 	var resp int64
 	err := m.conn.QueryRowCtx(ctx, &resp, query, id, videoId)
 	switch err {

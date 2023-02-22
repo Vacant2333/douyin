@@ -28,7 +28,6 @@ func (l *GetUserFavoriteLogic) GetUserFavorite(in *userOptPb.GetUserFavoriteReq)
 	fmt.Printf("GetVideoFavorite-------------->")
 
 	allFavoriteInfoData, err := l.svcCtx.UserFavoriteModel.FindAll(l.ctx, in.UserId)
-	//fmt.Printf("favoriteList: %v", favoriteList)
 	if err != nil {
 		logx.Errorf("GetFavoriteList------->SELECT err : %s", err.Error())
 		return &userOptPb.GetUserFavoriteResp{}, err

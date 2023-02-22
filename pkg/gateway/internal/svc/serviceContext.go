@@ -35,11 +35,12 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		AuthJWT: middleware.NewAuthJWTMiddleware().Handle,
 		IsLogin: middleware.NewIsLoginMiddleware().Handle,
 
-		UserRpc:               userservice.NewUserService(zrpc.MustNewClient(c.UserRpc)),
-		UserCommentRpc:        usercomment.NewUserComment(zrpc.MustNewClient(c.UserCommentRpc)),
-		MessageRpc:            usermessage.NewUserMessage(zrpc.MustNewClient(c.MessageRpc)),
-		UserFavoriteRpc:       nil,
-		VideoRPC:              videoservice.NewVideoService(zrpc.MustNewClient(c.VideoRPC)),
-		CommentOptMsgProducer: kq.NewPusher(c.UserCommentOptServiceConf.Brokers, c.UserCommentOptServiceConf.Topic),
+		FavoriteOptMsgProducer: kq.NewPusher(c.UserFavoriteOptServiceConf.Brokers, c.UserFavoriteOptServiceConf.Topic),
+		UserRpc:                userservice.NewUserService(zrpc.MustNewClient(c.UserRpc)),
+		UserCommentRpc:         usercomment.NewUserComment(zrpc.MustNewClient(c.UserCommentRpc)),
+		MessageRpc:             usermessage.NewUserMessage(zrpc.MustNewClient(c.MessageRpc)),
+		UserFavoriteRpc:        useroptservice.NewUserOptService(zrpc.MustNewClient(c.UserFavoriteRpc)),
+		VideoRPC:               videoservice.NewVideoService(zrpc.MustNewClient(c.VideoRPC)),
+		CommentOptMsgProducer:  kq.NewPusher(c.UserCommentOptServiceConf.Brokers, c.UserCommentOptServiceConf.Topic),
 	}
 }
