@@ -19,5 +19,3 @@ spec:
         - name: comment-mq
           image: douyin/comment-mq:nightly
           imagePullPolicy: Never
-          ports:
-            - containerPort: 3001

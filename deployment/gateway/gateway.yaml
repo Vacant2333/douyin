@@ -22,7 +22,7 @@ metadata:
   name: gateway
   namespace: gateway
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: gateway

@@ -19,5 +19,3 @@ spec:
         - name: message
           image: douyin/message:nightly
           imagePullPolicy: Never
-          ports:
-            - containerPort: 8080

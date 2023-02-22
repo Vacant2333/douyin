@@ -11,9 +11,6 @@ COPY pkg/comment-mq/etc /app/etc
 RUN go build -ldflags="-s -w" -o /app/comment-mq /usr/local/go/src/douyin/pkg/comment-mq/mq.go
 
 FROM gcr.io/distroless/static-debian11:latest
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /usr/share/zoneinfo/Asia/Shanghai
-ENV TZ Asia/Shanghai
 WORKDIR /app
 COPY --from=builder /app/comment-mq /app/comment-mq
 COPY --from=builder /app/etc /app/etc

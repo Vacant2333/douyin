@@ -19,5 +19,3 @@ spec:
         - name: comment
           image: douyin/comment:nightly
           imagePullPolicy: Never
-          ports:
-            - containerPort: 8083

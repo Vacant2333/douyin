@@ -1,15 +1,11 @@
 rootUser: "douyin"
 rootPassword: "douyin_pass"
-
-replicas: 2
-
+replicas: 3
 persistence:
   size: 10Gi
-
 resources:
   requests:
     memory: 512Mi
-
 buckets:
   - name: douyin
     policy: none

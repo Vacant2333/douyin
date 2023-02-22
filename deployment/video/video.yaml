@@ -19,5 +19,3 @@ spec:
         - name: video
           image: douyin/video:nightly
           imagePullPolicy: Never
-          ports:
-            - containerPort: 30001

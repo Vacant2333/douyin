@@ -19,5 +19,3 @@ spec:
         - name: favorite
           image: douyin/favorite:nightly
           imagePullPolicy: Never
-          ports:
-            - containerPort: 8081
