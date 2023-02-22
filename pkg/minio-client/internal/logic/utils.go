@@ -8,7 +8,6 @@ import (
 	"github.com/minio/minio-go/v7"
 	ffmpeg "github.com/u2takey/ffmpeg-go"
 	"os"
-	"time"
 )
 
 import (
@@ -32,32 +31,31 @@ func makeMinIOClient() *minio.Client {
 }
 
 func getVideoFrame(data []byte, frame int) (*bytes.Reader, error) {
+	tmp, _ := os.Create("tmp.mp4")
+	tmp.Write(data)
+	tmp.Close()
+
 	pngBuffer := bytes.NewBuffer(nil)
-	err := ffmpeg.Input("pipe:").WithInput(bytes.NewReader(data)).Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frame)}).
+	err := ffmpeg.Input("tmp.mp4").Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frame)}).
 		Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
-		WithOutput(pngBuffer, os.Stdout).Run()
+		WithOutput(pngBuffer).Run()
 	if err != nil {
-		logger.Fatalf("Get video frame error: %v", err)
 		return nil, err
 	}
+
 	return bytes.NewReader(pngBuffer.Bytes()), nil
 }
 
 func uploadFile(client *minio.Client, reader *bytes.Reader, fileName string, bucket string, contentType string) (string, error) {
 	_, err := client.PutObject(context.Background(),
 		bucket, fileName, reader, reader.Size(), minio.PutObjectOptions{})
-	//minio.PutObjectOptions{ContentType: contentType})
 	if err != nil {
 		logger.Fatalf("Fail to upload file, name: %v, err: %v", fileName, err)
 		return "", err
 	}
 
-	fileUrl, err := client.PresignedGetObject(context.Background(), bucket, fileName, time.Second*60*60*24*7, nil)
-	if err != nil {
-		logger.Fatalf("Fail to get file url, fileName: %v, err: %v", fileName, err)
-		return "", err
-	}
+	url := fmt.Sprintf("http://192.168.10.2:9000/%s/%s", bucket, fileName)
 
-	logger.InfoF("Success to upload object to minio, fileName: %v, url: %v", fileName, fileUrl.String())
-	return fileUrl.String(), nil
+	logger.InfoF("Success to upload object to minio, fileName: %v, url: %v", fileName, url)
+	return url, nil
 }

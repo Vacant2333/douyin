@@ -16,8 +16,6 @@ spec:
         app: comment
     spec:
       containers:
-        - name: minio-client
+        - name: comment
           image: douyin/comment:nightly
           imagePullPolicy: Never
-          ports:
-            - containerPort: 8081

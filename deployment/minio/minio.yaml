@@ -1,4 +1,5 @@
 rootUser: "douyin"
+
 rootPassword: "douyin_pass"
 
 replicas: 2
@@ -8,8 +9,6 @@ persistence:
 
 resources:
   requests:
-    memory: 512Mi
+    memory: 1Gi
 
-buckets:
-  - name: douyin
-    policy: none
+defaultBuckets: "douyin"

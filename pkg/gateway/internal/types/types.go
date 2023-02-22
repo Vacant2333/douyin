@@ -200,7 +200,7 @@ type MessageListReq struct {
 
 type MessageListRes struct {
 	Status
-	VideoPubList []*Message `json:"message_list,omitempty"`
+	MessageList []*Message `json:"message_list,omitempty"`
 }
 
 type Message struct {

@@ -10,6 +10,5 @@ DB:
   DataSource: douyin:Z4eEXbWWCApby8dE@tcp(bt.vacant.zone:3306)/douyin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 CacheRedis:
-  - Host: 127.0.0.1:6379
-    Type: node
-    Pass:
+  - Host: redis-master.redis.svc.cluster.local:6379
+    Pass: redispwd123

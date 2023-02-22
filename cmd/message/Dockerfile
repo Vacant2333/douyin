@@ -7,11 +7,11 @@ ADD go.sum .
 RUN go mod download
 COPY pkg /usr/local/go/src/douyin/pkg
 COPY common /usr/local/go/src/douyin/common
-COPY pkg/minio-client/etc /app/etc
-RUN go build -ldflags="-s -w" -o /app/minioclient /usr/local/go/src/douyin/pkg/minio-client/minioclient.go
+COPY pkg/message/etc /app/etc
+RUN go build -ldflags="-s -w" -o /app/message /usr/local/go/src/douyin/pkg/message/userMessage.go
 
-FROM minidocks/ffmpeg
+FROM gcr.io/distroless/static-debian11:latest
 WORKDIR /app
-COPY --from=builder /app/minioclient /app/minioclient
+COPY --from=builder /app/message /app/message
 COPY --from=builder /app/etc /app/etc
-CMD ["./minioclient", "-f", "etc/minioclient.yaml"]
+CMD ["./message", "-f", "etc/userMessage.yaml"]

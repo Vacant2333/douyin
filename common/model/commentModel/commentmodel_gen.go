@@ -93,14 +93,10 @@ func (m *defaultCommentModel) Insert(ctx context.Context, data *Comment) (sql.Re
 }
 
 func (m *defaultCommentModel) FindAll(ctx context.Context, id int64) ([]*Comment, error) {
-	fmt.Printf("findall:::::::::::::::::::::::::")
-	tiktokCommentIdKey := fmt.Sprintf("%s%v", cacheTiktokCommentIdPrefix, id)
 	var resp []*Comment
-	err := m.QueryRowCtx(ctx, &resp, tiktokCommentIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
-		query := fmt.Sprintf("select %s from %s where `video_id` = ? and `removed` = 0 order by `create_time` DESC", commentRows, m.table)
-		fmt.Printf("sql:------------->%v", query)
-		return conn.QueryRowsCtx(ctx, v, query, id)
-	})
+	query := fmt.Sprintf("select %s from %s where `video_id` = ? and `removed` = 0 order by `create_time` DESC", commentRows, m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
+
 	switch err {
 	case nil:
 		return resp, nil

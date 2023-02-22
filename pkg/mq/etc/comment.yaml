@@ -1,4 +1,4 @@
-Name: comment-mq
+Name: mq
 Host: 0.0.0.0
 Port: 3001
 Mode: dev

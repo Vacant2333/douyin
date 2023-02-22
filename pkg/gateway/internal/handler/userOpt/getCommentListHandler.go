@@ -4,6 +4,7 @@ import (
 	"douyin/pkg/gateway/internal/logic/userOpt"
 	"douyin/pkg/gateway/internal/svc"
 	"douyin/pkg/gateway/internal/types"
+	"fmt"
 	"net/http"
 
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -19,6 +20,7 @@ func GetCommentListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 
 		l := userOpt.NewGetCommentListLogic(r.Context(), svcCtx)
 		resp, err := l.GetCommentList(&req)
+		fmt.Println("list", resp.CommentList, resp)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

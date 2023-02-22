@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: favorite
-  name: favorite
-  namespace: favorite
+    app: mq
+  name: mq
+  namespace: mq
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: favorite
+      app: mq
   template:
     metadata:
       labels:
-        app: favorite
+        app: mq
     spec:
       containers:
-        - name: favorite
-          image: douyin/favorite:nightly
+        - name: mq
+          image: douyin/mq:nightly
           imagePullPolicy: Never

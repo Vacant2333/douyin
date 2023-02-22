@@ -11,4 +11,8 @@ type Config struct {
 		DataSource string
 	}
 	CacheRedis cache.CacheConf
+
+	FavoriteRpc    zrpc.RpcClientConf
+	UserRpc        zrpc.RpcClientConf
+	MinIOClientRpc zrpc.RpcClientConf
 }

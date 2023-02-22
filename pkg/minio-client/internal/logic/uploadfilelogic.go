@@ -43,6 +43,7 @@ func (l *UploadFileLogic) UploadFile(in *minio_client.UploadFileRequest) (*minio
 		logger.Fatalf("Fail to upload video file, err: %v", err)
 		return nil, err
 	}
+
 	frameUrl, err := uploadFile(client, pngFrame, in.Title+".png", bucket, "")
 	if err != nil {
 		logger.Fatalf("Fail to upload frame file, err: %v, err")

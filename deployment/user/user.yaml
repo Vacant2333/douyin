@@ -19,5 +19,3 @@ spec:
         - name: user
           image: douyin/user:nightly
           imagePullPolicy: Never
-          ports:
-            - containerPort: 30001

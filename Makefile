@@ -1,6 +1,5 @@
 PROJECT_ROOT := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
-# Todo:build all image
 init:
 	go get -u google.golang.org/protobuf/cmd/protoc-gen-go
 	go install google.golang.org/protobuf/cmd/protoc-gen-go
@@ -64,6 +63,15 @@ install-comment:
 	kubectl create ns comment
 	kubectl apply -f deployment/comment/comment.yaml
 
+install-comment-mq:
+	docker build -f ${PROJECT_ROOT}/cmd/comment-mq/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/comment-mq:nightly
+	-kubectl delete ns comment-mq
+	kind load docker-image douyin/comment-mq:nightly --name douyin
+	kubectl create ns comment-mq
+	kubectl apply -f deployment/comment-mq/comment-mq.yaml
+
 install-favorite:
 	docker build -f ${PROJECT_ROOT}/cmd/favorite/Dockerfile \
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
@@ -82,6 +90,15 @@ install-video:
 	kubectl create ns video
 	kubectl apply -f deployment/video/video.yaml
 
+install-message:
+	docker build -f ${PROJECT_ROOT}/cmd/message/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/message:nightly
+	-kubectl delete ns message
+	kind load docker-image douyin/message:nightly --name douyin
+	kubectl create ns message
+	kubectl apply -f deployment/message/message.yaml
+
 install-gateway:
 	docker build -f ${PROJECT_ROOT}/cmd/gateway/Dockerfile \
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
@@ -90,12 +107,6 @@ install-gateway:
 	kind load docker-image douyin/gateway:nightly --name douyin
 	kubectl create ns gateway
 	kubectl apply -f deployment/gateway/gateway.yaml
-
-
-
-
-
-# todo: delete deployment/comment/* != comment.yaml
 
 
 
@@ -118,3 +129,9 @@ mysql-regenerate-codes:
 
 forward-gateway:
 	kubectl port-forward -n gateway svc/gateway 8888: --address='0.0.0.0'
+
+forward-minio-console:
+	kubectl port-forward -n minio svc/minio-console 9001:9001
+
+forward-minio:
+	kubectl port-forward -n minio svc/minio 9000:9000 --address='0.0.0.0'

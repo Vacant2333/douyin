@@ -2,7 +2,7 @@ syntax = "v1"
 
 info(
 	title: "video"
-	author: "healer"
+	author: "babysite"
 )
 
 import "user.api"

@@ -31,7 +31,6 @@ func (l *UpdateFavoriteStatusLogic) UpdateFavoriteStatus(in *userOptPb.UpdateFav
 	switch in.ActionType {
 	//新增点赞
 	case messageTypes.ActionADD:
-
 		favoriteModel.UserId = in.UserId
 		favoriteModel.VideoId = in.VideoId
 

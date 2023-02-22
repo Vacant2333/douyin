@@ -29,7 +29,7 @@ func NewGetVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetVideo
 }
 
 func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, error) {
-	// todo: 这个10应该改为配置文件中读取，待改进
+
 	var selectNum int64 = 10
 	queryVideos, err := l.svcCtx.VideoModel.FindManyByTime(l.ctx, in.LatestTime, selectNum)
 	if err != nil {

@@ -19,5 +19,3 @@ spec:
         - name: minio-client
           image: douyin/minio-client:nightly
           imagePullPolicy: Never
-          ports:
-            - containerPort: 30001

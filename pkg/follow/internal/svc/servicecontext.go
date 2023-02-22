@@ -19,6 +19,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:      c,
 		FollowModel: followModel.NewFollowModel(conn, c.CacheRedis),
-		UserPRC:     userservice.NewUserService(zrpc.MustNewClient(c.UserRpc)),
+		UserPRC:     userservice.NewUserService(zrpc.MustNewClient(c.UserRPC)),
 	}
 }
