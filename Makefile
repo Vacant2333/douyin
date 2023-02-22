@@ -112,12 +112,6 @@ install-gateway:
 
 
 
-# todo: delete deployment/comment/* != comment.yaml
-
-
-
-
-
 
 # Build proto
 build-proto-minio-client:
@@ -135,3 +129,9 @@ mysql-regenerate-codes:
 
 forward-gateway:
 	kubectl port-forward -n gateway svc/gateway 8888: --address='0.0.0.0'
+
+forward-minio-console:
+	kubectl port-forward -n minio svc/minio-console 9001:9001
+
+forward-minio:
+	kubectl port-forward -n minio svc/minio 9000:9000 --address='0.0.0.0'
