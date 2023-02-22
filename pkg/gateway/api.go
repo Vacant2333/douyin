@@ -17,6 +17,8 @@ func main() {
 	flag.Parse()
 
 	var c config.Config
+
+	c.MaxBytes = 8388608
 	conf.MustLoad(*configFile, &c)
 
 	server := rest.MustNewServer(c.RestConf)

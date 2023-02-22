@@ -34,7 +34,9 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		IsLogin: middleware.NewIsLoginMiddleware().Handle,
 
 		UserRpc:               userservice.NewUserService(zrpc.MustNewClient(c.UserRpc)),
-		CommentOptMsgProducer: kq.NewPusher(c.UserCommentOptServiceConf.Brokers, c.UserCommentOptServiceConf.Topic),
 		UserCommentRpc:        usercomment.NewUserComment(zrpc.MustNewClient(c.UserCommentRpc)),
+		UserFavoriteRpc:       nil,
+		VideoRPC:              videoservice.NewVideoService(zrpc.MustNewClient(c.VideoRPC)),
+		CommentOptMsgProducer: kq.NewPusher(c.UserCommentOptServiceConf.Brokers, c.UserCommentOptServiceConf.Topic),
 	}
 }

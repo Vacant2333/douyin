@@ -32,14 +32,18 @@ func makeMinIOClient() *minio.Client {
 }
 
 func getVideoFrame(data []byte, frame int) (*bytes.Reader, error) {
+	tmp, _ := os.Create("tmp.mp4")
+	tmp.Write(data)
+	tmp.Close()
+
 	pngBuffer := bytes.NewBuffer(nil)
-	err := ffmpeg.Input("pipe:").WithInput(bytes.NewReader(data)).Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frame)}).
+	err := ffmpeg.Input("tmp.mp4").Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frame)}).
 		Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
-		WithOutput(pngBuffer, os.Stdout).Run()
+		WithOutput(pngBuffer).Run()
 	if err != nil {
-		logger.Fatalf("Get video frame error: %v", err)
 		return nil, err
 	}
+
 	return bytes.NewReader(pngBuffer.Bytes()), nil
 }
 

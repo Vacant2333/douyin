@@ -20,4 +20,4 @@ spec:
           image: douyin/video:nightly
           imagePullPolicy: Never
           ports:
-            - containerPort: 8081
+            - containerPort: 30001

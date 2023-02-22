@@ -20,4 +20,4 @@ spec:
           image: douyin/comment:nightly
           imagePullPolicy: Never
           ports:
-            - containerPort: 8081
+            - containerPort: 8083

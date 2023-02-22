@@ -4,7 +4,6 @@ import (
 	"context"
 	"douyin/common/help/token"
 	"douyin/common/model/videoModel"
-	"douyin/pkg/favorite/userOptPb"
 	"douyin/pkg/logger"
 	"douyin/pkg/user/userservice"
 	"douyin/pkg/video/internal/svc"
@@ -77,19 +76,19 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 				FavoriteCount:   info.User.FavoriteCount,
 			}
 			if hasUserId {
-				// todo: 调用PRC查看是否已关注
-				videos[i].Author.IsFollow = true // 对应函数
-
-				// 调用RPC查看视频是否点赞
-				favoriteResp, err := l.svcCtx.FavoritePRC.CheckIsFavorite(l.ctx, &userOptPb.CheckIsFavoriteReq{
-					UserId:  tokenResult.UserId,
-					VideoId: query.Id,
-				})
-				if err != nil {
-					logger.Fatal("查询视频是否点赞失败", err)
-					return
-				}
-				videos[i].IsFavorite = favoriteResp.IsFavorite
+				//// todo: 调用PRC查看是否已关注
+				//videos[i].Author.IsFollow = true // 对应函数
+				//
+				//// 调用RPC查看视频是否点赞
+				//favoriteResp, err := l.svcCtx.FavoritePRC.CheckIsFavorite(l.ctx, &userOptPb.CheckIsFavoriteReq{
+				//	UserId:  tokenResult.UserId,
+				//	VideoId: query.Id,
+				//})
+				//if err != nil {
+				//	logger.Fatal("查询视频是否点赞失败", err)
+				//	return
+				//}
+				//videos[i].IsFavorite = favoriteResp.IsFavorite
 			}
 			defer wg.Done()
 		}(i, queryVideos)

@@ -11,7 +11,7 @@ COPY common /usr/local/go/src/douyin/common
 COPY pkg/minio-client/etc /app/etc
 RUN go build -ldflags="-s -w" -o /app/minioclient /usr/local/go/src/douyin/pkg/minio-client/minioclient.go
 
-FROM gcr.io/distroless/static-debian11:latest
+FROM minidocks/ffmpeg
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /usr/share/zoneinfo/Asia/Shanghai
 ENV TZ Asia/Shanghai

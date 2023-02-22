@@ -31,6 +31,7 @@ func (l *GetCommentListLogic) GetCommentList(req *types.CommentListReq) (resp *t
 	allCommentInfoData, err := l.svcCtx.UserCommentRpc.GetVideoComment(l.ctx, &usercomment.GetVideoCommentReq{
 		VideoId: req.VideoId,
 	})
+	fmt.Println(1, allCommentInfoData)
 	if err != nil {
 		logx.Errorf("UserCommentList->commentRpc  err : %v , val : %s , message:%+v", err)
 		return &types.CommentListRes{
