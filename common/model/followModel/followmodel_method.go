@@ -63,3 +63,17 @@ func (m *defaultFollowModel) CheckIsFollow(ctx context.Context, userId int64, fu
 		return false, err
 	}
 }
+
+func (m *defaultFollowModel) FindIfExist(ctx context.Context, userId int64, funId int64) (int64, error) {
+	query := fmt.Sprintf("select id from %s where user_id = ? and removed = 0 and fun_id = ?", m.table)
+	var resp int64
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, userId, funId)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return 0, ErrNotFound
+	default:
+		return 0, err
+	}
+}

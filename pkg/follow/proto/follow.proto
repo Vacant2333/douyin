@@ -4,9 +4,9 @@ package follow;
 option go_package = "./follow";
 
 message FollowReq {
-  string token = 1;
-  string to_user_id = 2;
-  string action_type = 3;
+  int64 user_id = 1;
+  int64 to_user_id = 2;
+  int64 action_type = 3;
 }
 
 message FollowResp {
