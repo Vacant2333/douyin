@@ -5,7 +5,7 @@ WORKDIR /build
 ADD go.mod .
 ADD go.sum .
 RUN go mod download
-COPY pkg/favorite /usr/local/go/src/douyin/pkg/favorite
+COPY pkg /usr/local/go/src/douyin/pkg
 COPY common /usr/local/go/src/douyin/common
 COPY pkg/favorite/etc /app/etc
 RUN go build -ldflags="-s -w" -o /app/favorite /usr/local/go/src/douyin/pkg/favorite/userOptService.go

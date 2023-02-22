@@ -1,14 +1,11 @@
-Name: useropt.rpc
-ListenOn: 0.0.0.0:8081
-Mode: dev
+Name: follow.rpc
+ListenOn: 0.0.0.0:8082
 Etcd:
   Hosts:
   - etcd.etcd.svc.cluster.local:2379
-  Key: useropt.rpc
-
-DB:
+  Key: follow.rpc
+Mysql:
   DataSource: douyin:Z4eEXbWWCApby8dE@tcp(bt.vacant.zone:3306)/douyin?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
-
 CacheRedis:
   - Host: redis-master.redis.svc.cluster.local:6379
     Pass: redispwd123
