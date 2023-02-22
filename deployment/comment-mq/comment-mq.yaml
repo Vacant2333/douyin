@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: comment-mq
+  name: comment-mq
+  namespace: comment-mq
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: comment-mq
+  template:
+    metadata:
+      labels:
+        app: comment-mq
+    spec:
+      containers:
+        - name: comment-mq
+          image: douyin/comment-mq:nightly
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3001

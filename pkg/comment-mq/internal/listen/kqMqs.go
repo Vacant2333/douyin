@@ -2,9 +2,9 @@ package listen
 
 import (
 	"context"
-	"douyin/pkg/mq/internal/config"
-	kqMq "douyin/pkg/mq/internal/mqs/kq"
-	"douyin/pkg/mq/internal/svc"
+	"douyin/pkg/comment-mq/internal/config"
+	kqMq "douyin/pkg/comment-mq/internal/mqs/kq"
+	"douyin/pkg/comment-mq/internal/svc"
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/core/service"
 )

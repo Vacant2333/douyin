@@ -64,6 +64,15 @@ install-comment:
 	kubectl create ns comment
 	kubectl apply -f deployment/comment/comment.yaml
 
+install-comment-mq:
+	docker build -f ${PROJECT_ROOT}/cmd/comment-mq/Dockerfile \
+		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
+		-t douyin/comment-mq:nightly
+	-kubectl delete ns comment-mq
+	kind load docker-image douyin/comment-mq:nightly --name douyin
+	kubectl create ns comment-mq
+	kubectl apply -f deployment/comment-mq/comment-mq.yaml
+
 install-favorite:
 	docker build -f ${PROJECT_ROOT}/cmd/favorite/Dockerfile \
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \

@@ -1,9 +1,9 @@
 package svc
 
 import (
+	"douyin/pkg/comment-mq/internal/config"
 	"douyin/pkg/comment/usercomment"
 	"douyin/pkg/favorite/useroptservice"
-	"douyin/pkg/mq/internal/config"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
