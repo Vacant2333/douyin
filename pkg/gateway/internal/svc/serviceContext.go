@@ -3,6 +3,7 @@ package svc
 import (
 	"douyin/pkg/comment/usercomment"
 	"douyin/pkg/favorite/useroptservice"
+	"douyin/pkg/follow/followservice"
 	"douyin/pkg/gateway/internal/config"
 	"douyin/pkg/gateway/internal/middleware"
 	"douyin/pkg/message/usermessage"
@@ -20,10 +21,12 @@ type ServiceContext struct {
 	UserCommentRpc  usercomment.UserComment
 	UserFavoriteRpc useroptservice.UserOptService
 	VideoRPC        videoservice.VideoService
+	FollowRPC       followservice.FollowService
 	MessageRpc      usermessage.UserMessage
 
 	CommentOptMsgProducer  *kq.Pusher
 	FavoriteOptMsgProducer *kq.Pusher
+	FollowOptMsgProducer   *kq.Pusher
 
 	AuthJWT rest.Middleware
 	IsLogin rest.Middleware
@@ -35,9 +38,10 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		AuthJWT: middleware.NewAuthJWTMiddleware().Handle,
 		IsLogin: middleware.NewIsLoginMiddleware().Handle,
 
-		FavoriteOptMsgProducer: kq.NewPusher(c.UserFavoriteOptServiceConf.Brokers, c.UserFavoriteOptServiceConf.Topic),
 		UserRpc:                userservice.NewUserService(zrpc.MustNewClient(c.UserRpc)),
 		UserCommentRpc:         usercomment.NewUserComment(zrpc.MustNewClient(c.UserCommentRpc)),
+		FollowRPC:              followservice.NewFollowService(zrpc.MustNewClient(c.FollowRPC)),
+		FavoriteOptMsgProducer: kq.NewPusher(c.UserFavoriteOptServiceConf.Brokers, c.UserFavoriteOptServiceConf.Topic),
 		MessageRpc:             usermessage.NewUserMessage(zrpc.MustNewClient(c.MessageRpc)),
 		UserFavoriteRpc:        useroptservice.NewUserOptService(zrpc.MustNewClient(c.UserFavoriteRpc)),
 		VideoRPC:               videoservice.NewVideoService(zrpc.MustNewClient(c.VideoRPC)),

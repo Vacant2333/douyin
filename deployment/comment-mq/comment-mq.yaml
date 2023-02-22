@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: comment-mq
-  name: comment-mq
-  namespace: comment-mq
+    app: mq
+  name: mq
+  namespace: mq
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: comment-mq
+      app: mq
   template:
     metadata:
       labels:
-        app: comment-mq
+        app: mq
     spec:
       containers:
-        - name: comment-mq
-          image: douyin/comment-mq:nightly
+        - name: mq
+          image: douyin/mq:nightly
           imagePullPolicy: Never

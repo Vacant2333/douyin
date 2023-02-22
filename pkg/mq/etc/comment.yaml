@@ -1,4 +1,4 @@
-Name: comment-mq
+Name: mq
 Host: 0.0.0.0
 Port: 3001
 Mode: dev
@@ -42,6 +42,12 @@ UserFavoriteRpc:
     Hosts:
       - etcd.etcd.svc.cluster.local:2379
     Key: useropt.rpc
+
+FollowRpc:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: follow.rpc
 
 RedisCacheConf:
   Host: redis-master.redis.svc.cluster.local:6379

@@ -5,14 +5,15 @@ package server
 
 import (
 	"context"
-	logic2 "douyin/pkg/follow/internal/logic"
+
+	"douyin/pkg/follow/internal/logic"
 	"douyin/pkg/follow/internal/svc"
-	follow2 "douyin/pkg/follow/types/follow"
+	"douyin/pkg/follow/types/follow"
 )
 
 type FollowServiceServer struct {
 	svcCtx *svc.ServiceContext
-	follow2.UnimplementedFollowServiceServer
+	follow.UnimplementedFollowServiceServer
 }
 
 func NewFollowServiceServer(svcCtx *svc.ServiceContext) *FollowServiceServer {
@@ -21,17 +22,22 @@ func NewFollowServiceServer(svcCtx *svc.ServiceContext) *FollowServiceServer {
 	}
 }
 
-func (s *FollowServiceServer) Follow(ctx context.Context, in *follow2.FollowReq) (*follow2.FollowResp, error) {
-	l := logic2.NewFollowLogic(ctx, s.svcCtx)
+func (s *FollowServiceServer) Follow(ctx context.Context, in *follow.FollowReq) (*follow.FollowResp, error) {
+	l := logic.NewFollowLogic(ctx, s.svcCtx)
 	return l.Follow(in)
 }
 
-func (s *FollowServiceServer) GetFollowList(ctx context.Context, in *follow2.GetFollowListReq) (*follow2.GetFollowListResp, error) {
-	l := logic2.NewGetFollowListLogic(ctx, s.svcCtx)
+func (s *FollowServiceServer) GetFollowList(ctx context.Context, in *follow.GetFollowListReq) (*follow.GetFollowListResp, error) {
+	l := logic.NewGetFollowListLogic(ctx, s.svcCtx)
 	return l.GetFollowList(in)
 }
 
-func (s *FollowServiceServer) GetFollowerList(ctx context.Context, in *follow2.GetFollowerListReq) (*follow2.GetFollowerListResp, error) {
-	l := logic2.NewGetFollowerListLogic(ctx, s.svcCtx)
+func (s *FollowServiceServer) GetFollowerList(ctx context.Context, in *follow.GetFollowerListReq) (*follow.GetFollowerListResp, error) {
+	l := logic.NewGetFollowerListLogic(ctx, s.svcCtx)
 	return l.GetFollowerList(in)
+}
+
+func (s *FollowServiceServer) CheckIsFollow(ctx context.Context, in *follow.CheckIsFollowReq) (*follow.CheckIsFollowResp, error) {
+	l := logic.NewCheckIsFollowLogic(ctx, s.svcCtx)
+	return l.CheckIsFollow(in)
 }

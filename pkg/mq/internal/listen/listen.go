@@ -2,8 +2,8 @@ package listen
 
 import (
 	"context"
-	"douyin/pkg/comment-mq/internal/config"
-	"douyin/pkg/comment-mq/internal/svc"
+	"douyin/pkg/mq/internal/config"
+	"douyin/pkg/mq/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/service"
 )

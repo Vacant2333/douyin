@@ -13,6 +13,7 @@ type Config struct {
 	UserRpc         zrpc.RpcClientConf
 	UserCommentRpc  zrpc.RpcClientConf
 	VideoRPC        zrpc.RpcClientConf
+	FollowRPC       zrpc.RpcClientConf
 	MessageRpc      zrpc.RpcClientConf
 	// kq
 	UserCommentOptServiceConf  kq.KqConf

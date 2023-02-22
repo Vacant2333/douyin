@@ -3,8 +3,8 @@ package kq
 import (
 	"context"
 	"douyin/common/messageTypes"
-	"douyin/pkg/comment-mq/internal/svc"
 	"douyin/pkg/favorite/useroptservice"
+	"douyin/pkg/mq/internal/svc"
 	"encoding/json"
 	"errors"
 	"fmt"

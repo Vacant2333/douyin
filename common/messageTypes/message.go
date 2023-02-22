@@ -22,3 +22,10 @@ type UserFavoriteOptMessage struct {
 	VideoId    int64 `json:"video_id"`
 	UserId     int64 `json:"user_id"`
 }
+
+// UserFollowOptMessage 关注 / 取消关注
+type UserFollowOptMessage struct {
+	ActionType int64 `json:"action_type"`
+	ToUserId   int64 `json:"to_user_id"`
+	UserId     int64 `json:"user_id"`
+}

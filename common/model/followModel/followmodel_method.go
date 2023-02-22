@@ -6,7 +6,7 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 )
 
-func (m *defaultFollowModel) FindAllByUserId(ctx context.Context, userId string) ([]*Follow, error) {
+func (m *defaultFollowModel) FindAllByUserId(ctx context.Context, userId int64) ([]*Follow, error) {
 	var resp []*Follow
 	query := fmt.Sprintf("select `fun_id` from %s where `user_id` = ? and `removed` = 0", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userId)
@@ -21,7 +21,7 @@ func (m *defaultFollowModel) FindAllByUserId(ctx context.Context, userId string)
 	}
 }
 
-func (m *defaultFollowModel) FindAllByFunId(ctx context.Context, funId string) ([]*Follow, error) {
+func (m *defaultFollowModel) FindAllByFunId(ctx context.Context, funId int64) ([]*Follow, error) {
 	var resp []*Follow
 	query := fmt.Sprintf("select `user_id` from %s where `fun_id` = ? and `removed` = 0", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, funId)
@@ -37,7 +37,43 @@ func (m *defaultFollowModel) FindAllByFunId(ctx context.Context, funId string) (
 }
 
 func (m *defaultFollowModel) CountByFollowRelation(ctx context.Context, id int64, field string) (int64, error) {
-	// todo: 与向交流后完善该函数
+	query := fmt.Sprintf("select count(*) from %s where %s = ? and removed = 0", m.table, field)
+	var resp int64
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, id)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return 0, ErrNotFound
+	default:
+		return 0, err
+	}
+}
 
-	return 0, nil
+func (m *defaultFollowModel) CheckIsFollow(ctx context.Context, userId int64, funId int64) (bool, error) {
+	query := fmt.Sprintf("select count(*) from %s where user_id = ? and removed = 0 and fun_id = ?", m.table)
+	var resp int64
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, userId, funId)
+	switch err {
+	case nil:
+		return resp == 1, nil
+	case sqlc.ErrNotFound:
+		return false, ErrNotFound
+	default:
+		return false, err
+	}
+}
+
+func (m *defaultFollowModel) FindIfExist(ctx context.Context, userId int64, funId int64) (int64, error) {
+	query := fmt.Sprintf("select id from %s where user_id = ? and removed = 0 and fun_id = ?", m.table)
+	var resp int64
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, userId, funId)
+	switch err {
+	case nil:
+		return resp, nil
+	case sqlc.ErrNotFound:
+		return 0, ErrNotFound
+	default:
+		return 0, err
+	}
 }

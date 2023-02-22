@@ -16,8 +16,10 @@ type Config struct {
 	// kq : pub sub
 	UserCommentOptServiceConf  kq.KqConf
 	UserFavoriteOptServiceConf kq.KqConf
+	UserFollowOptServiceConf   kq.KqConf
 
 	// rpc
 	UserCommentRpc  zrpc.RpcClientConf
 	UserFavoriteRpc zrpc.RpcClientConf
+	UserFollowRpc   zrpc.RpcClientConf
 }

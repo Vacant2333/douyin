@@ -8,7 +8,7 @@ RUN go mod download
 COPY pkg /usr/local/go/src/douyin/pkg
 COPY common /usr/local/go/src/douyin/common
 COPY pkg/comment-mq/etc /app/etc
-RUN go build -ldflags="-s -w" -o /app/comment-mq /usr/local/go/src/douyin/pkg/comment-mq/mq.go
+RUN go build -ldflags="-s -w" -o /app/mq /usr/local/go/src/douyin/pkg/mq/mq.go
 
 FROM gcr.io/distroless/static-debian11:latest
 WORKDIR /app

@@ -5,25 +5,29 @@ package followservice
 
 import (
 	"context"
-	follow2 "douyin/pkg/follow/types/follow"
+
+	"douyin/pkg/follow/types/follow"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
 )
 
 type (
-	FollowReq           = follow2.FollowReq
-	FollowResp          = follow2.FollowResp
-	GetFollowListReq    = follow2.GetFollowListReq
-	GetFollowListResp   = follow2.GetFollowListResp
-	GetFollowerListReq  = follow2.GetFollowerListReq
-	GetFollowerListResp = follow2.GetFollowerListResp
-	User                = follow2.User
+	CheckIsFollowReq    = follow.CheckIsFollowReq
+	CheckIsFollowResp   = follow.CheckIsFollowResp
+	FollowReq           = follow.FollowReq
+	FollowResp          = follow.FollowResp
+	GetFollowListReq    = follow.GetFollowListReq
+	GetFollowListResp   = follow.GetFollowListResp
+	GetFollowerListReq  = follow.GetFollowerListReq
+	GetFollowerListResp = follow.GetFollowerListResp
+	User                = follow.User
 
 	FollowService interface {
 		Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
 		GetFollowList(ctx context.Context, in *GetFollowListReq, opts ...grpc.CallOption) (*GetFollowListResp, error)
 		GetFollowerList(ctx context.Context, in *GetFollowerListReq, opts ...grpc.CallOption) (*GetFollowerListResp, error)
+		CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error)
 	}
 
 	defaultFollowService struct {
@@ -38,16 +42,21 @@ func NewFollowService(cli zrpc.Client) FollowService {
 }
 
 func (m *defaultFollowService) Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error) {
-	client := follow2.NewFollowServiceClient(m.cli.Conn())
+	client := follow.NewFollowServiceClient(m.cli.Conn())
 	return client.Follow(ctx, in, opts...)
 }
 
 func (m *defaultFollowService) GetFollowList(ctx context.Context, in *GetFollowListReq, opts ...grpc.CallOption) (*GetFollowListResp, error) {
-	client := follow2.NewFollowServiceClient(m.cli.Conn())
+	client := follow.NewFollowServiceClient(m.cli.Conn())
 	return client.GetFollowList(ctx, in, opts...)
 }
 
 func (m *defaultFollowService) GetFollowerList(ctx context.Context, in *GetFollowerListReq, opts ...grpc.CallOption) (*GetFollowerListResp, error) {
-	client := follow2.NewFollowServiceClient(m.cli.Conn())
+	client := follow.NewFollowServiceClient(m.cli.Conn())
 	return client.GetFollowerList(ctx, in, opts...)
+}
+
+func (m *defaultFollowService) CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error) {
+	client := follow.NewFollowServiceClient(m.cli.Conn())
+	return client.CheckIsFollow(ctx, in, opts...)
 }

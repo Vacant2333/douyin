@@ -1,8 +1,8 @@
 package main
 
 import (
-	"douyin/pkg/comment-mq/internal/config"
-	"douyin/pkg/comment-mq/internal/listen"
+	"douyin/pkg/mq/internal/config"
+	"douyin/pkg/mq/internal/listen"
 	"flag"
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
