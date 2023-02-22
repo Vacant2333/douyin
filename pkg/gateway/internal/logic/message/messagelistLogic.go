@@ -2,6 +2,7 @@ package message
 
 import (
 	"context"
+	"douyin/pkg/message/userMessagePb"
 
 	"douyin/pkg/gateway/internal/svc"
 	"douyin/pkg/gateway/internal/types"
@@ -24,7 +25,29 @@ func NewMessagelistLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Messa
 }
 
 func (l *MessagelistLogic) Messagelist(req *types.MessageListReq) (resp *types.MessageListRes, err error) {
-	// todo: add your logic here and delete this line
+	GetMessagelistRPC, err := l.svcCtx.MessageRpc.GetMessageList(l.ctx, &userMessagePb.MessageListReq{UserId: req.UserId, Token: req.Token})
+	if err != nil {
+		logx.Errorf("GetMessagelist->GetMessagelistRpc  err : %v , val : %s , message:%+v", err)
+		return &types.MessageListRes{
+			Status:      types.Status{Code: 0, Msg: GetMessagelistRPC.Msg},
+			MessageList: nil,
+		}, err
+	}
 
-	return
+	var MessageList []*types.Message
+
+	for _, v := range GetMessagelistRPC.MessageList {
+		var message *types.Message
+		message.Id = v.Id
+		message.Content = v.Content
+		message.CreateTime = v.CreateTime
+		message.FromUserId = v.FromUserId
+		message.ToUserId = v.ToUserId
+
+		MessageList = append(MessageList, message)
+	}
+	return &types.MessageListRes{
+		Status:      types.Status{Code: 0, Msg: GetMessagelistRPC.Msg},
+		MessageList: MessageList,
+	}, nil
 }

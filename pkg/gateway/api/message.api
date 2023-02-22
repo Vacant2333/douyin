@@ -20,7 +20,7 @@ type MessageListReq {
 
 type MessageListRes {
 	Status
-	VideoPubList []*Message `json:"message_list,omitempty"`
+	MessageList []*Message `json:"message_list,omitempty"`
 }
 
 type Message {
