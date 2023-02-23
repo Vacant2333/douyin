@@ -27,7 +27,7 @@ func NewChangeVideoCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 func (l *ChangeVideoCommentLogic) ChangeVideoComment(in *video.ChangeVideoCommentReq) (*video.ChangeVideoCommentResp, error) {
 	err := l.svcCtx.VideoModel.UpdateCount(l.ctx, in.VideoId, "comment_count", in.ActionType)
 	if err != nil {
-		logger.Fatalf("ChangeVideoCommentCount failed %s", err.Error())
+		logger.Errorf("ChangeVideoCommentCount failed %s", err.Error())
 		return nil, err
 	}
 	return &video.ChangeVideoCommentResp{

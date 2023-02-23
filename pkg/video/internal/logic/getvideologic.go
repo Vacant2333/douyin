@@ -34,7 +34,7 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 	var selectNum int64 = 10
 	queryVideos, err := l.svcCtx.VideoModel.FindManyByTime(l.ctx, in.LatestTime, selectNum)
 	if err != nil {
-		logger.Fatal("FindManyByTime failed", err)
+		logger.Error("FindManyByTime failed", err)
 		return nil, err
 	}
 
@@ -64,7 +64,7 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 				UserId: query.AuthorId,
 			})
 			if err != nil {
-				logger.Fatal("Video获取Userinfo出错", err)
+				logger.Error("Video获取Userinfo出错", err)
 				return
 			}
 
@@ -87,7 +87,7 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 					FunId:  tokenResult.UserId,
 				})
 				if err != nil {
-					logger.Fatalf("CheckIsFollow RPC failed %s", err.Error())
+					logger.Errorf("CheckIsFollow RPC failed %s", err.Error())
 					return
 				}
 				videos[i].Author.IsFollow = checkIsFollowResp.IsFollow
@@ -98,7 +98,7 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 					VideoId: query.Id,
 				})
 				if err != nil {
-					logger.Fatal("查询视频是否点赞失败", err)
+					logger.Error("查询视频是否点赞失败", err)
 					return
 				}
 				videos[i].IsFavorite = favoriteResp.IsFavorite

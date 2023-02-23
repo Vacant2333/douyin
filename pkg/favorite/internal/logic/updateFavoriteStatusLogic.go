@@ -8,8 +8,6 @@ import (
 	"douyin/common/xerr"
 	"douyin/pkg/favorite/internal/svc"
 	"douyin/pkg/favorite/userOptPb"
-	"douyin/pkg/video/videoservice"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -42,10 +40,11 @@ func (l *UpdateFavoriteStatusLogic) UpdateFavoriteStatus(in *userOptPb.UpdateFav
 			return &userOptPb.UpdateFavoriteStatusResp{}, err
 		}
 
-		_, err = l.svcCtx.VideoRPC.ChangeVideoFavorite(l.ctx, &videoservice.ChangeVideoFavoriteReq{
-			VideoId:    in.VideoId,
-			ActionType: in.ActionType,
-		})
+		//_, err = l.svcCtx.VideoRPC.ChangeVideoFavorite(l.ctx, &videoservice.ChangeVideoFavoriteReq{
+		//	VideoId:    in.VideoId,
+		//	ActionType: in.ActionType,
+		//})
+		err = l.svcCtx.VideoModel.UpdateCount(l.ctx, in.VideoId, "like_count", in.ActionType)
 		if err != nil {
 			logx.Errorf("ChangeVideoFavorite failed %s ", err)
 			return &userOptPb.UpdateFavoriteStatusResp{}, err
@@ -64,10 +63,12 @@ func (l *UpdateFavoriteStatusLogic) UpdateFavoriteStatus(in *userOptPb.UpdateFav
 			return &userOptPb.UpdateFavoriteStatusResp{}, err
 		}
 
-		_, err = l.svcCtx.VideoRPC.ChangeVideoFavorite(l.ctx, &videoservice.ChangeVideoFavoriteReq{
-			VideoId:    in.VideoId,
-			ActionType: in.ActionType,
-		})
+		//_, err = l.svcCtx.VideoRPC.ChangeVideoFavorite(l.ctx, &videoservice.ChangeVideoFavoriteReq{
+		//	VideoId:    in.VideoId,
+		//	ActionType: in.ActionType,
+		//})
+		err = l.svcCtx.VideoModel.UpdateCount(l.ctx, in.VideoId, "like_count", in.ActionType)
+
 		if err != nil {
 			logx.Errorf("ChangeVideoFavorite failed %s ", err)
 			return &userOptPb.UpdateFavoriteStatusResp{}, err

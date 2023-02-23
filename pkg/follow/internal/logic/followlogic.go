@@ -28,7 +28,7 @@ func (l *FollowLogic) Follow(in *follow.FollowReq) (*follow.FollowResp, error) {
 
 	followId, err := l.svcCtx.FollowModel.FindIfExist(l.ctx, in.UserId, in.ToUserId)
 	if err != nil {
-		logger.Fatalf("follow option failed: %v", err.Error())
+		logger.Errorf("follow option failed: %v", err.Error())
 		return &follow.FollowResp{
 			StatusCode: -1,
 			StatusMsg:  "follow option failed",
@@ -46,7 +46,7 @@ func (l *FollowLogic) Follow(in *follow.FollowReq) (*follow.FollowResp, error) {
 		}
 		err = l.svcCtx.FollowModel.Update(l.ctx, newFollowModel)
 		if err != nil {
-			logger.Fatalf("follow option failed: %v", err.Error())
+			logger.Errorf("follow option failed: %v", err.Error())
 			return &follow.FollowResp{
 				StatusCode: -1,
 				StatusMsg:  "follow option failed",

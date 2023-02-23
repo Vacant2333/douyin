@@ -41,8 +41,3 @@ func (s *VideoServiceServer) ChangeVideoComment(ctx context.Context, in *video.C
 	l := logic.NewChangeVideoCommentLogic(ctx, s.svcCtx)
 	return l.ChangeVideoComment(in)
 }
-
-func (s *VideoServiceServer) ChangeVideoFavorite(ctx context.Context, in *video.ChangeVideoFavoriteReq) (*video.ChangeVideoFavoriteResp, error) {
-	l := logic.NewChangeVideoFavoriteLogic(ctx, s.svcCtx)
-	return l.ChangeVideoFavorite(in)
-}

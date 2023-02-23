@@ -35,8 +35,8 @@ func InfoF(format string, args ...interface{}) {
 	zlog.Infof(format, args...)
 }
 
-func Fatalf(format string, args ...interface{}) {
-	zlog.Fatalf(format, args...)
+func Errorf(format string, args ...interface{}) {
+	zlog.Errorf(format, args...)
 }
 
 func Debug(args ...interface{}) {
@@ -47,6 +47,6 @@ func Info(args ...interface{}) {
 	zlog.Info(args...)
 }
 
-func Fatal(args ...interface{}) {
-	zlog.Fatal(args...)
+func Error(args ...interface{}) {
+	zlog.Error(args...)
 }

@@ -5,7 +5,7 @@ WORKDIR /build
 ADD go.mod .
 ADD go.sum .
 RUN go mod download
-COPY pkg/comment /usr/local/go/src/douyin/pkg/comment
+COPY pkg /usr/local/go/src/douyin/pkg
 COPY common /usr/local/go/src/douyin/common
 COPY pkg/comment/etc /app/etc
 RUN go build -ldflags="-s -w" -o /app/usercomment /usr/local/go/src/douyin/pkg/comment/usercomment.go

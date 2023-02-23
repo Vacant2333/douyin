@@ -27,7 +27,7 @@ func NewCheckIsFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *C
 func (l *CheckIsFavoriteLogic) CheckIsFavorite(in *userOptPb.CheckIsFavoriteReq) (*userOptPb.CheckIsFavoriteResp, error) {
 	result, err := l.svcCtx.UserFavoriteModel.CheckIsFavorite(l.ctx, in.UserId, in.VideoId)
 	if err != nil {
-		logger.Fatal("CheckIsFavorite查询错误", err)
+		logger.Error("CheckIsFavorite查询错误", err)
 		return nil, err
 	}
 	return &userOptPb.CheckIsFavoriteResp{IsFavorite: result}, nil

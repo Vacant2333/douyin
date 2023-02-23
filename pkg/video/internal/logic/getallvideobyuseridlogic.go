@@ -40,7 +40,7 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 	authorId := in.UserId
 	queryVideos, err := l.svcCtx.VideoModel.FindAllByUserId(l.ctx, authorId)
 	if err != nil {
-		logger.Fatal("FindAllByUserId failed", err)
+		logger.Error("FindAllByUserId failed", err)
 		return nil, err
 	}
 	videos := make([]*video.Video, len(queryVideos))
@@ -62,7 +62,7 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 				UserId: authorId,
 			})
 			if err != nil {
-				logger.Fatal("Video获取Userinfo出错", err)
+				logger.Error("Video获取Userinfo出错", err)
 				return
 			}
 			videos[i].Author = &video.User{
@@ -84,7 +84,7 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 					FunId:  in.UserId,
 				})
 				if err != nil {
-					logger.Fatalf("CheckIsFollow RPC failed %s", err.Error())
+					logger.Errorf("CheckIsFollow RPC failed %s", err.Error())
 					return
 				}
 				videos[i].Author.IsFollow = checkIsFollowResp.IsFollow
@@ -95,7 +95,7 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 					VideoId: query.Id,
 				})
 				if err != nil {
-					logger.Fatal("查询视频是否点赞失败", err)
+					logger.Error("查询视频是否点赞失败", err)
 					return
 				}
 				videos[i].IsFavorite = favoriteResp.IsFavorite

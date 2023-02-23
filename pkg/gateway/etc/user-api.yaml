@@ -1,11 +1,8 @@
 Name: user-api
 Host: 0.0.0.0
 Port: 8888
-Mode: dev
 MaxBytes: 8388608
-Timeout: 30000
-
-
+Timeout: 300000
 UserCommentRpc:
   Etcd:
     Hosts:
@@ -31,7 +28,6 @@ MessageRpc:
     Hosts:
       - etcd.etcd.svc.cluster.local:2379
     Key: usermessage.rpc
-
 UserCommentOptServiceConf:
   Name: UserCommentOptService
   Brokers:
@@ -41,7 +37,6 @@ UserCommentOptServiceConf:
   Offset: first
   Consumers: 1
   Processors: 1
-
 UserFavoriteOptServiceConf:
   Name: UserFavoriteOptService
   Brokers:
@@ -51,7 +46,6 @@ UserFavoriteOptServiceConf:
   Offset: first
   Consumers: 1
   Processors: 1
-
 FollowRpc:
   Etcd:
     Hosts:

@@ -24,7 +24,7 @@ func makeMinIOClient() *minio.Client {
 		Creds: credentials.NewStaticV4(accessKeyID, secretAccessKey, ""),
 	})
 	if err != nil {
-		logger.Fatalf("Make MinIO client error:", err)
+		logger.Errorf("Make MinIO client error:", err)
 		panic(err)
 	}
 	return client
@@ -50,7 +50,7 @@ func uploadFile(client *minio.Client, reader *bytes.Reader, fileName string, buc
 	_, err := client.PutObject(context.Background(),
 		bucket, fileName, reader, reader.Size(), minio.PutObjectOptions{})
 	if err != nil {
-		logger.Fatalf("Fail to upload file, name: %v, err: %v", fileName, err)
+		logger.Errorf("Fail to upload file, name: %v, err: %v", fileName, err)
 		return "", err
 	}
 

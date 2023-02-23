@@ -24,7 +24,6 @@ func NewGetMessageListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 // -----------------------GetMessageList-----------------------
 func (l *GetMessageListLogic) GetMessageList(in *userMessagePb.MessageListReq) (*userMessagePb.MessageListRes, error) {
-	// todo: add your logic here and delete this line
 	parseToken := token.ParseToken{}
 	userid, _ := parseToken.ParseToken(in.Token)
 	allMessageData, err := l.svcCtx.MessageModel.FindMessageListByUserID(l.ctx, userid.UserId, in.UserId)

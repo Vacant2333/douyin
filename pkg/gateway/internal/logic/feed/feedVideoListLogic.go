@@ -6,8 +6,6 @@ import (
 	"douyin/pkg/gateway/internal/svc"
 	"douyin/pkg/gateway/internal/types"
 	"douyin/pkg/video/types/video"
-	"fmt"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -40,7 +38,6 @@ func (l *FeedVideoListLogic) FeedVideoList(req *types.FeedVideoListReq) (resp *t
 		}, err
 	}
 	videos := make([]*types.PubVideo, len(videosResp.VideoList))
-	fmt.Println(111, videosResp.VideoList[0])
 	for i, v := range videosResp.VideoList {
 		videos[i] = &types.PubVideo{}
 		videos[i].Id = v.Id

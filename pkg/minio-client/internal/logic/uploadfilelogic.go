@@ -29,26 +29,26 @@ func NewUploadFileLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Upload
 func (l *UploadFileLogic) UploadFile(in *minio_client.UploadFileRequest) (*minio_client.UploadFileReply, error) {
 	pngFrame, err := getVideoFrame(in.Data, 1)
 	if err != nil {
-		logger.Fatalf("Fail to get video frame, err: %v", err)
+		logger.Errorf("Fail to get video frame, err: %v", err)
 		return nil, err
 	}
 
 	client := makeMinIOClient()
 	bucket := "douyin"
 	if in.Data == nil || in.Title == "" {
-		logger.Fatal("UploadFile's parameter cant be nil")
+		logger.Error("UploadFile's parameter cant be nil")
 		panic("UploadFile's parameter cant be nil")
 	}
 
 	videoUrl, err := uploadFile(client, bytes.NewReader(in.Data), fmt.Sprintf("%v.mp4", time.Now().Unix()), bucket, "")
 	if err != nil {
-		logger.Fatalf("Fail to upload video file, err: %v", err)
+		logger.Errorf("Fail to upload video file, err: %v", err)
 		return nil, err
 	}
 
 	frameUrl, err := uploadFile(client, pngFrame, fmt.Sprintf("%v.png", time.Now().Unix()), bucket, "")
 	if err != nil {
-		logger.Fatalf("Fail to upload frame file, err: %v, err")
+		logger.Errorf("Fail to upload frame file, err: %v, err")
 		return nil, err
 	}
 
