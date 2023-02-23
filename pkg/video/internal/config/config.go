@@ -15,4 +15,5 @@ type Config struct {
 	FavoriteRpc    zrpc.RpcClientConf
 	UserRpc        zrpc.RpcClientConf
 	MinIOClientRpc zrpc.RpcClientConf
+	FollowRPC      zrpc.RpcClientConf
 }
