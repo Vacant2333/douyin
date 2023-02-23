@@ -69,6 +69,7 @@ func (l *GetFriendListLogic) GetFriendList(in *follow.GetFriendListReq) (*follow
 			defer wg.Done()
 		}()
 	}
+	wg.Wait()
 	return &follow.GetFriendListResp{
 		StatusCode: 0,
 		StatusMsg:  "success",
