@@ -30,6 +30,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*Video, error)
 		FindManyByTime(ctx context.Context, time int64, num int64) ([]*Video, error)
 		FindAllByUserId(ctx context.Context, userId int64) ([]*Video, error)
+		UpdateCount(ctx context.Context, videoId int64, filed string, actionType int64) error
 		Update(ctx context.Context, data *Video) error
 		Delete(ctx context.Context, id int64) error
 	}

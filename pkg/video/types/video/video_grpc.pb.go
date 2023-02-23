@@ -25,6 +25,8 @@ type VideoServiceClient interface {
 	PublishVideo(ctx context.Context, in *PublishVideoReq, opts ...grpc.CallOption) (*PublishVideoResp, error)
 	GetVideo(ctx context.Context, in *GetVideoReq, opts ...grpc.CallOption) (*GetVideoResp, error)
 	GetAllVideoByUserId(ctx context.Context, in *GetAllVideoByUserIdReq, opts ...grpc.CallOption) (*GetAllVideoByUserIdResp, error)
+	ChangeVideoComment(ctx context.Context, in *ChangeVideoCommentReq, opts ...grpc.CallOption) (*ChangeVideoCommentResp, error)
+	ChangeVideoFavorite(ctx context.Context, in *ChangeVideoFavoriteReq, opts ...grpc.CallOption) (*ChangeVideoFavoriteResp, error)
 }
 
 type videoServiceClient struct {
@@ -62,6 +64,24 @@ func (c *videoServiceClient) GetAllVideoByUserId(ctx context.Context, in *GetAll
 	return out, nil
 }
 
+func (c *videoServiceClient) ChangeVideoComment(ctx context.Context, in *ChangeVideoCommentReq, opts ...grpc.CallOption) (*ChangeVideoCommentResp, error) {
+	out := new(ChangeVideoCommentResp)
+	err := c.cc.Invoke(ctx, "/video.VideoService/ChangeVideoComment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *videoServiceClient) ChangeVideoFavorite(ctx context.Context, in *ChangeVideoFavoriteReq, opts ...grpc.CallOption) (*ChangeVideoFavoriteResp, error) {
+	out := new(ChangeVideoFavoriteResp)
+	err := c.cc.Invoke(ctx, "/video.VideoService/ChangeVideoFavorite", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VideoServiceServer is the server API for VideoService service.
 // All implementations must embed UnimplementedVideoServiceServer
 // for forward compatibility
@@ -69,6 +89,8 @@ type VideoServiceServer interface {
 	PublishVideo(context.Context, *PublishVideoReq) (*PublishVideoResp, error)
 	GetVideo(context.Context, *GetVideoReq) (*GetVideoResp, error)
 	GetAllVideoByUserId(context.Context, *GetAllVideoByUserIdReq) (*GetAllVideoByUserIdResp, error)
+	ChangeVideoComment(context.Context, *ChangeVideoCommentReq) (*ChangeVideoCommentResp, error)
+	ChangeVideoFavorite(context.Context, *ChangeVideoFavoriteReq) (*ChangeVideoFavoriteResp, error)
 	mustEmbedUnimplementedVideoServiceServer()
 }
 
@@ -84,6 +106,12 @@ func (UnimplementedVideoServiceServer) GetVideo(context.Context, *GetVideoReq) (
 }
 func (UnimplementedVideoServiceServer) GetAllVideoByUserId(context.Context, *GetAllVideoByUserIdReq) (*GetAllVideoByUserIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllVideoByUserId not implemented")
+}
+func (UnimplementedVideoServiceServer) ChangeVideoComment(context.Context, *ChangeVideoCommentReq) (*ChangeVideoCommentResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeVideoComment not implemented")
+}
+func (UnimplementedVideoServiceServer) ChangeVideoFavorite(context.Context, *ChangeVideoFavoriteReq) (*ChangeVideoFavoriteResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeVideoFavorite not implemented")
 }
 func (UnimplementedVideoServiceServer) mustEmbedUnimplementedVideoServiceServer() {}
 
@@ -152,6 +180,42 @@ func _VideoService_GetAllVideoByUserId_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VideoService_ChangeVideoComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeVideoCommentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServiceServer).ChangeVideoComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/video.VideoService/ChangeVideoComment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServiceServer).ChangeVideoComment(ctx, req.(*ChangeVideoCommentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VideoService_ChangeVideoFavorite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeVideoFavoriteReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VideoServiceServer).ChangeVideoFavorite(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/video.VideoService/ChangeVideoFavorite",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VideoServiceServer).ChangeVideoFavorite(ctx, req.(*ChangeVideoFavoriteReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VideoService_ServiceDesc is the grpc.ServiceDesc for VideoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +234,14 @@ var VideoService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllVideoByUserId",
 			Handler:    _VideoService_GetAllVideoByUserId_Handler,
+		},
+		{
+			MethodName: "ChangeVideoComment",
+			Handler:    _VideoService_ChangeVideoComment_Handler,
+		},
+		{
+			MethodName: "ChangeVideoFavorite",
+			Handler:    _VideoService_ChangeVideoFavorite_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
