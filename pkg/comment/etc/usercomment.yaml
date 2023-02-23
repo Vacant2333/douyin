@@ -10,3 +10,8 @@ DB:
 CacheConf:
   - Host: redis-master.redis.svc.cluster.local:6379
     Pass: redispwd123
+VideoRPC:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: video.rpc
