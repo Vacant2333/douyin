@@ -7,7 +7,6 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/cache"
@@ -31,7 +30,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*Message, error)
 		Update(ctx context.Context, data *Message) error
 		Delete(ctx context.Context, id int64) error
-		FindMessageListByUserID(ctx context.Context, userid int64, to_userid int64) ([]*Message, error)
+		FindMessageListByUserID(ctx context.Context, userid int64, to_userid int64, create_time int64) ([]*Message, error)
 	}
 
 	defaultMessageModel struct {
@@ -40,11 +39,11 @@ type (
 	}
 
 	Message struct {
-		Id         int64     `db:"id"`
-		Content    string    `db:"content"`
-		FromUserId int64     `db:"from_user_id"`
-		ToUserId   int64     `db:"to_user_id"`
-		CreateTime time.Time `db:"create_time"`
+		Id         int64  `db:"id"`
+		Content    string `db:"content"`
+		FromUserId int64  `db:"from_user_id"`
+		ToUserId   int64  `db:"to_user_id"`
+		CreateTime int64  `db:"create_time"`
 	}
 )
 
@@ -81,20 +80,18 @@ func (m *defaultMessageModel) FindOne(ctx context.Context, id int64) (*Message, 
 	}
 }
 
-func (m *defaultMessageModel) FindMessageListByUserID(ctx context.Context, from_user_id int64, to_userid int64) ([]*Message, error) {
+func (m *defaultMessageModel) FindMessageListByUserID(ctx context.Context, from_user_id int64, to_userid int64, pre_time int64) ([]*Message, error) {
 	fmt.Printf("findall:::::::::::::::::::::::::")
-	tiktokCommentIdKey := fmt.Sprintf("%s%v", cacheTiktokMessageIdPrefix, from_user_id+to_userid)
 	var resp []*Message
-	err := m.QueryRowCtx(ctx, &resp, tiktokCommentIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
-		query := fmt.Sprintf("select %s from %s where `from_user_id` = ? and `to_user_id` = ? order by `create_time` DESC", messageRows, m.table)
-		fmt.Printf("sql:------------->%v", query)
-		return conn.QueryRowsCtx(ctx, v, query, from_user_id+to_userid)
-	})
+
+	query := fmt.Sprintf("select %s from %s where ((`from_user_id` = ? and `to_user_id` = ?) or (`to_user_id` = ? and `from_user_id` = ?)) and `create_time` > ? order by `create_time` DESC", messageRows, m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, from_user_id, to_userid, from_user_id, to_userid, pre_time)
+
 	switch err {
 	case nil:
 		return resp, nil
 	case sqlc.ErrNotFound:
-		return nil, ErrNotFound
+		return nil, nil
 	default:
 		return nil, err
 	}
@@ -103,8 +100,8 @@ func (m *defaultMessageModel) FindMessageListByUserID(ctx context.Context, from_
 func (m *defaultMessageModel) Insert(ctx context.Context, data *Message) (sql.Result, error) {
 	tiktokMessageIdKey := fmt.Sprintf("%s%v", cacheTiktokMessageIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, messageRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Content, data.FromUserId, data.ToUserId)
+		query := fmt.Sprintf("insert into %s (`content`, `from_user_id`, `to_user_id`, `create_time`) values (?, ?, ?, ?)", m.table)
+		return conn.ExecCtx(ctx, query, data.Content, data.FromUserId, data.ToUserId, data.CreateTime)
 	}, tiktokMessageIdKey)
 	return ret, err
 }

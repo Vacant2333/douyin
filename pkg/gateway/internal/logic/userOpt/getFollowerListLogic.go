@@ -40,6 +40,7 @@ func (l *GetFollowerListLogic) GetFollowerList(req *types.FollowerListReq) (resp
 	}
 	userList := make([]*types.User, len(result.UserList))
 	for i, v := range result.UserList {
+		userList[i] = &types.User{}
 		userList[i].UserId = v.Id
 		userList[i].UserName = v.Name
 		userList[i].FollowCount = v.FollowCount

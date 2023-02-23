@@ -39,10 +39,10 @@ type Message {
 
 service user-api {
 	@doc "发送消息"
-	@handler message
+	@handler Message
 	post /message/action (MessageReq) returns (MessageRes)
 	
 	@doc "聊天记录"
-	@handler messagelist
+	@handler MessageList
 	get /message/chat (MessageListReq) returns (MessageListRes)
 }

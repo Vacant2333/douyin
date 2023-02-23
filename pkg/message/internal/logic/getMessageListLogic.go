@@ -26,7 +26,7 @@ func NewGetMessageListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 func (l *GetMessageListLogic) GetMessageList(in *userMessagePb.MessageListReq) (*userMessagePb.MessageListRes, error) {
 	parseToken := token.ParseToken{}
 	userid, _ := parseToken.ParseToken(in.Token)
-	allMessageData, err := l.svcCtx.MessageModel.FindMessageListByUserID(l.ctx, userid.UserId, in.UserId)
+	allMessageData, err := l.svcCtx.MessageModel.FindMessageListByUserID(l.ctx, userid.UserId, in.UserId, in.PreTime)
 	if err != nil {
 		logx.Errorf("GetCommentList------->SELECT err : %s", err.Error())
 		return &userMessagePb.MessageListRes{
@@ -37,17 +37,15 @@ func (l *GetMessageListLogic) GetMessageList(in *userMessagePb.MessageListReq) (
 	}
 
 	var MessageList []*userMessagePb.Message
-	for index, v := range allMessageData {
+	for _, v := range allMessageData {
 		var message userMessagePb.Message
-		message.Id = int64(index)
+		message.Id = v.Id
 		message.ToUserId = v.ToUserId
 		message.Content = v.Content
 		message.FromUserId = v.FromUserId
-		message.CreateTime = v.CreateTime.String()
-
+		message.CreateTime = v.CreateTime
 		MessageList = append(MessageList, &message)
 	}
-
 	return &userMessagePb.MessageListRes{
 		Code:        0,
 		Msg:         "Success",

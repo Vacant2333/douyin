@@ -182,7 +182,7 @@ type IChatDo interface {
 // sql(select * from @@table)
 func (c chatDo) FindAll() (result []model.Chat, err error) {
 	var generateSQL strings.Builder
-	generateSQL.WriteString("select * from chat ")
+	generateSQL.WriteString("select * from message ")
 
 	var executeSQL *gorm.DB
 	executeSQL = c.UnderlyingDB().Raw(generateSQL.String()).Find(&result) // ignore_security_alert

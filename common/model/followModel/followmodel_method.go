@@ -87,7 +87,7 @@ func (m *defaultFollowModel) UpdateMsg(ctx context.Context, sender int64, receiv
 }
 
 func (m *defaultFollowModel) FindMsg(ctx context.Context, userId int64, funId int64) (*Follow, error) {
-	query := fmt.Sprintf("select msg,sender from %s where user_id = ? and removed = 0 and fun_id = ?", m.table)
+	query := fmt.Sprintf("select * from %s where user_id = ? and removed = 0 and fun_id = ?", m.table)
 	var resp Follow
 	err := m.QueryRowNoCacheCtx(ctx, &resp, query, userId, funId)
 	switch err {

@@ -45,7 +45,7 @@ func GetFollowerList(ctx context.Context, svcCtx *svc.ServiceContext, in *follow
 		i := index
 		go func() {
 			queryFollowers, err := svcCtx.UserPRC.Info(ctx, &userservice.UserInfoReq{
-				UserId: query.UserId.Int64,
+				UserId: query.FunId,
 			})
 			if err != nil {
 				logx.Errorf("in follow model get user info failed: %v", err.Error())

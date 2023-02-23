@@ -209,8 +209,9 @@ type MessageRes struct {
 }
 
 type MessageListReq struct {
-	UserId int64  `form:"user_id"`
-	Token  string `form:"token"`
+	ToUserId   int64  `form:"to_user_id"`
+	PreMsgTime int64  `form:"pre_msg_time"`
+	Token      string `form:"token"`
 }
 
 type MessageListRes struct {
@@ -223,5 +224,5 @@ type Message struct {
 	ToUserId   int64  `json:"to_user_id"`
 	FromUserId int64  `json:"from_user_id"`
 	Content    string `json:"content"`
-	CreateTime string `json:"create_time"`
+	CreateTime int64  `json:"create_time"`
 }

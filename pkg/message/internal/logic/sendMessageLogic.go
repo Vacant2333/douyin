@@ -8,6 +8,7 @@ import (
 	"douyin/pkg/message/internal/svc"
 	"douyin/pkg/message/userMessagePb"
 	"github.com/zeromicro/go-zero/core/logx"
+	"time"
 )
 
 type SendMessageLogic struct {
@@ -25,7 +26,7 @@ func NewSendMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SendM
 }
 
 func (l *SendMessageLogic) SendMessage(in *userMessagePb.MessageReq) (*userMessagePb.MessageRes, error) {
-	var message *messageModel.Message
+	message := &messageModel.Message{}
 	var parseToken token.ParseToken
 	claims, err := parseToken.ParseToken(in.Token)
 	if err != nil {
@@ -39,6 +40,7 @@ func (l *SendMessageLogic) SendMessage(in *userMessagePb.MessageReq) (*userMessa
 	message.ToUserId = in.ToUserId
 	message.Content = in.Content
 	message.FromUserId = claims.UserId
+	message.CreateTime = time.Now().Unix()
 
 	_, err = l.svcCtx.MessageModel.Insert(l.ctx, message)
 

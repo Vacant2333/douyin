@@ -47,6 +47,7 @@ func (l *GetFollowListLogic) GetFollowList(in *follow.GetFollowListReq) (*follow
 				logx.Errorf("in follow model get user info failed: %v", err.Error())
 				return
 			}
+			follows[i] = &follow.User{}
 			follows[i].Id = queryFollows.User.UserId
 			follows[i].Name = queryFollows.User.UserName
 			follows[i].FollowCount = queryFollows.User.FollowCount

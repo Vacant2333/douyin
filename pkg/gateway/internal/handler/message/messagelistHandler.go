@@ -9,7 +9,7 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func MessagelistHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func MessageListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.MessageListReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -17,8 +17,8 @@ func MessagelistHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := message.NewMessagelistLogic(r.Context(), svcCtx)
-		resp, err := l.Messagelist(&req)
+		l := message.NewMessageListLogin(r.Context(), svcCtx)
+		resp, err := l.MessageList(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

@@ -151,8 +151,9 @@ type MessageListReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId int64  `protobuf:"varint,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
-	Token  string `protobuf:"bytes,2,opt,name=Token,proto3" json:"Token,omitempty"`
+	PreTime int64  `protobuf:"varint,3,opt,name=PreTime,proto3" json:"PreTime,omitempty"`
+	UserId  int64  `protobuf:"varint,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	Token   string `protobuf:"bytes,2,opt,name=Token,proto3" json:"Token,omitempty"`
 }
 
 func (x *MessageListReq) Reset() {
@@ -273,7 +274,7 @@ type Message struct {
 	ToUserId   int64  `protobuf:"varint,2,opt,name=ToUserId,proto3" json:"ToUserId,omitempty"`
 	FromUserId int64  `protobuf:"varint,3,opt,name=FromUserId,proto3" json:"FromUserId,omitempty"`
 	Content    string `protobuf:"bytes,4,opt,name=Content,proto3" json:"Content,omitempty"`
-	CreateTime string `protobuf:"bytes,5,opt,name=CreateTime,proto3" json:"CreateTime,omitempty"`
+	CreateTime int64  `protobuf:"varint,5,opt,name=CreateTime,proto3" json:"CreateTime,omitempty"`
 }
 
 func (x *Message) Reset() {
@@ -336,11 +337,11 @@ func (x *Message) GetContent() string {
 	return ""
 }
 
-func (x *Message) GetCreateTime() string {
+func (x *Message) GetCreateTime() int64 {
 	if x != nil {
 		return x.CreateTime
 	}
-	return ""
+	return 0
 }
 
 var File_UserMessage_proto protoreflect.FileDescriptor

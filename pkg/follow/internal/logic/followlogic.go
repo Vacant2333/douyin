@@ -25,10 +25,11 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 }
 
 func (l *FollowLogic) Follow(in *follow.FollowReq) (*follow.FollowResp, error) {
-	followId, _ := l.svcCtx.FollowModel.FindIfExist(l.ctx, in.UserId, in.ToUserId)
+	followId, _ := l.svcCtx.FollowModel.FindIfExist(l.ctx, in.ToUserId, in.UserId)
+
 	if followId != 0 {
 		var removed int64
-		if in.ActionType == 1 {
+		if in.ActionType == 2 {
 			removed = 1
 		}
 		// 查询到了followId，调用update更新
