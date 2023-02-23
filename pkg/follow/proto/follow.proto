@@ -61,9 +61,37 @@ message CheckIsFollowResp {
   bool isFollow = 3;
 }
 
+message GetFriendListReq {
+  string token = 1;
+  int64 user_id = 2;
+}
+
+message FriendUser {
+  int64 id = 1; // 用户id
+  string name = 2; // 用户名称
+  int64 follow_count = 3; // 关注总数
+  int64 follower_count = 4; // 粉丝总数
+  bool is_follow = 5; // true-已关注，false-未关注
+  string avatar = 6; //用户头像
+  string background_image = 7; //用户个人页顶部大图
+  string signature = 8; //个人简介
+  int64 total_favorited = 9; //获赞数量
+  int64 work_count = 10; //作品数量
+  int64 favorite_count = 11; //点赞数量
+  optional string message = 12;
+  int64 msgType = 13;
+}
+
+message GetFriendListResp {
+  int32 status_code = 1;
+  string status_msg = 2;
+  repeated FriendUser user_list = 3;
+}
+
 service FollowService {
   rpc Follow(FollowReq) returns (FollowResp);
   rpc GetFollowList(GetFollowListReq) returns (GetFollowListResp);
   rpc GetFollowerList(GetFollowerListReq) returns (GetFollowerListResp);
+  rpc GetFriendList(GetFriendListReq) returns (GetFriendListResp);
   rpc CheckIsFollow(CheckIsFollowReq) returns (CheckIsFollowResp);
 }

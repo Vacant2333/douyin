@@ -37,6 +37,11 @@ func (s *FollowServiceServer) GetFollowerList(ctx context.Context, in *follow.Ge
 	return l.GetFollowerList(in)
 }
 
+func (s *FollowServiceServer) GetFriendList(ctx context.Context, in *follow.GetFriendListReq) (*follow.GetFriendListResp, error) {
+	l := logic.NewGetFriendListLogic(ctx, s.svcCtx)
+	return l.GetFriendList(in)
+}
+
 func (s *FollowServiceServer) CheckIsFollow(ctx context.Context, in *follow.CheckIsFollowReq) (*follow.CheckIsFollowResp, error) {
 	l := logic.NewCheckIsFollowLogic(ctx, s.svcCtx)
 	return l.CheckIsFollow(in)
