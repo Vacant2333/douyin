@@ -27,7 +27,12 @@ func NewMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *MessageLo
 
 func (l *MessageLogic) Message(req *types.MessageReq) (resp *types.MessageRes, err error) {
 	req.Content = sensitiveWords.SensitiveWordsFliter(sensitiveWords.SensitiveWords, req.Content, '?')
-	SendMessageRPC, err := l.svcCtx.MessageRpc.SendMessage(l.ctx, &userMessagePb.MessageReq{ToUserId: req.ToUserId, Content: req.Content, Token: req.Token, ActionType: req.ActionType})
+	SendMessageRPC, err := l.svcCtx.MessageRpc.SendMessage(l.ctx, &userMessagePb.MessageReq{
+		ToUserId:   req.ToUserId,
+		Content:    req.Content,
+		Token:      req.Token,
+		ActionType: req.ActionType,
+	})
 
 	if err != nil {
 		logx.Errorf("SendMessage->SendMessageRpc  err : %v , val : %s , message:%+v", err)

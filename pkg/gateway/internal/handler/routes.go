@@ -138,7 +138,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Handler: message.MessageHandler(serverCtx),
 				},
 				{
-					Method:  http.MethodPost,
+					Method:  http.MethodGet,
 					Path:    "/message/chat",
 					Handler: message.MessagelistHandler(serverCtx),
 				},
