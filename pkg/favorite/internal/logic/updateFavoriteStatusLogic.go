@@ -8,6 +8,7 @@ import (
 	"douyin/common/xerr"
 	"douyin/pkg/favorite/internal/svc"
 	"douyin/pkg/favorite/userOptPb"
+	"douyin/pkg/video/videoservice"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -27,17 +28,26 @@ func NewUpdateFavoriteStatusLogic(ctx context.Context, svcCtx *svc.ServiceContex
 }
 
 func (l *UpdateFavoriteStatusLogic) UpdateFavoriteStatus(in *userOptPb.UpdateFavoriteStatusReq) (*userOptPb.UpdateFavoriteStatusResp, error) {
-	favoriteModel := new(favoriteModel.Favorite)
+	newFavoriteModel := new(favoriteModel.Favorite)
 	switch in.ActionType {
 	//新增点赞
 	case messageTypes.ActionADD:
-		favoriteModel.UserId = in.UserId
-		favoriteModel.VideoId = in.VideoId
+		newFavoriteModel.UserId = in.UserId
+		newFavoriteModel.VideoId = in.VideoId
 
-		_, err := l.svcCtx.UserFavoriteModel.Insert(l.ctx, favoriteModel)
+		_, err := l.svcCtx.UserFavoriteModel.Insert(l.ctx, newFavoriteModel)
 
 		if err != nil {
 			logx.Errorf("UpdateFavoriteStatus------->Insert err : %s", err.Error())
+			return &userOptPb.UpdateFavoriteStatusResp{}, err
+		}
+
+		_, err = l.svcCtx.VideoRPC.ChangeVideoFavorite(l.ctx, &videoservice.ChangeVideoFavoriteReq{
+			VideoId:    in.VideoId,
+			ActionType: in.ActionType,
+		})
+		if err != nil {
+			logx.Errorf("ChangeVideoFavorite failed %s ", err)
 			return &userOptPb.UpdateFavoriteStatusResp{}, err
 		}
 
@@ -45,14 +55,24 @@ func (l *UpdateFavoriteStatusLogic) UpdateFavoriteStatus(in *userOptPb.UpdateFav
 
 	//取消点赞
 	case messageTypes.ActionCancel:
-		favoriteModel.Removed = globalkey.DelStateYes
-		favoriteModel.VideoId = in.VideoId
-		favoriteModel.UserId = in.UserId
-		err := l.svcCtx.UserFavoriteModel.Update(l.ctx, favoriteModel)
+		newFavoriteModel.Removed = globalkey.DelStateYes
+		newFavoriteModel.VideoId = in.VideoId
+		newFavoriteModel.UserId = in.UserId
+		err := l.svcCtx.UserFavoriteModel.Update(l.ctx, newFavoriteModel)
 		if err != nil {
 			logx.Errorf("UpdateFavoriteStatus------->update err : %s", err.Error())
 			return &userOptPb.UpdateFavoriteStatusResp{}, err
 		}
+
+		_, err = l.svcCtx.VideoRPC.ChangeVideoFavorite(l.ctx, &videoservice.ChangeVideoFavoriteReq{
+			VideoId:    in.VideoId,
+			ActionType: in.ActionType,
+		})
+		if err != nil {
+			logx.Errorf("ChangeVideoFavorite failed %s ", err)
+			return &userOptPb.UpdateFavoriteStatusResp{}, err
+		}
+
 		return &userOptPb.UpdateFavoriteStatusResp{}, nil
 
 	default:

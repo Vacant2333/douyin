@@ -12,4 +12,5 @@ type Config struct {
 		DataSource string
 	}
 	CacheRedis cache.CacheConf
+	VideoRPC   zrpc.RpcClientConf
 }
