@@ -57,8 +57,6 @@ func (l *UserCommentOpt) execService(message messageTypes.UserCommentOptMessage)
 		ActionType: message.ActionType,
 	})
 
-	logx.Error("UserCommentOptMessage->execService xxxxxxxxxxx")
-
 	if err != nil {
 		logx.Errorf("UserCommentOptMessage->execService  err : %v , val : %s , message:%+v", err, message)
 		return err
