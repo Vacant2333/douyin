@@ -9,3 +9,8 @@ DB:
 CacheConf:
   - Host: redis-master.redis.svc.cluster.local:6379
     Pass: redispwd123
+FollowRPC:
+  Etcd:
+    Hosts:
+      - etcd.etcd.svc.cluster.local:2379
+    Key: follow.rpc

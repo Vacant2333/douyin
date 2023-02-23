@@ -2,12 +2,11 @@ package logic
 
 import (
 	"context"
+	"douyin/common/help/token"
 	"douyin/common/model/messageModel"
+	"douyin/pkg/logger"
 	"douyin/pkg/message/internal/svc"
 	"douyin/pkg/message/userMessagePb"
-	"fmt"
-	"time"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -25,20 +24,37 @@ func NewSendMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SendM
 	}
 }
 
-// -----------------------SendMessage-----------------------
 func (l *SendMessageLogic) SendMessage(in *userMessagePb.MessageReq) (*userMessagePb.MessageRes, error) {
-	fmt.Printf(":::::::::::::::::::::::::::::::::::::::::::::::")
 	var message *messageModel.Message
+	var parseToken token.ParseToken
+	claims, err := parseToken.ParseToken(in.Token)
+	if err != nil {
+		logger.InfoF("Token解析错误 %s ", err.Error())
+		return &userMessagePb.MessageRes{
+			Code: -1,
+			Msg:  "Token解析错误",
+		}, err
+	}
+
 	message.ToUserId = in.ToUserId
 	message.Content = in.Content
-	message.CreateTime = time.Now()
+	message.FromUserId = claims.UserId
 
-	_, err := l.svcCtx.MessageModel.Insert(l.ctx, message)
+	_, err = l.svcCtx.MessageModel.Insert(l.ctx, message)
 
 	if err != nil {
 		logx.Errorf("SendMessage------->SELECT err : %s", err.Error())
 		return &userMessagePb.MessageRes{
-			Code: 1,
+			Code: -1,
+			Msg:  "failure",
+		}, err
+	}
+
+	err = l.svcCtx.FollowModel.UpdateMsg(l.ctx, claims.UserId, in.ToUserId, message.Content)
+	if err != nil {
+		logx.Errorf("Update First Msg failed : %s", err.Error())
+		return &userMessagePb.MessageRes{
+			Code: -1,
 			Msg:  "failure",
 		}, err
 	}
