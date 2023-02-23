@@ -2,6 +2,8 @@ package kafkax
 
 import (
 	"context"
+	constantx "douyin/pkg/constant"
+	"time"
 
 	"github.com/segmentio/kafka-go"
 )
@@ -9,13 +11,47 @@ import (
 type Reader struct {
 	Reader *kafka.Reader
 	// Callback funtion when get a msg
-	PullCb func(m *kafka.Message) error
-	//err        chan error
+	PullCb      func(m *kafka.Message) error
+	err         chan error
 	IsFetchMode bool
 }
 
-func (r *Reader) Run() {
+func NewReader(topic string, brokers []string, pullCb func(m *kafka.Message) error, isFetchMode bool) (*Reader, error) {
+	return NewGroupReader(topic, brokers, "", pullCb, isFetchMode)
+}
 
+func NewGroupReader(topic string, brokers []string, groupID string, pullCb func(m *kafka.Message) error, isFetchMode bool) (*Reader, error) {
+	r := &Reader{
+		PullCb:      pullCb,
+		IsFetchMode: isFetchMode,
+		err:         make(chan error),
+	}
+
+	config := kafka.ReaderConfig{
+		Brokers:   brokers,
+		Topic:     topic,
+		MinBytes:  10e3,
+		MaxBytes:  10e6,
+		MaxWait:   3 * time.Second,
+		Partition: constantx.KAFKA_PartitionNum,
+		// ReadLagInterval: -1,
+	}
+
+	if groupID != "" {
+		config.GroupID = groupID
+	}
+
+	if isFetchMode {
+		//config.ReadBackoffMax = 10 * time.Millisecond
+		config.ReadBackoffMin = 10 * time.Millisecond
+	}
+
+	r.Reader = kafka.NewReader(config)
+
+	return r, nil
+}
+
+func (r *Reader) Run() {
 	CreateTopics(r.Reader.Config().Brokers, append([]string{}, r.Reader.Config().Topic))
 	if r.PullCb == nil {
 		l.DPanic("have not appoint pull callback function in struct")
@@ -26,6 +62,14 @@ func (r *Reader) Run() {
 	} else {
 		r.run()
 	}
+
+	// Listen for errors
+	go func() {
+		for {
+			e := <-r.err
+			l.Errorln("erroer occured in Kafka reader: ", e.Error())
+		}
+	}()
 }
 
 /*
@@ -35,23 +79,19 @@ func (r *Reader) Run() {
 func (r *Reader) fetchRun() {
 	go func() {
 		defer r.Reader.Close()
+
 		for {
-			// Fetch one msg
-			m, e := r.Reader.FetchMessage(context.Background())
-			if e != nil {
-				//r.err <- errors.New("error occur when reader <fetch> a message")
-				l.Errorln("error occur when reader <fetch> a message")
+			m, err := r.Reader.FetchMessage(context.Background())
+			if err != nil {
+				r.err <- err
+				continue
 			}
-			// Handle it
-			if e = r.PullCb(&m); e != nil {
-				// r.err <- e
-				l.Errorln("error occur when handle message")
+			if err := r.PullCb(&m); err != nil {
+				r.err <- err
+				continue
 			}
-			// Commit when no exception
-			e = r.Reader.CommitMessages(context.Background(), m)
-			if e != nil {
-				//r.err <- errors.New("error cocur when commit a message")
-				l.Errorln("error occur when commit a message")
+			if err := r.Reader.CommitMessages(context.Background(), m); err != nil {
+				r.err <- err
 			}
 		}
 	}()
@@ -61,15 +101,13 @@ func (r *Reader) run() {
 	go func() {
 		defer r.Reader.Close()
 		for {
-			m, e := r.Reader.ReadMessage(context.Background())
-			if e != nil {
-				//r.err <- errors.New("error occur when reader <read> a message")
-				l.Errorln("error occur when reader <fetch> a message")
+			m, err := r.Reader.ReadMessage(context.Background())
+			if err != nil {
+				r.err <- err
+				continue
 			}
-			// Handle it
-			if e = r.PullCb(&m); e != nil {
-				//r.err <- e
-				l.Errorln("error occur when handle message")
+			if err := r.PullCb(&m); err != nil {
+				r.err <- err
 			}
 		}
 	}()
