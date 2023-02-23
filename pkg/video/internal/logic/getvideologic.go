@@ -5,6 +5,7 @@ import (
 	"douyin/common/help/token"
 	"douyin/common/model/videoModel"
 	"douyin/pkg/favorite/userOptPb"
+	"douyin/pkg/follow/followservice"
 	"douyin/pkg/logger"
 	"douyin/pkg/user/userservice"
 	"douyin/pkg/video/internal/svc"
@@ -80,11 +81,19 @@ func (l *GetVideoLogic) GetVideo(in *video.GetVideoReq) (*video.GetVideoResp, er
 				FavoriteCount:   info.User.FavoriteCount,
 			}
 			if hasUserId {
-				// todo: 调用Follow RPC,查看是否关注了这个人,填入IsFollow
-				videos[i].Author.IsFollow = true // 对应函数
+
+				checkIsFollowResp, err := l.svcCtx.FollowRPC.CheckIsFollow(l.ctx, &followservice.CheckIsFollowReq{
+					UserId: query.AuthorId,
+					FunId:  tokenResult.UserId,
+				})
+				if err != nil {
+					logger.Fatalf("CheckIsFollow RPC failed %s", err.Error())
+					return
+				}
+				videos[i].Author.IsFollow = checkIsFollowResp.IsFollow
 
 				// 调用RPC查看视频是否点赞
-				favoriteResp, err := l.svcCtx.FavoritePRC.CheckIsFavorite(l.ctx, &userOptPb.CheckIsFavoriteReq{
+				favoriteResp, err := l.svcCtx.FavoriteRPC.CheckIsFavorite(l.ctx, &userOptPb.CheckIsFavoriteReq{
 					UserId:  tokenResult.UserId,
 					VideoId: query.Id,
 				})

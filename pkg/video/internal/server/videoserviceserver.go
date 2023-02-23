@@ -5,14 +5,15 @@ package server
 
 import (
 	"context"
-	logic2 "douyin/pkg/video/internal/logic"
+
+	"douyin/pkg/video/internal/logic"
 	"douyin/pkg/video/internal/svc"
-	video2 "douyin/pkg/video/types/video"
+	"douyin/pkg/video/types/video"
 )
 
 type VideoServiceServer struct {
 	svcCtx *svc.ServiceContext
-	video2.UnimplementedVideoServiceServer
+	video.UnimplementedVideoServiceServer
 }
 
 func NewVideoServiceServer(svcCtx *svc.ServiceContext) *VideoServiceServer {
@@ -21,17 +22,27 @@ func NewVideoServiceServer(svcCtx *svc.ServiceContext) *VideoServiceServer {
 	}
 }
 
-func (s *VideoServiceServer) PublishVideo(ctx context.Context, in *video2.PublishVideoReq) (*video2.PublishVideoResp, error) {
-	l := logic2.NewPublishVideoLogic(ctx, s.svcCtx)
+func (s *VideoServiceServer) PublishVideo(ctx context.Context, in *video.PublishVideoReq) (*video.PublishVideoResp, error) {
+	l := logic.NewPublishVideoLogic(ctx, s.svcCtx)
 	return l.PublishVideo(in)
 }
 
-func (s *VideoServiceServer) GetVideo(ctx context.Context, in *video2.GetVideoReq) (*video2.GetVideoResp, error) {
-	l := logic2.NewGetVideoLogic(ctx, s.svcCtx)
+func (s *VideoServiceServer) GetVideo(ctx context.Context, in *video.GetVideoReq) (*video.GetVideoResp, error) {
+	l := logic.NewGetVideoLogic(ctx, s.svcCtx)
 	return l.GetVideo(in)
 }
 
-func (s *VideoServiceServer) GetAllVideoByUserId(ctx context.Context, in *video2.GetAllVideoByUserIdReq) (*video2.GetAllVideoByUserIdResp, error) {
-	l := logic2.NewGetAllVideoByUserIdLogic(ctx, s.svcCtx)
+func (s *VideoServiceServer) GetAllVideoByUserId(ctx context.Context, in *video.GetAllVideoByUserIdReq) (*video.GetAllVideoByUserIdResp, error) {
+	l := logic.NewGetAllVideoByUserIdLogic(ctx, s.svcCtx)
 	return l.GetAllVideoByUserId(in)
+}
+
+func (s *VideoServiceServer) ChangeVideoComment(ctx context.Context, in *video.ChangeVideoCommentReq) (*video.ChangeVideoCommentResp, error) {
+	l := logic.NewChangeVideoCommentLogic(ctx, s.svcCtx)
+	return l.ChangeVideoComment(in)
+}
+
+func (s *VideoServiceServer) ChangeVideoFavorite(ctx context.Context, in *video.ChangeVideoFavoriteReq) (*video.ChangeVideoFavoriteResp, error) {
+	l := logic.NewChangeVideoFavoriteLogic(ctx, s.svcCtx)
+	return l.ChangeVideoFavorite(in)
 }

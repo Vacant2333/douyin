@@ -25,7 +25,10 @@ func NewMessagelistLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Messa
 }
 
 func (l *MessagelistLogic) Messagelist(req *types.MessageListReq) (resp *types.MessageListRes, err error) {
-	GetMessagelistRPC, err := l.svcCtx.MessageRpc.GetMessageList(l.ctx, &userMessagePb.MessageListReq{UserId: req.UserId, Token: req.Token})
+	GetMessagelistRPC, err := l.svcCtx.MessageRpc.GetMessageList(l.ctx, &userMessagePb.MessageListReq{
+		UserId: req.UserId,
+		Token:  req.Token,
+	})
 	if err != nil {
 		logx.Errorf("GetMessagelist->GetMessagelistRpc  err : %v , val : %s , message:%+v", err)
 		return &types.MessageListRes{

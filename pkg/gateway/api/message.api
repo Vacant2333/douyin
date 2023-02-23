@@ -44,5 +44,5 @@ service user-api {
 	
 	@doc "聊天记录"
 	@handler messagelist
-	post /message/chat (MessageListReq) returns (MessageListRes)
+	get /message/chat (MessageListReq) returns (MessageListRes)
 }

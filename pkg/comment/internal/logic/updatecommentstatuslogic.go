@@ -8,6 +8,7 @@ import (
 	"douyin/common/xerr"
 	"douyin/pkg/comment/internal/svc"
 	"douyin/pkg/comment/userCommentPb"
+	"douyin/pkg/video/videoservice"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -29,16 +30,16 @@ func NewUpdateCommentStatusLogic(ctx context.Context, svcCtx *svc.ServiceContext
 
 // UpdateCommentStatus -----------------------userCommentStatus-----------------------
 func (l *UpdateCommentStatusLogic) UpdateCommentStatus(in *userCommentPb.UpdateCommentStatusReq) (*userCommentPb.UpdateCommentStatusResp, error) {
-	commentModel := new(commentModel.Comment)
+	newCommentModel := new(commentModel.Comment)
 
 	switch in.ActionType {
 	//新增评论
 	case messageTypes.ActionADD:
 		// Todo 更新返回字段
-		commentModel.UserId = in.UserId
-		commentModel.VideoId = in.VideoId
-		commentModel.Content = in.Content
-		insertCommentResult, err := l.svcCtx.UserCommentModel.Insert(l.ctx, commentModel)
+		newCommentModel.UserId = in.UserId
+		newCommentModel.VideoId = in.VideoId
+		newCommentModel.Content = in.Content
+		insertCommentResult, err := l.svcCtx.UserCommentModel.Insert(l.ctx, newCommentModel)
 
 		if err != nil {
 			logx.Errorf("UpdateCommentStatus------->Insert err : %s", err.Error())
@@ -51,18 +52,27 @@ func (l *UpdateCommentStatusLogic) UpdateCommentStatus(in *userCommentPb.UpdateC
 			return &userCommentPb.UpdateCommentStatusResp{}, err
 		}
 
+		_, err = l.svcCtx.VideoRPC.ChangeVideoComment(l.ctx, &videoservice.ChangeVideoCommentReq{
+			VideoId:    in.VideoId,
+			ActionType: in.ActionType,
+		})
+		if err != nil {
+			logx.Errorf("ChangeVideoComment failed %s ", err)
+			return &userCommentPb.UpdateCommentStatusResp{}, err
+		}
+
 		return &userCommentPb.UpdateCommentStatusResp{
 			CommentId: insertCommentId,
 		}, nil
 
 	//删除评论
 	case messageTypes.ActionCancel:
-		commentModel.Removed = globalkey.DelStateYes
-		commentModel.Id = in.CommentId
-		commentModel.VideoId = in.VideoId
-		commentModel.UserId = in.UserId
+		newCommentModel.Removed = globalkey.DelStateYes
+		newCommentModel.Id = in.CommentId
+		newCommentModel.VideoId = in.VideoId
+		newCommentModel.UserId = in.UserId
 		err := l.svcCtx.UserCommentModel.Trans(l.ctx, func(context context.Context, session sqlx.Session) error {
-			err := l.svcCtx.UserCommentModel.Update(l.ctx, commentModel)
+			err := l.svcCtx.UserCommentModel.Update(l.ctx, newCommentModel)
 			if err != nil {
 				logx.Errorf("UpdateCommentStatus------->update err : %s", err.Error())
 				return err
@@ -74,6 +84,16 @@ func (l *UpdateCommentStatusLogic) UpdateCommentStatus(in *userCommentPb.UpdateC
 			logx.Error("UpdateCommentStatus-------> trans fail")
 			return &userCommentPb.UpdateCommentStatusResp{}, err
 		}
+
+		_, err = l.svcCtx.VideoRPC.ChangeVideoComment(l.ctx, &videoservice.ChangeVideoCommentReq{
+			VideoId:    in.VideoId,
+			ActionType: in.ActionType,
+		})
+		if err != nil {
+			logx.Errorf("ChangeVideoComment failed %s ", err)
+			return &userCommentPb.UpdateCommentStatusResp{}, err
+		}
+
 		return &userCommentPb.UpdateCommentStatusResp{
 			CommentId: in.CommentId,
 		}, nil
