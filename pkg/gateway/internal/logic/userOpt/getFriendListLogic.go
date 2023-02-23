@@ -27,7 +27,6 @@ func NewGetFriendListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 }
 
 func (l *GetFriendListLogic) GetFriendList(req *types.FriendListReq) (resp *types.FriendListRes, err error) {
-
 	friendRes, err := l.svcCtx.FollowRPC.GetFriendList(l.ctx, &followservice.GetFriendListReq{
 		UserId: req.UserId,
 		Token:  req.Token,
@@ -48,6 +47,7 @@ func (l *GetFriendListLogic) GetFriendList(req *types.FriendListReq) (resp *type
 		user := queryUser
 		wg.Add(1)
 		go func() {
+			userList[i] = &types.FriendUser{}
 			userList[i].Message = *user.Message
 			userList[i].MsgType = user.MsgType
 			userList[i].UserId = user.Id

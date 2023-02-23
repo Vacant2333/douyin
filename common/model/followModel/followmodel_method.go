@@ -8,7 +8,7 @@ import (
 
 func (m *defaultFollowModel) FindAllByUserId(ctx context.Context, userId int64) ([]*Follow, error) {
 	var resp []*Follow
-	query := fmt.Sprintf("select `fun_id` from %s where `user_id` = ? and `removed` = 0", m.table)
+	query := fmt.Sprintf("select * from %s where `user_id` = ? and `removed` = 0", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userId)
 
 	switch err {
@@ -23,7 +23,7 @@ func (m *defaultFollowModel) FindAllByUserId(ctx context.Context, userId int64) 
 
 func (m *defaultFollowModel) FindAllByFunId(ctx context.Context, funId int64) ([]*Follow, error) {
 	var resp []*Follow
-	query := fmt.Sprintf("select `user_id` from %s where `fun_id` = ? and `removed` = 0", m.table)
+	query := fmt.Sprintf("select * from %s where `fun_id` = ? and `removed` = 0", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, funId)
 
 	switch err {
@@ -87,7 +87,6 @@ func (m *defaultFollowModel) UpdateMsg(ctx context.Context, sender int64, receiv
 }
 
 func (m *defaultFollowModel) FindMsg(ctx context.Context, userId int64, funId int64) (*Follow, error) {
-
 	query := fmt.Sprintf("select msg,sender from %s where user_id = ? and removed = 0 and fun_id = ?", m.table)
 	var resp Follow
 	err := m.QueryRowNoCacheCtx(ctx, &resp, query, userId, funId)
@@ -95,7 +94,7 @@ func (m *defaultFollowModel) FindMsg(ctx context.Context, userId int64, funId in
 	case nil:
 		return &resp, nil
 	case sqlc.ErrNotFound:
-		return nil, ErrNotFound
+		return nil, nil
 	default:
 		return nil, err
 	}

@@ -25,7 +25,11 @@ func NewGetFollowerListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 }
 
 func (l *GetFollowerListLogic) GetFollowerList(in *follow.GetFollowerListReq) (*follow.GetFollowerListResp, error) {
-	queryFollow, err := l.svcCtx.FollowModel.FindAllByUserId(l.ctx, in.UserId)
+	return GetFollowerList(l.ctx, l.svcCtx, in)
+}
+
+func GetFollowerList(ctx context.Context, svcCtx *svc.ServiceContext, in *follow.GetFollowerListReq) (*follow.GetFollowerListResp, error) {
+	queryFollow, err := svcCtx.FollowModel.FindAllByUserId(ctx, in.UserId)
 	if err != nil {
 		logx.Errorf("get follower list failed: %v", err.Error())
 		return &follow.GetFollowerListResp{
@@ -40,13 +44,14 @@ func (l *GetFollowerListLogic) GetFollowerList(in *follow.GetFollowerListReq) (*
 		query := v
 		i := index
 		go func() {
-			queryFollowers, err := l.svcCtx.UserPRC.Info(l.ctx, &userservice.UserInfoReq{
+			queryFollowers, err := svcCtx.UserPRC.Info(ctx, &userservice.UserInfoReq{
 				UserId: query.UserId.Int64,
 			})
 			if err != nil {
 				logx.Errorf("in follow model get user info failed: %v", err.Error())
 				return
 			}
+			followers[i] = &follow.User{}
 			followers[i].Id = queryFollowers.User.UserId
 			followers[i].Name = queryFollowers.User.UserName
 			followers[i].FollowCount = queryFollowers.User.FollowCount
@@ -58,7 +63,7 @@ func (l *GetFollowerListLogic) GetFollowerList(in *follow.GetFollowerListReq) (*
 			followers[i].WorkCount = queryFollowers.User.WorkCount
 			followers[i].FavoriteCount = queryFollowers.User.FavoriteCount
 
-			isFollow, err := l.svcCtx.FollowModel.CheckIsFollow(l.ctx, queryFollowers.User.UserId, in.UserId)
+			isFollow, err := svcCtx.FollowModel.CheckIsFollow(ctx, queryFollowers.User.UserId, in.UserId)
 			if err != nil {
 				logx.Errorf("in follow model query is follow failed: %v", err.Error())
 				return

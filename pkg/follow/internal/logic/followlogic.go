@@ -25,15 +25,7 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 }
 
 func (l *FollowLogic) Follow(in *follow.FollowReq) (*follow.FollowResp, error) {
-
-	followId, err := l.svcCtx.FollowModel.FindIfExist(l.ctx, in.UserId, in.ToUserId)
-	if err != nil {
-		logger.Errorf("follow option failed: %v", err.Error())
-		return &follow.FollowResp{
-			StatusCode: -1,
-			StatusMsg:  "follow option failed",
-		}, err
-	}
+	followId, _ := l.svcCtx.FollowModel.FindIfExist(l.ctx, in.UserId, in.ToUserId)
 	if followId != 0 {
 		var removed int64
 		if in.ActionType == 1 {
@@ -44,7 +36,7 @@ func (l *FollowLogic) Follow(in *follow.FollowReq) (*follow.FollowResp, error) {
 			Id:      followId,
 			Removed: removed,
 		}
-		err = l.svcCtx.FollowModel.Update(l.ctx, newFollowModel)
+		err := l.svcCtx.FollowModel.Update(l.ctx, newFollowModel)
 		if err != nil {
 			logger.Errorf("follow option failed: %v", err.Error())
 			return &follow.FollowResp{
@@ -57,12 +49,12 @@ func (l *FollowLogic) Follow(in *follow.FollowReq) (*follow.FollowResp, error) {
 		if in.ActionType == 1 {
 			newFollowModel := &followModel.Follow{
 				UserId: sql.NullInt64{
-					Int64: in.UserId,
+					Int64: in.ToUserId,
 					Valid: true,
 				},
-				FunId: in.ToUserId,
+				FunId: in.UserId,
 			}
-			_, err = l.svcCtx.FollowModel.Insert(l.ctx, newFollowModel)
+			_, err := l.svcCtx.FollowModel.Insert(l.ctx, newFollowModel)
 			if err != nil {
 				return &follow.FollowResp{
 					StatusCode: -1,

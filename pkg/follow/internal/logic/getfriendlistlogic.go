@@ -26,16 +26,16 @@ func NewGetFriendListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 }
 
 func (l *GetFriendListLogic) GetFriendList(in *follow.GetFriendListReq) (*follow.GetFriendListResp, error) {
-
-	followerResp, err := l.svcCtx.FollowRPC.GetFollowerList(l.ctx, &follow.GetFollowerListReq{
+	followerResp, err := GetFollowerList(l.ctx, l.svcCtx, &follow.GetFollowerListReq{
 		Token:  in.Token,
 		UserId: in.UserId,
 	})
+
 	if err != nil {
-		logger.Error("GetFriendList call GetFollowerList RPC failed %s ", err.Error())
+		logger.Error("GetFriendList call GetFollowerList failed %s ", err.Error())
 		return &follow.GetFriendListResp{
 			StatusCode: -1,
-			StatusMsg:  "GetFriendList call GetFollowerList RPC failed",
+			StatusMsg:  "GetFriendList call GetFollowerList failed",
 		}, err
 	}
 	var wg sync.WaitGroup
@@ -45,6 +45,7 @@ func (l *GetFriendListLogic) GetFriendList(in *follow.GetFriendListReq) (*follow
 		user := queryUser
 		wg.Add(1)
 		go func() {
+			userList[i] = &follow.FriendUser{}
 			userList[i].Id = user.Id
 			userList[i].Name = user.Name
 			userList[i].FollowCount = user.FollowCount
@@ -62,9 +63,14 @@ func (l *GetFriendListLogic) GetFriendList(in *follow.GetFriendListReq) (*follow
 				logger.Errorf("FindMsg failed %s", err.Error())
 				return
 			}
-			userList[i].Message = &msg.Msg.String
-			if msg.Sender == 0 {
-				userList[i].MsgType = 1
+			defaultMsg := "暂未发消息"
+			if msg == nil {
+				userList[i].Message = &defaultMsg
+			} else {
+				userList[i].Message = &msg.Msg.String
+				if msg.Sender == 0 {
+					userList[i].MsgType = 1
+				}
 			}
 			defer wg.Done()
 		}()

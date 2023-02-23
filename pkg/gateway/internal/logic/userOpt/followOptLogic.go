@@ -33,6 +33,8 @@ func (l *FollowOptLogic) FollowOpt(req *types.FollowOptReq) (resp *types.FollowO
 	_ = copier.Copy(&followTemp, req)
 
 	followTemp.UserId = l.ctx.Value(myToken.CurrentUserId("CurrentUserId")).(int64)
+	followTemp.ToUserId = req.FollowId
+	followTemp.ActionType = req.ActionType
 	// 序列化
 	msg, err := json.Marshal(followTemp)
 	if err != nil {

@@ -78,7 +78,6 @@ func (l *GetAllVideoByUserIdLogic) GetAllVideoByUserId(in *video.GetAllVideoByUs
 				FavoriteCount:   info.User.FavoriteCount,
 			}
 			if hasUserId {
-
 				checkIsFollowResp, err := l.svcCtx.FollowRPC.CheckIsFollow(l.ctx, &followservice.CheckIsFollowReq{
 					UserId: authorId,
 					FunId:  in.UserId,

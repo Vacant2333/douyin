@@ -46,5 +46,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserFavoriteRpc:        useroptservice.NewUserOptService(zrpc.MustNewClient(c.UserFavoriteRpc)),
 		VideoRPC:               videoservice.NewVideoService(zrpc.MustNewClient(c.VideoRPC)),
 		CommentOptMsgProducer:  kq.NewPusher(c.UserCommentOptServiceConf.Brokers, c.UserCommentOptServiceConf.Topic),
+		FollowOptMsgProducer:   kq.NewPusher(c.UserFollowOptServiceConf.Brokers, c.UserFollowOptServiceConf.Topic),
 	}
 }

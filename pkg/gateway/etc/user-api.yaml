@@ -2,7 +2,7 @@ Name: user-api
 Host: 0.0.0.0
 Port: 8888
 MaxBytes: 8388608
-Timeout: 300000
+Timeout: 30000
 UserCommentRpc:
   Etcd:
     Hosts:
@@ -34,6 +34,15 @@ UserCommentOptServiceConf:
     - kafka.kafka.svc.cluster.local:9092
   Group: UserCommentOptService-group
   Topic: UserCommentOptService-topic
+  Offset: first
+  Consumers: 1
+  Processors: 1
+UserFollowOptServiceConf:
+  Name: UserCommentOptService
+  Brokers:
+    - kafka.kafka.svc.cluster.local:9092
+  Group: UserFollowOptService-group
+  Topic: UserFollowOptService-topic
   Offset: first
   Consumers: 1
   Processors: 1

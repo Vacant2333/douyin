@@ -1,14 +1,11 @@
 rootUser: "douyin"
-
 rootPassword: "douyin_pass"
-
 replicas: 2
-
 persistence:
   size: 10Gi
-
 resources:
   requests:
     memory: 1Gi
-
-defaultBuckets: "douyin"
+buckets:
+ - name: douyin
+   policy: public

@@ -18,4 +18,5 @@ type Config struct {
 	// kq
 	UserCommentOptServiceConf  kq.KqConf
 	UserFavoriteOptServiceConf kq.KqConf
+	UserFollowOptServiceConf   kq.KqConf
 }

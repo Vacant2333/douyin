@@ -40,6 +40,7 @@ func (l *GetPublishVideoListLogic) GetPublishVideoList(req *types.GetPubVideoLis
 	}
 	videos := make([]*types.PubVideo, len(videosResp.VideoList))
 	for i, v := range videosResp.VideoList {
+		videos[i] = &types.PubVideo{}
 		videos[i].Id = v.Id
 		videos[i].User = types.User{
 			UserId:          v.Author.Id,
