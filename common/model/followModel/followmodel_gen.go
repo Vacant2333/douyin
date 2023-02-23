@@ -21,7 +21,7 @@ var (
 	followRowsExpectAutoSet   = strings.Join(stringx.Remove(followFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
 	followRowsWithPlaceHolder = strings.Join(stringx.Remove(followFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
-	cacheTiktokFollowIdPrefix = "cache:tiktok:follow:id:"
+	cacheTitokFollowIdPrefix = "cache:titok:follow:id:"
 )
 
 type (
@@ -30,10 +30,12 @@ type (
 		FindOne(ctx context.Context, id int64) (*Follow, error)
 		FindAllByUserId(ctx context.Context, userId int64) ([]*Follow, error)
 		FindAllByFunId(ctx context.Context, funId int64) ([]*Follow, error)
+		FindMsg(ctx context.Context, userId int64, funId int64) (*Follow, error)
 		CountByFollowRelation(ctx context.Context, id int64, field string) (int64, error)
 		CheckIsFollow(ctx context.Context, userId int64, funId int64) (bool, error)
 		FindIfExist(ctx context.Context, userId int64, funId int64) (int64, error)
 		Update(ctx context.Context, data *Follow) error
+		UpdateMsg(ctx context.Context, sender int64, receiver int64, msg string) error
 		Delete(ctx context.Context, id int64) error
 	}
 
@@ -48,6 +50,7 @@ type (
 		FunId   int64          `db:"fun_id"`
 		Removed int64          `db:"removed"`
 		Msg     sql.NullString `db:"msg"`
+		Sender  int64          `db:"sender"` // 最新消息，0为被关注者发送，1为粉丝发送
 	}
 )
 
@@ -59,18 +62,18 @@ func newFollowModel(conn sqlx.SqlConn, c cache.CacheConf) *defaultFollowModel {
 }
 
 func (m *defaultFollowModel) Delete(ctx context.Context, id int64) error {
-	tiktokFollowIdKey := fmt.Sprintf("%s%v", cacheTiktokFollowIdPrefix, id)
+	titokFollowIdKey := fmt.Sprintf("%s%v", cacheTitokFollowIdPrefix, id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		return conn.ExecCtx(ctx, query, id)
-	}, tiktokFollowIdKey)
+	}, titokFollowIdKey)
 	return err
 }
 
 func (m *defaultFollowModel) FindOne(ctx context.Context, id int64) (*Follow, error) {
-	tiktokFollowIdKey := fmt.Sprintf("%s%v", cacheTiktokFollowIdPrefix, id)
+	titokFollowIdKey := fmt.Sprintf("%s%v", cacheTitokFollowIdPrefix, id)
 	var resp Follow
-	err := m.QueryRowCtx(ctx, &resp, tiktokFollowIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
+	err := m.QueryRowCtx(ctx, &resp, titokFollowIdKey, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) error {
 		query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", followRows, m.table)
 		return conn.QueryRowCtx(ctx, v, query, id)
 	})
@@ -85,25 +88,25 @@ func (m *defaultFollowModel) FindOne(ctx context.Context, id int64) (*Follow, er
 }
 
 func (m *defaultFollowModel) Insert(ctx context.Context, data *Follow) (sql.Result, error) {
-	tiktokFollowIdKey := fmt.Sprintf("%s%v", cacheTiktokFollowIdPrefix, data.Id)
+	titokFollowIdKey := fmt.Sprintf("%s%v", cacheTitokFollowIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, followRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.UserId, data.FunId, data.Removed, data.Msg)
-	}, tiktokFollowIdKey)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, followRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.UserId, data.FunId, data.Removed, data.Msg, data.Sender)
+	}, titokFollowIdKey)
 	return ret, err
 }
 
 func (m *defaultFollowModel) Update(ctx context.Context, data *Follow) error {
-	tiktokFollowIdKey := fmt.Sprintf("%s%v", cacheTiktokFollowIdPrefix, data.Id)
+	titokFollowIdKey := fmt.Sprintf("%s%v", cacheTitokFollowIdPrefix, data.Id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, followRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.UserId, data.FunId, data.Removed, data.Msg, data.Id)
-	}, tiktokFollowIdKey)
+		return conn.ExecCtx(ctx, query, data.UserId, data.FunId, data.Removed, data.Msg, data.Sender, data.Id)
+	}, titokFollowIdKey)
 	return err
 }
 
 func (m *defaultFollowModel) formatPrimary(primary interface{}) string {
-	return fmt.Sprintf("%s%v", cacheTiktokFollowIdPrefix, primary)
+	return fmt.Sprintf("%s%v", cacheTitokFollowIdPrefix, primary)
 }
 
 func (m *defaultFollowModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary interface{}) error {

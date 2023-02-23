@@ -77,3 +77,26 @@ func (m *defaultFollowModel) FindIfExist(ctx context.Context, userId int64, funI
 		return 0, err
 	}
 }
+
+func (m *defaultFollowModel) UpdateMsg(ctx context.Context, sender int64, receiver int64, msg string) error {
+	query := fmt.Sprintf("update %s set msg = ?,sender = 0 where user_id = ? and fun_id = ? ", m.table)
+	_, err := m.ExecNoCacheCtx(ctx, query, msg, sender, receiver)
+	query = fmt.Sprintf("update %s set msg = ?,sender = 1 where user_id = ? and fun_id = ? ", m.table)
+	_, err = m.ExecNoCacheCtx(ctx, query, msg, receiver, sender)
+	return err
+}
+
+func (m *defaultFollowModel) FindMsg(ctx context.Context, userId int64, funId int64) (*Follow, error) {
+
+	query := fmt.Sprintf("select msg,sender from %s where user_id = ? and removed = 0 and fun_id = ?", m.table)
+	var resp Follow
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, userId, funId)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
