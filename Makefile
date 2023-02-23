@@ -42,7 +42,7 @@ install-minio-client:
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
 		-t douyin/minio-client:nightly
 	-kubectl delete ns minio-client
-	#kind load docker-image douyin/minio-client:nightly --name douyin
+	-kind load docker-image douyin/minio-client:nightly --name douyin
 	kubectl create ns minio-client
 	kubectl apply -f deployment/minio-client/minio-client.yaml
 
@@ -52,7 +52,7 @@ install-user:
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
 		-t douyin/user:nightly
 	-kubectl delete ns user
-	#kind load docker-image douyin/user:nightly --name douyin
+	-kind load docker-image douyin/user:nightly --name douyin
 	kubectl create ns user
 	kubectl apply -f deployment/user/user.yaml
 
@@ -61,7 +61,7 @@ install-comment:
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
 		-t douyin/comment:nightly
 	-kubectl delete ns comment
-	#kind load docker-image douyin/comment:nightly --name douyin
+	-kind load docker-image douyin/comment:nightly --name douyin
 	kubectl create ns comment
 	kubectl apply -f deployment/comment/comment.yaml
 
@@ -70,7 +70,7 @@ install-mq:
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
 		-t douyin/mq:nightly
 	-kubectl delete ns mq
-	#kind load docker-image douyin/mq:nightly --name douyin
+	-kind load docker-image douyin/mq:nightly --name douyin
 	kubectl create ns mq
 	kubectl apply -f deployment/mq/mq.yaml
 
@@ -79,7 +79,7 @@ install-favorite:
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
 		-t douyin/favorite:nightly
 	-kubectl delete ns favorite
-	#kind load docker-image douyin/favorite:nightly --name douyin
+	-kind load docker-image douyin/favorite:nightly --name douyin
 	kubectl create ns favorite
 	kubectl apply -f deployment/favorite/favorite.yaml
 
@@ -88,7 +88,7 @@ install-video:
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
 		-t douyin/video:nightly
 	-kubectl delete ns video
-	#kind load docker-image douyin/video:nightly --name douyin
+	-kind load docker-image douyin/video:nightly --name douyin
 	kubectl create ns video
 	kubectl apply -f deployment/video/video.yaml
 
@@ -97,7 +97,7 @@ install-message:
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
 		-t douyin/message:nightly
 	-kubectl delete ns message
-	#kind load docker-image douyin/message:nightly --name douyin
+	-kind load docker-image douyin/message:nightly --name douyin
 	kubectl create ns message
 	kubectl apply -f deployment/message/message.yaml
 
@@ -106,7 +106,7 @@ install-follow:
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
 		-t douyin/follow:nightly
 	-kubectl delete ns follow
-	#kind load docker-image douyin/follow:nightly --name douyin
+	-kind load docker-image douyin/follow:nightly --name douyin
 	kubectl create ns follow
 	kubectl apply -f deployment/follow/follow.yaml
 
@@ -115,7 +115,7 @@ install-gateway:
 		--build-arg PROJECT_ROOT="${PROJECT_ROOT}" ${PROJECT_ROOT} \
 		-t douyin/gateway:nightly
 	-kubectl delete ns gateway
-	#kind load docker-image douyin/gateway:nightly --name douyin
+	-kind load docker-image douyin/gateway:nightly --name douyin
 	kubectl create ns gateway
 	kubectl apply -f deployment/gateway/gateway.yaml
 

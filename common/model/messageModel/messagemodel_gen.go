@@ -84,7 +84,7 @@ func (m *defaultMessageModel) FindMessageListByUserID(ctx context.Context, from_
 	fmt.Printf("findall:::::::::::::::::::::::::")
 	var resp []*Message
 
-	query := fmt.Sprintf("select %s from %s where ((`from_user_id` = ? and `to_user_id` = ?) or (`to_user_id` = ? and `from_user_id` = ?)) and `create_time` > ? order by `create_time` DESC", messageRows, m.table)
+	query := fmt.Sprintf("select %s from %s where ((`from_user_id` = ? and `to_user_id` = ?) or (`to_user_id` = ? and `from_user_id` = ?)) and `create_time` > ? order by `create_time` ASC", messageRows, m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, from_user_id, to_userid, from_user_id, to_userid, pre_time)
 
 	switch err {
@@ -101,7 +101,7 @@ func (m *defaultMessageModel) Insert(ctx context.Context, data *Message) (sql.Re
 	tiktokMessageIdKey := fmt.Sprintf("%s%v", cacheTiktokMessageIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (`content`, `from_user_id`, `to_user_id`, `create_time`) values (?, ?, ?, ?)", m.table)
-		return conn.ExecCtx(ctx, query, data.Content, data.FromUserId, data.ToUserId, data.CreateTime)
+		return conn.ExecCtx(ctx, query, data.Content, data.FromUserId, data.ToUserId, data.CreateTime+5)
 	}, tiktokMessageIdKey)
 	return ret, err
 }

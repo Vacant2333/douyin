@@ -23,6 +23,7 @@ message MessageRes {
 message MessageListReq {
  int64  UserId = 1;
   string Token = 2;
+  int64 PreTime = 3;
 }
 
 message MessageListRes {
@@ -36,7 +37,7 @@ message Message {
   int64  ToUserId = 2;
   int64  FromUserId = 3;
   string Content = 4;
-  string CreateTime = 5;
+  int64 CreateTime = 5;
 }
 
 
