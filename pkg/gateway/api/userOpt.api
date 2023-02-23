@@ -102,6 +102,21 @@ type CommentListRes {
 	CommentList []*Comment `json:"comment_list,omitempty"`
 }
 
+type FriendListReq {
+	IdWithTokenReq
+}
+
+type FriendUser {
+	User
+	Message string `json:"message,omitempty"`
+	MsgType int64  `json:"msgType"`
+}
+
+type FriendListRes {
+	Status
+	UserFriendlist []*FriendUser `json:"user_list,omitempty"`
+}
+
 @server(
 	group : userOpt
 	prefix : /douyin
@@ -123,4 +138,8 @@ service user-api {
 	@doc "用户粉丝列表"
 	@handler GetFollowerList
 	get /relation/follower/list (FollowerListReq) returns (FollowerListRes)
+	
+	@doc "用户好友列表"
+	@handler GetFriendList
+	get /relation/friend/list (FriendListReq) returns (FriendListRes)
 }

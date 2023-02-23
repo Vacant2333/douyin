@@ -78,6 +78,21 @@ type CommentListRes struct {
 	CommentList []*Comment `json:"comment_list,omitempty"`
 }
 
+type FriendListReq struct {
+	IdWithTokenReq
+}
+
+type FriendUser struct {
+	User
+	Message string `json:"message,omitempty"`
+	MsgType int64  `json:"msgType"`
+}
+
+type FriendListRes struct {
+	Status
+	UserFriendlist []*FriendUser `json:"user_list,omitempty"`
+}
+
 type Status struct {
 	Code int64  `json:"status_code"`
 	Msg  string `json:"status_msg,omitempty"`

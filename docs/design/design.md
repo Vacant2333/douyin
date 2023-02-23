@@ -90,6 +90,7 @@ create table IF NOT EXISTS `follow`
     fun_id  int               not null,
     removed tinyint default 0 not null,
     msg     text              null,
+    sender  tinyint default 0 null COMMENT '最新消息，0为被关注者发送，1为粉丝发送',
     constraint follow_user_id2fun_fk_2    foreign key (fun_id) references user (id),
     constraint follow_user_id2user_fk     foreign key (user_id) references user (id)
 );

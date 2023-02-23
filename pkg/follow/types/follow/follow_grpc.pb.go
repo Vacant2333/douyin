@@ -25,6 +25,7 @@ type FollowServiceClient interface {
 	Follow(ctx context.Context, in *FollowReq, opts ...grpc.CallOption) (*FollowResp, error)
 	GetFollowList(ctx context.Context, in *GetFollowListReq, opts ...grpc.CallOption) (*GetFollowListResp, error)
 	GetFollowerList(ctx context.Context, in *GetFollowerListReq, opts ...grpc.CallOption) (*GetFollowerListResp, error)
+	GetFriendList(ctx context.Context, in *GetFriendListReq, opts ...grpc.CallOption) (*GetFriendListResp, error)
 	CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error)
 }
 
@@ -63,6 +64,15 @@ func (c *followServiceClient) GetFollowerList(ctx context.Context, in *GetFollow
 	return out, nil
 }
 
+func (c *followServiceClient) GetFriendList(ctx context.Context, in *GetFriendListReq, opts ...grpc.CallOption) (*GetFriendListResp, error) {
+	out := new(GetFriendListResp)
+	err := c.cc.Invoke(ctx, "/follow.FollowService/GetFriendList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *followServiceClient) CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error) {
 	out := new(CheckIsFollowResp)
 	err := c.cc.Invoke(ctx, "/follow.FollowService/CheckIsFollow", in, out, opts...)
@@ -79,6 +89,7 @@ type FollowServiceServer interface {
 	Follow(context.Context, *FollowReq) (*FollowResp, error)
 	GetFollowList(context.Context, *GetFollowListReq) (*GetFollowListResp, error)
 	GetFollowerList(context.Context, *GetFollowerListReq) (*GetFollowerListResp, error)
+	GetFriendList(context.Context, *GetFriendListReq) (*GetFriendListResp, error)
 	CheckIsFollow(context.Context, *CheckIsFollowReq) (*CheckIsFollowResp, error)
 	mustEmbedUnimplementedFollowServiceServer()
 }
@@ -95,6 +106,9 @@ func (UnimplementedFollowServiceServer) GetFollowList(context.Context, *GetFollo
 }
 func (UnimplementedFollowServiceServer) GetFollowerList(context.Context, *GetFollowerListReq) (*GetFollowerListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowerList not implemented")
+}
+func (UnimplementedFollowServiceServer) GetFriendList(context.Context, *GetFriendListReq) (*GetFriendListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFriendList not implemented")
 }
 func (UnimplementedFollowServiceServer) CheckIsFollow(context.Context, *CheckIsFollowReq) (*CheckIsFollowResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckIsFollow not implemented")
@@ -166,6 +180,24 @@ func _FollowService_GetFollowerList_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FollowService_GetFriendList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFriendListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FollowServiceServer).GetFriendList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/follow.FollowService/GetFriendList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FollowServiceServer).GetFriendList(ctx, req.(*GetFriendListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _FollowService_CheckIsFollow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CheckIsFollowReq)
 	if err := dec(in); err != nil {
@@ -202,6 +234,10 @@ var FollowService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFollowerList",
 			Handler:    _FollowService_GetFollowerList_Handler,
+		},
+		{
+			MethodName: "GetFriendList",
+			Handler:    _FollowService_GetFriendList_Handler,
 		},
 		{
 			MethodName: "CheckIsFollow",

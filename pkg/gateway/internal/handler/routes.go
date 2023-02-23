@@ -63,6 +63,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 					Path:    "/relation/follower/list",
 					Handler: userOpt.GetFollowerListHandler(serverCtx),
 				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/relation/friend/list",
+					Handler: userOpt.GetFriendListHandler(serverCtx),
+				},
 			}...,
 		),
 		rest.WithPrefix("/douyin"),
