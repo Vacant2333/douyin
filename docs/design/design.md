@@ -52,47 +52,34 @@
 ### DataBase schema
 
 ```sql
-create database IF NOT EXISTS  titok;
-use titok;
+create database IF NOT EXISTS  tiktok;
+use tiktok;
 
 create table IF NOT EXISTS `user`
 (
-    id          int auto_increment                  primary key,
-    username    varchar(32)                         not null,
-    password    varchar(32)                         not null,
-    enable      tinyint   default 1                 null,
-    type        tinyint   default 0                 not null,
-    login_time  datetime  default CURRENT_TIMESTAMP null,
-    create_time timestamp default CURRENT_TIMESTAMP null
+    id               int auto_increment
+        primary key,
+    username         varchar(32)                                                                         not null,
+    password         varchar(128)                                                                        not null,
+    enable           tinyint      default 1                                                              null,
+    login_time       datetime     default CURRENT_TIMESTAMP                                              null,
+    create_time      timestamp    default CURRENT_TIMESTAMP                                              null,
+    type             tinyint      default 0                                                              not null,
+    avatar           varchar(128) default 'https://www.shunvzhi.com/uploads/allimg/180731/1TF952E-3.jpg' not null comment '头像',
+    background_image varchar(128) default 'https://inews.gtimg.com/newsapp_bt/0/13250363674/1000.jpg'    not null comment '背景图片',
+    signature        varchar(128) default '打工魂'                                                          not null comment '签名',
+    constraint username
+        unique (username)
 );
-
-create table IF NOT EXISTS `chat`
-(
-    id         int auto_increment                 primary key,
-    msg        text                               not null,
-    sender     int                                not null,
-    receiver   int                                not null,
-    create_time datetime default CURRENT_TIMESTAMP not null,
-    constraint chat_user_id_fk                    foreign key (sender) references user (id),
-    constraint chat_user_id_fk_2                  foreign key (receiver) references user (id)
-);
-
-create index chat_receiver_sender_index
-    on chat (receiver, sender);
-
-create index chat_sender_receiver_index
-    on chat (sender, receiver);
 
 create table IF NOT EXISTS `follow`
 (
-    id      int auto_increment            primary key,
+    id      int auto_increment
+        primary key,
     user_id int               null,
     fun_id  int               not null,
     removed tinyint default 0 not null,
     msg     text              null,
-    sender  tinyint default 0 null COMMENT '最新消息，0为被关注者发送，1为粉丝发送',
-    constraint follow_user_id2fun_fk_2    foreign key (fun_id) references user (id),
-    constraint follow_user_id2user_fk     foreign key (user_id) references user (id)
 );
 
 create index follow_fun_id_removed_index
@@ -101,35 +88,48 @@ create index follow_fun_id_removed_index
 create index follow_user_id_removed_index
     on follow (user_id, removed);
 
+create table IF NOT EXISTS `message`
+(
+    id           int auto_increment
+        primary key,
+    content      text                               not null,
+    from_user_id int                                not null,
+    to_user_id   int                                not null,
+    create_time  datetime default CURRENT_TIMESTAMP not null,
+);
+
+create index chat_receiver_sender_index
+    on message (to_user_id, from_user_id);
+
+create index chat_sender_receiver_index
+    on message (from_user_id, to_user_id);
+
 create index user_username_enable_index
     on user (username, enable);
 
 create table IF NOT EXISTS `video`
 (
-    id        int auto_increment primary key,
-    author_id int                not null,
-    play_url  varchar(32)        not null,
-    cover_url varchar(32)        not null,
-    like_count int    default 0  not null,
-    comment_count int default 0  not null,
-    time      int                not null,
-    title     varchar(128)       not null,
-    removed   tinyint default 0  not null,
-    type      tinyint default 0 not null,
-    constraint video_user_id_fk  foreign key (author_id) references user (id)
+    id         int auto_increment
+        primary key,
+    author_id  int               not null,
+    play_url   varchar(32)       not null,
+    cover_url  varchar(32)       not null,
+    like_count int               null,
+    time       int               not null,
+    title      varchar(128)      not null,
+    removed    tinyint default 0 not null,
+    type       tinyint default 0 not null,
 );
 
 create table IF NOT EXISTS `comment`
 (
-    id          int auto_increment                 primary key,
+    id          int auto_increment
+        primary key,
     user_id     int                                not null,
     video_id    int                                not null,
     create_time datetime default CURRENT_TIMESTAMP not null,
     removed     tinyint  default 0                 not null,
-    deleted     tinyint  default 0                 not null,
-    content     text                               not null,
-    constraint comment_user_id_fk                  foreign key (user_id) references user (id),
-    constraint comment_video_id_fk                 foreign key (video_id) references video (id)
+    content     text                               not null
 );
 
 create index comment_video_id_removed_create_time_index
@@ -137,12 +137,11 @@ create index comment_video_id_removed_create_time_index
 
 create table IF NOT EXISTS `favorite`
 (
-    id       int auto_increment      primary key,
-    video_id int                     not null,
-    user_id  int                     not null,
-    removed  tinyint default 0       not null,
-    constraint favorite_user_id_fk   foreign key (user_id) references user (id),
-    constraint favorite_video_id_fk  foreign key (video_id) references video (id)
+    id       int auto_increment
+        primary key,
+    video_id int               not null,
+    user_id  int               not null,
+    removed  tinyint default 0 not null
 );
 
 create index favorite_user_id_removed_index
