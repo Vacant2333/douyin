@@ -17,13 +17,12 @@ make install-cluster
 
 #### Install components which you need
 ```bash
-make install-minio
-make install-etcd
+make install-minio install-etcd install-kafka install-redis
 ```
 
 ## Install the microservices
 ```bash
-
+make install-minio-client install-user install-comment install-mq install-favorite install-video install-message install-follow install-gateway
 ```
 
 ## Optional components
