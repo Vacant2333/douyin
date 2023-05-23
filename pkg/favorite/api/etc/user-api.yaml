@@ -1,0 +1,14 @@
+Name: user-api
+Host: 0.0.0.0
+Port: 8888
+UserFavoriteRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: useropt.rpc
+
+UserInfoRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: userinfo.rpc
